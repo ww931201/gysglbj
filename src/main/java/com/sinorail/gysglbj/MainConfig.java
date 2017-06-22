@@ -58,6 +58,9 @@ public class MainConfig extends JFinalConfig {
 	public void configRoute(Routes me) {
 		int a = 0;
 		System.out.println("123");
+		System.out.println("aaa");
+		System.out.println("bbb");
+		System.out.println("ccc");
 		me.add("/", IndexAction.class, "WEB-INF/view");
 		me.add("/login", LoginAction.class, "WEB-INF/view");
 		me.add("/user", UserAction.class, "WEB-INF/view/system/user");
