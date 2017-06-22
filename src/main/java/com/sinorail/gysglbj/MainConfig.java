@@ -59,6 +59,8 @@ public class MainConfig extends JFinalConfig {
 		System.out.println("123");
 		System.out.println("124");
 		System.out.println("125");
+		int a = 0;
+		System.out.println("123");
 		me.add("/", IndexAction.class, "WEB-INF/view");
 		me.add("/login", LoginAction.class, "WEB-INF/view");
 		me.add("/user", UserAction.class, "WEB-INF/view/system/user");
