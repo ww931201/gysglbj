@@ -28,12 +28,12 @@ import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.model._MappingKit;
 
 public class MainConfig extends JFinalConfig {
+	
 	/**
 	 * 配置JFinal常量
 	 */
 	@Override
 	public void configConstant(Constants me) {
-		
 		//读取数据库配置文件
 		PropKit.use(Const.file_jdbc);
 		//设置当前是否为开发模式
@@ -57,6 +57,7 @@ public class MainConfig extends JFinalConfig {
 	@Override
 	public void configRoute(Routes me) {
 		int a = 0;
+		System.out.println("123");
 		me.add("/", IndexAction.class, "WEB-INF/view");
 		me.add("/login", LoginAction.class, "WEB-INF/view");
 		me.add("/user", UserAction.class, "WEB-INF/view/system/user");
