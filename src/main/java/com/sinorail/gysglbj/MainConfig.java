@@ -56,6 +56,9 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configRoute(Routes me) {
+		System.out.println("123");
+		System.out.println("124");
+		System.out.println("125");
 		int a = 0;
 		System.out.println("123");
 		System.out.println("aaa");
