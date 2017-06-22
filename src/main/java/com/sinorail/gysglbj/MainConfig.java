@@ -33,6 +33,7 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configConstant(Constants me) {
+		
 		//读取数据库配置文件
 		PropKit.use(Const.file_jdbc);
 		//设置当前是否为开发模式
