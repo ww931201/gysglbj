@@ -28,6 +28,7 @@ import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.model._MappingKit;
 
 public class MainConfig extends JFinalConfig {
+	
 	/**
 	 * 配置JFinal常量
 	 */
