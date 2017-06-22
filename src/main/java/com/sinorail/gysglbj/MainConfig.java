@@ -34,7 +34,6 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configConstant(Constants me) {
-		
 		//读取数据库配置文件
 		PropKit.use(Const.file_jdbc);
 		//设置当前是否为开发模式
@@ -57,9 +56,11 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configRoute(Routes me) {
+		System.out.println("123");
+		System.out.println("124");
+		System.out.println("125");
 		me.add("/", IndexAction.class, "WEB-INF/view");
 		me.add("/login", LoginAction.class, "WEB-INF/view");
-		
 		me.add("/user", UserAction.class, "WEB-INF/view/system/user");
 		me.add("/role", RoleAction.class, "WEB-INF/view/system/role");
 		me.add("/popedom", PopedomAction.class, "WEB-INF/view/system/popedom");
