@@ -56,6 +56,7 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configRoute(Routes me) {
+		
 		me.add("/", IndexAction.class, "WEB-INF/view");
 		me.add("/login", LoginAction.class, "WEB-INF/view");
 		me.add("/user", UserAction.class, "WEB-INF/view/system/user");
