@@ -1,5 +1,7 @@
 package com.sinorail.gysglbj.model;
 
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
 
 /**
@@ -8,4 +10,9 @@ import com.sinorail.gysglbj.model.base.BaseSupplier;
 @SuppressWarnings("serial")
 public class Supplier extends BaseSupplier<Supplier> {
 	public static final Supplier dao = new Supplier().dao();
+	
+	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize) {
+		SqlPara sqlp = getSqlPara("supplier.supplierList");
+		return paginate(pageNumber, pageSize, sqlp);
+	}
 }
