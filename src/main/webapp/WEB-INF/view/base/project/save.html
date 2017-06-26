@@ -27,6 +27,16 @@
 			<td>编号：</td><td><input style="width:200px" type="text" name="project.NO" value="#(project.NO ??)" class="validate[required,length[0,30]]"/><span class="star">*</span></td>
 		</tr>
 		<tr>
+			<td>类型：</td>
+			<td>
+				<select name="project.TYPE">
+					<option value="1">竞买</option>
+					<option value="2">竞价</option>
+				</select>
+				<span class="star">*</span>
+			</td>
+		</tr>
+		<tr>
 			<td>备注：</td><td><textarea name="project.REMARK">#(project.REMARK ??)</textarea></td>
 		</tr>
 		<tr>

@@ -32,9 +32,10 @@ public class ProjectAction extends QuiController {
 		Project project = getModel(Project.class);
 		if (project.getId() == null) {
 			project.remove("ID");
-				status = project.save();
+			project.setCreaterId(getSessionUser().getId());
+			status = project.save();
 		} else {
-				status = project.update();
+			status = project.update();
 		}
 		if(!status) {			
 			setAttr("message","保存失败!");

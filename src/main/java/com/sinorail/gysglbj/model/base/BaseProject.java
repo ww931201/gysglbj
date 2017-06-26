@@ -57,4 +57,12 @@ public abstract class BaseProject<M extends BaseProject<M>> extends Model<M> imp
 		return get("CREATER_ID");
 	}
 
+	public void setType(java.math.BigDecimal type) {
+		set("TYPE", type);
+	}
+
+	public java.math.BigDecimal getType() {
+		return get("TYPE");
+	}
+
 }

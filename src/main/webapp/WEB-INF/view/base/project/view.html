@@ -72,16 +72,25 @@
 var grid = null;
 var gridProject = null;
 
+var typeData = {list:[{value:1,key:"竞买"},{value:2,key:"竞价"}]};
+
 function initComplete(){
 	//当提交表单刷新本页面时关闭弹窗
 	top.Dialog.close();
 	/**/
 	gridProject = $("#dataBasicProject").quiGrid({
 		columns:[
-			{ display: '名称', name: 'NAME', align: 'center', editor: { type: 'text'}, width: '25%'},
-			{ display: '编号', name: 'NO', align: 'center', editor: { type: 'text'}, width: '25%'},
-			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', editor: { type: 'text'}, width: '25%'},
-       		{ display: '操作', isAllowHide: false, align: 'center', width:'25%',
+			{ display: '名称', name: 'NAME', align: 'center', editor: { type: 'text'}, width: '20%'},
+			{ display: '编号', name: 'NO', align: 'center', editor: { type: 'text'}, width: '20%'},
+			{ display: '类型', name: 'TYPE', align: 'center', editor: { type: 'select', data: typeData}, width: '20%',render:function (item){
+             	 for (var i = 0; i < typeData["list"].length; i++) {
+                     if (typeData["list"][i]['value'] == item.TYPE)
+                         return typeData["list"][i]['key']
+                 }
+                 return item.TYPE;
+	        }},
+			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', editor: { type: 'text'}, width: '20%'},
+       		{ display: '操作', isAllowHide: false, align: 'center', width:'20%',
 				 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
                                 + '<span class="img_list hand" title="查看" onclick='+'onViewProject("' + rowdata.ID + '")'+'></span>'
@@ -130,6 +139,8 @@ function initComplete(){
      headerRowHeight: 40,
      toolbar:{
     	 items:[
+    		  {text: '导入', click: importQuote,    iconClass: 'icon_import'},
+    		  { line : true },
     		  {text: '新增', click: addQuote,    iconClass: 'icon_add'},
     		  { line : true },
     		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'}
@@ -155,19 +166,19 @@ function initComplete(){
 function onViewProject(rowid){
 	top.Dialog.open({
 		URL:"/project/detailView?id="+rowid,
-		Title:"查看",Width:500,Height:250});
+		Title:"查看",Width:500,Height:280});
 }
 //新增
 function addProject() {
 	top.Dialog.open({
 			URL:"/project/addView",
-			Title:"添加",Width:500,Height:250});
+			Title:"添加",Width:500,Height:280});
 }
 //修改	
 function onEditProject(rowid){
 	top.Dialog.open({
 		URL:"/project/updateView?id=" + rowid,
-		Title:"修改",Width:500,Height:250});
+		Title:"修改",Width:500,Height:280});
 }
 //删除	
 function onDeleteProject(rowid,rowidx){
@@ -185,29 +196,38 @@ function onDeleteProject(rowid,rowidx){
 
 
 
+//导入
+function importQuote() {
+	var row = gridProject.getSelectedRow();
+	
+	if(row == null) { top.Dialog.alert("请选中一条项目记录!"); return;}
+	top.Dialog.open({
+			URL:"/quote/importView?projectId="+row.ID,
+			Title:"导入",Width:350,Height:150});
+}
 //新增
 function addQuote() {
 	top.Dialog.open({
-			URL:"/user/addView",
-			Title:"添加",Width:500,Height:380});
+			URL:"/quote/addView",
+			Title:"添加",Width:600,Height:500});
 }
 //查看
 function onView(rowid){
 	top.Dialog.open({
-		URL:"/user/detailView?id="+rowid,
-		Title:"查看",Width:500,Height:240});
+		URL:"/quote/detailView?id="+rowid,
+		Title:"查看",Width:600,Height:600});
 }
 //修改	
 function onEdit(rowid){
 	top.Dialog.open({
-		URL:"/user/updateView?userId=" + rowid,
-		Title:"修改",Width:500,Height:380});
+		URL:"/quote/updateView?id=" + rowid,
+		Title:"修改",Width:600,Height:500});
 }
 //删除	
 function onDelete(rowid,rowidx){
 	top.Dialog.confirm("确定要删除该记录吗？",function(){
 	  	//删除记录
-	  	$.post("/user/delete",
+	  	$.post("/quote/delete",
 	  			{"id":rowid},
 	  			function(result){
 	  				handleResult(result.status);
@@ -228,7 +248,7 @@ function deleteUnit() {
 		return;
 	}
 	top.Dialog.confirm("确定要删除吗？",function(){
-		$.post("/user/deleteBatch",
+		$.post("/quote/deleteBatch",
 					//获取所有选中行
 					getSelectIds(grid),
 					function(result){

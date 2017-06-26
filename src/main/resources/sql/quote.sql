@@ -15,7 +15,7 @@
 		#if(SYDWJDQ ??)
 			and SYDWJDQ like '%#(SYDWJDQ)%'
 		#end
-		ORDER BY ENTRY_TIME DESC
+		ORDER BY WZBM, ENTRY_TIME DESC
 	#end
 
 #end

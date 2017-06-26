@@ -25,7 +25,6 @@ import com.sinorail.gysglbj.action.QuoteAction;
 import com.sinorail.gysglbj.action.RoleAction;
 import com.sinorail.gysglbj.action.UserAction;
 import com.sinorail.gysglbj.aop.LoginInterceptor;
-import com.sinorail.gysglbj.aop.ThemeGlobalInterceptor;
 import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.model._MappingKit;
 
@@ -123,7 +122,7 @@ public class MainConfig extends JFinalConfig {
 	@Override
 	public void configInterceptor(Interceptors me) {
 		me.addGlobalActionInterceptor(new LoginInterceptor());
-		me.addGlobalActionInterceptor(new ThemeGlobalInterceptor());
+		//me.addGlobalActionInterceptor(new ThemeGlobalInterceptor());
 		
 	}
 	/**

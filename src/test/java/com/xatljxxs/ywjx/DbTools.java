@@ -19,13 +19,14 @@ public class DbTools {
 
 		// createGrid(rList);
 		// createJSNewRowData(rList,"popedom");
-		createGrid(rList);
-
+		createQuiGrid(rList, "quote");
+		createFiledArray(rList);
 	}
 
-	public static void createGrid(List<Record> rList) {
+	public static void createQuiGrid(List<Record> rList,String modelName) {
 		String colName;
 		String colComment;
+		//列表
 		for (Record r : rList) {
 			// System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
 			colName = r.getStr(DataBaseSchema.col_name);
@@ -33,7 +34,41 @@ public class DbTools {
 			System.out.println("{ display: '" + colComment + "', name: '" + colName
 					+ "', align: 'center', editor: { type: 'text'}, width: '" + 100 / 13 + "%'},");
 		}
+		//详情
+		System.out.println("\r\n******************详情**********************\r\n");
+		for (Record r : rList) {
+			// System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
+			colName = r.getStr(DataBaseSchema.col_name);
+			colComment = r.getStr(DataBaseSchema.col_comment);
+			System.out.println("<tr><td width='10%'>"+colComment+"</td><td width='30%'>#("+modelName+"."+colName+" ??)</td></tr>");
+		}
+		//保存页
+		System.out.println("\r\n******************保存**********************\r\n");
+		System.out.println("<input type='hidden' name='"+modelName+".ID' value='#("+modelName+".ID ??)' />");
+		for (Record r : rList) {
+			// System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
+			colName = r.getStr(DataBaseSchema.col_name);
+			colComment = r.getStr(DataBaseSchema.col_comment);
+			System.out.println("<tr><td style='width:150'>"+colComment+"：</td><td><input style='width:200px' type='text' name='"+modelName+"."+colName+"' value='#("+modelName+"."+colName+" ??)' class='validate[required,length[0,30]]'/><span class='star'>*</span></td></tr>");
+		}
 	}
+	
+	 public static void createFiledArray (List<Record> rList) {
+		 String colName;
+		 for(Record r : rList) {
+			 //System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
+			 colName=r.getStr(DataBaseSchema.col_name);
+			 String colComment = r.getStr(DataBaseSchema.col_comment);
+			 System.out.print("\""+colComment+"\", ");
+		 }
+		 System.out.println();
+		 for(Record r : rList) {
+			 //System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
+			 colName=r.getStr(DataBaseSchema.col_name);
+			 String colComment = r.getStr(DataBaseSchema.col_comment);
+			 System.out.print("\""+colName+"\", ");
+		 }
+	 }
 
 	public static void createSeletSql(List<Record> rList, String tableTempName) {
 		String colName;
