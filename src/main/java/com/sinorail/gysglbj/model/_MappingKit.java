@@ -17,13 +17,13 @@ public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
 		// Composite Primary Key order: ID,ID,ID,ID,ID,ID
-		arp.addMapping("DIC_POPEDOM", "ID", DicPopedom.class);
+		arp.addMapping("DIC_POPEDOM", "ID,ID,ID,ID,ID,ID", DicPopedom.class);
 		// Composite Primary Key order: ID,ID,ID,ID,ID,ID
-		arp.addMapping("DIC_ROLE", "ID", DicRole.class);
+		arp.addMapping("DIC_ROLE", "ID,ID,ID,ID,ID,ID", DicRole.class);
 		// Composite Primary Key order: ID,ID,ID,ID,ID,ID
-		arp.addMapping("DIC_ROLE_POPEDOM", "ID", DicRolePopedom.class);
+		arp.addMapping("DIC_ROLE_POPEDOM", "ID,ID,ID,ID,ID,ID", DicRolePopedom.class);
 		// Composite Primary Key order: ID,ID,ID,ID,ID,ID,ID,USER_ID
-		arp.addMapping("DIC_USER", "ID", DicUser.class);
+		arp.addMapping("DIC_USER", "ID,ID,ID,ID,ID,ID,ID,USER_ID", DicUser.class);
 		arp.addMapping("E_CERTIFICATE", "ID", Certificate.class);
 		arp.addMapping("E_PROJECT", "ID", Project.class);
 		arp.addMapping("E_QUOTE", "ID", Quote.class);

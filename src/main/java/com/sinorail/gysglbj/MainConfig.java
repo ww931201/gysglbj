@@ -20,6 +20,8 @@ import com.sinorail.gysglbj.action.IndexAction;
 import com.sinorail.gysglbj.action.LoginAction;
 import com.sinorail.gysglbj.action.PopedomAction;
 import com.sinorail.gysglbj.action.PopedomMatchAction;
+import com.sinorail.gysglbj.action.ProjectAction;
+import com.sinorail.gysglbj.action.QuoteAction;
 import com.sinorail.gysglbj.action.RoleAction;
 import com.sinorail.gysglbj.action.UserAction;
 import com.sinorail.gysglbj.aop.LoginInterceptor;
@@ -64,6 +66,8 @@ public class MainConfig extends JFinalConfig {
 		me.add("/popedom", PopedomAction.class, "WEB-INF/view/system/popedom");
 		me.add("/popedomMatch", PopedomMatchAction.class, "WEB-INF/view/system/popedomMatch");
 		me.add("/gys", GysglAction.class, "WEB-INF/view/gl");
+		me.add("/project", ProjectAction.class, "WEB-INF/view/base/project");
+		me.add("/quote", QuoteAction.class, "WEB-INF/view/base/quote");
 
 	}
 	
@@ -98,11 +102,14 @@ public class MainConfig extends JFinalConfig {
 		
 		//添加sql文件映射
 		arp.setBaseSqlTemplatePath(PathKit.getRootClassPath());
+		
 		/********在此添加dao层sql文件 *********/
 		arp.addSqlTemplate("sql/user.sql");
 		arp.addSqlTemplate("sql/role.sql");
 		arp.addSqlTemplate("sql/popedom.sql");
 		arp.addSqlTemplate("sql/supplier.sql");
+		arp.addSqlTemplate("sql/project.sql");
+		arp.addSqlTemplate("sql/quote.sql");
 		
 
 		/********在此添加数据库 表-Model 映射*********/
