@@ -62,6 +62,7 @@ public class MainConfig extends JFinalConfig {
 		me.add("/role", RoleAction.class, "WEB-INF/view/system/role");
 		me.add("/popedom", PopedomAction.class, "WEB-INF/view/system/popedom");
 		me.add("/popedomMatch", PopedomMatchAction.class, "WEB-INF/view/system/popedomMatch");
+		me.add("/gys", GysglAction.class, "WEB-INF/view/gl");
 
 	}
 	
@@ -100,6 +101,7 @@ public class MainConfig extends JFinalConfig {
 		arp.addSqlTemplate("sql/user.sql");
 		arp.addSqlTemplate("sql/role.sql");
 		arp.addSqlTemplate("sql/popedom.sql");
+		arp.addSqlTemplate("sql/supplier.sql");
 		
 
 		/********在此添加数据库 表-Model 映射*********/
