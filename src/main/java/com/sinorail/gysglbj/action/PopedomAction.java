@@ -53,11 +53,6 @@ public class PopedomAction extends QuiController {
 		BigDecimal pxh = p.getXh();
 		DicPopedom mp = DicPopedom.dao.findById(getPara("mid"));
 		p.setXh(mp.getXh()); mp.setXh(pxh);
-		if (!dicPopedomService.exchangePosition(p, mp)) {
-			setAttr("msg", "删除失败!");
-		}else{
-			setAttr("msg", "只允许同一级内移动!");
-		}
 		if(p.getParentId().equals(mp.getParentId())) {			
 			if (!dicPopedomService.exchangePosition(p, mp)) {
 				setAttr("msg", "删除失败!");
