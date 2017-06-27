@@ -5,17 +5,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Duang;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.upload.UploadFile;
+import com.sinorail.gysglbj.action.service.QuoteService;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Quote;
+import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
 
 public class QuoteAction extends QuiController {
 	
+	QuoteService quoteService = Duang.duang(QuoteService.class);
 	
 	public void index() {
 		render("view.html");
@@ -37,7 +41,8 @@ public class QuoteAction extends QuiController {
 	}
 	
 	public void list() {
-		SqlPara sqp = Db.getSqlPara("quote.paginateList", getModel(Quote.class));
+		Quote quote = getModel(Quote.class);
+		SqlPara sqp = Db.getSqlPara("quote.paginateList", quote);
 		renderJson(Db.paginate(pageNumber(), pageSize(), sqp));
 	}
 	
@@ -74,11 +79,22 @@ public class QuoteAction extends QuiController {
 		renderJson();
 	}
 	
-	public void importExcel() {
+	public void importExcel() throws IOException {
 		
 		UploadFile file = getFile("excel");
 		
 		String projectId = getPara("projectId");
+		
+		Object supplierNo = ExcelUtils.getCellValueFromExcel(file.getFile(), 0, 1);
+		
+		//System.out.println("*********"+supplierId+"************");
+		Supplier supplier = Supplier.dao.findFirst("select * from e_supplier where GYSBH = ?", supplierNo);
+		
+			if(supplier == null) {renderJson("msg","检查文件中供应商编码是否填写,获取系统中是否录入该供应商!"); return;}
+		
+		Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?",projectId, supplier.getId());
+		
+			if(quote != null) {renderJson("msg","已导入该供应商信息!"); return;}
 		
 		List<List<Object>> list = null;
 		
@@ -86,7 +102,7 @@ public class QuoteAction extends QuiController {
 		
 		try {
 			
-			list = ExcelUtils.readExcel(file.getFile(), 5);
+			list = ExcelUtils.readExcel(file.getFile(), 4);
 			
 		} catch (IOException e1) {
 			
@@ -102,7 +118,7 @@ public class QuoteAction extends QuiController {
 			
 			if(temp_i == 53)  break;
 			
-			Record r = new Record().set("PROJECT_ID", projectId).set("SUPPLIER_ID", null);
+			Record r = new Record().set("PROJECT_ID", projectId).set("SUPPLIER_ID", supplier.getId());
 			
 			for(int i=0; i<field.length; i++) {
 				

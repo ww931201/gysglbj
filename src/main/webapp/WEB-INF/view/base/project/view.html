@@ -101,7 +101,14 @@ function initComplete(){
             }
 		  ],
 	 url: '/project/list', rownumbers:true,checkbox:false,minColumnWidth:100,
-     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
+     height: '100%', width:"100%",pageSize:30,percentWidthMode:true,
+     onSelectRow: function (rowdata) {
+    	console.log(rowdata)
+   	    //页号重置为1
+   	    grid.setNewPage(1);
+    	grid.setOptions({url : "/quote/list?quote.PROJECT_ID="+rowdata.ID});
+   		 return false;
+     },
      toolbar:{
     	 items:[
     		  {text: '新增', click: addProject, iconClass: 'icon_add'},
@@ -135,7 +142,7 @@ function initComplete(){
             }
 		  ],
 	 url: '/quote/list', sortName: 'userId',rownumbers:true,checkbox:true,
-     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
+     height: '100%', width:"100%",pageSize:30,percentWidthMode:true,
      headerRowHeight: 40,
      toolbar:{
     	 items:[
