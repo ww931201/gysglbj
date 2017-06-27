@@ -83,43 +83,44 @@ public class ExcelUtils {
 						//System.out.println("\nROW " + row.getRowNum() + " has " + row.getPhysicalNumberOfCells() + " cell(s).");
 						for (int c = 0; c < row.getLastCellNum(); c++) {
 							HSSFCell cell = row.getCell(c);
-							String value1;
+							//String value1;
 							Object value = null;
 							if(cell != null) {
 								switch (cell.getCellTypeEnum()) {
 
 									case FORMULA:
-										value1 = "FORMULA value=" + cell.getCellFormula();
-										value = cell.getCellFormula();
+										//value1 = "FORMULA value=" + cell.getCellFormula();
+										//value = cell.getCellFormula();
+										value = cell.getNumericCellValue();
 										break;
 
 									case NUMERIC:
-										value1 = "NUMERIC value=" + cell.getNumericCellValue();
+										//value1 = "NUMERIC value=" + cell.getNumericCellValue();
 										value = cell.getNumericCellValue();
 										break;
 
 									case STRING:
-										value1 = "STRING value=" + cell.getStringCellValue();
+										//value1 = "STRING value=" + cell.getStringCellValue();
 										value = cell.getStringCellValue();
 										break;
 
 									case BLANK:
-										value1 = "<BLANK>";
+										//value1 = "<BLANK>";
 										value = null;
 										break;
 
 									case BOOLEAN:
-										value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
+										//value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
 										value = cell.getBooleanCellValue();
 										break;
 
 									case ERROR:
-										value1 = "ERROR value=" + cell.getErrorCellValue();
+										//value1 = "ERROR value=" + cell.getErrorCellValue();
 										value = cell.getErrorCellValue();
 										break;
 
 									default:
-										value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
+										//value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
 										value = cell.getCellTypeEnum();
 								}
 								//System.out.print("CELL col=" + cell.getColumnIndex() + " VALUE="+ value1);
@@ -176,43 +177,44 @@ public class ExcelUtils {
 						//System.out.println("\nROW " + row.getRowNum() + " has " + row.getPhysicalNumberOfCells() + " cell(s).");
 						for (int c = 0; c < row.getLastCellNum(); c++) {
 							XSSFCell cell = row.getCell(c);
-							String value1;
+							//String value1;
 							Object value = null;
 							if(cell != null) {
 								switch (cell.getCellTypeEnum()) {
 	
 									case FORMULA:
-										value1 = "FORMULA value=" + cell.getCellFormula();
-										value = cell.getCellFormula();
+										//value1 = "FORMULA value=" + cell.getCellFormula();
+										//value = cell.getCellFormula();
+										value = cell.getNumericCellValue();
 										break;
 	
 									case NUMERIC:
-										value1 = "NUMERIC value=" + cell.getNumericCellValue();
+										//value1 = "NUMERIC value=" + cell.getNumericCellValue();
 										value = cell.getNumericCellValue();
 										break;
 	
 									case STRING:
-										value1 = "STRING value=" + cell.getStringCellValue();
+										//value1 = "STRING value=" + cell.getStringCellValue();
 										value = cell.getStringCellValue();
 										break;
 	
 									case BLANK:
-										value1 = "<BLANK>";
+										//value1 = "<BLANK>";
 										value = null;
 										break;
 	
 									case BOOLEAN:
-										value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
+										//value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
 										value = cell.getBooleanCellValue();
 										break;
 	
 									case ERROR:
-										value1 = "ERROR value=" + cell.getErrorCellValue();
+										//value1 = "ERROR value=" + cell.getErrorCellValue();
 										value = cell.getErrorCellValue();
 										break;
 	
 									default:
-										value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
+										//value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
 										value = cell.getCellTypeEnum();
 								}
 								//System.out.print("CELL col=" + cell.getColumnIndex() + " VALUE="+ value1);
@@ -303,4 +305,157 @@ public class ExcelUtils {
 			wb.close();
 		}
     }
+
+    public static Object getCellValueFromExcel(File file, Integer rowNum, Integer colNum) throws IOException {
+		String fileName = file.getName();
+		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xls".equals(extension)) {
+			return getValueHSSFExcel(file, rowNum, colNum);
+		} else if ("xlsx".equals(extension)) {
+			return getValueXSSFExcel(file, rowNum, colNum);
+		} else {
+			throw new IOException("不支持的文件类型");
+		}
+	}
+
+	private static Object getValueHSSFExcel(File file, Integer rowNum, Integer colNum) {
+
+		Object value = null;
+		// 创建一个HSSF workbook
+		POIFSFileSystem fs;
+
+		try {
+
+			fs = new POIFSFileSystem(file);
+
+			HSSFWorkbook wb = new HSSFWorkbook(fs);
+
+			try {
+
+				// System.out.println(file.getPath()+file.getName());
+
+				HSSFSheet sheet = wb.getSheetAt(0);
+				HSSFRow row = sheet.getRow(rowNum);
+				HSSFCell cell = row.getCell(colNum);
+				//String value1;
+				if (cell != null) {
+					switch (cell.getCellTypeEnum()) {
+
+					case FORMULA:
+						//value1 = "FORMULA value=" + cell.getCellFormula();
+						// value = cell.getCellFormula();
+						value = cell.getNumericCellValue();
+						break;
+
+					case NUMERIC:
+						//value1 = "NUMERIC value=" + cell.getNumericCellValue();
+						value = cell.getNumericCellValue();
+						break;
+
+					case STRING:
+						//value1 = "STRING value=" + cell.getStringCellValue();
+						value = cell.getStringCellValue();
+						break;
+
+					case BLANK:
+						//value1 = "<BLANK>";
+						value = null;
+						break;
+
+					case BOOLEAN:
+						//value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
+						value = cell.getBooleanCellValue();
+						break;
+
+					case ERROR:
+						//value1 = "ERROR value=" + cell.getErrorCellValue();
+						value = cell.getErrorCellValue();
+						break;
+
+					default:
+						//value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
+						value = cell.getCellTypeEnum();
+					}
+					// System.out.print("CELL col=" + cell.getColumnIndex() + "
+					// VALUE="+ value1);
+				}
+			} finally {
+				wb.close();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+
+	private static Object getValueXSSFExcel(File file, Integer rowNum, Integer colNum) {
+
+		Object value = null;
+		// 创建一个HSSF workbook
+		XSSFWorkbook wb = null;
+		try {
+			wb = new XSSFWorkbook(file);
+			try {
+
+				// System.out.println(file.getPath()+file.getName());
+
+				XSSFSheet sheet = wb.getSheetAt(0);
+				XSSFRow row = sheet.getRow(rowNum);
+				XSSFCell cell = row.getCell(colNum);
+				//String value1;
+				if (cell != null) {
+					switch (cell.getCellTypeEnum()) {
+
+					case FORMULA:
+						//value1 = "FORMULA value=" + cell.getCellFormula();
+						// value = cell.getCellFormula();
+						value = cell.getNumericCellValue();
+						break;
+
+					case NUMERIC:
+						//value1 = "NUMERIC value=" + cell.getNumericCellValue();
+						value = cell.getNumericCellValue();
+						break;
+
+					case STRING:
+						//value1 = "STRING value=" + cell.getStringCellValue();
+						value = cell.getStringCellValue();
+						break;
+
+					case BLANK:
+						//value1 = "<BLANK>";
+						value = null;
+						break;
+
+					case BOOLEAN:
+						//value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
+						value = cell.getBooleanCellValue();
+						break;
+
+					case ERROR:
+						//value1 = "ERROR value=" + cell.getErrorCellValue();
+						value = cell.getErrorCellValue();
+						break;
+
+					default:
+						//value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
+						value = cell.getCellTypeEnum();
+					}
+					// System.out.print("CELL col=" + cell.getColumnIndex() + "
+					// VALUE="+ value1);
+				}
+			} finally {
+				wb.close();
+			}
+		} catch (InvalidFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return value;
+	}
 }
