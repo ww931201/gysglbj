@@ -16,19 +16,19 @@
 			<tr>
 				<td>供应商编号：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.USER_CODE" />
+					<input type="text" id="searchInput" name="user.GYSBH" />
 				</td>
 				<td>社会信用代码：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.USER_NAME" />
+					<input type="text" id="searchInput" name="user.SHXYDM" />
 				</td>
 				<td>所属省：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.OFFICE_NAME" />
+					<input type="text" id="searchInput" name="user.SSS" />
 				</td>
 				<td>企业类型：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.UNIT_NAME" />
+					<input type="text" id="searchInput" name="user.SSS1" />
 				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
@@ -122,13 +122,13 @@ function initComplete(){
 //新增
 function addUnit() {
 	top.Dialog.open({
-			URL:"/user/addView",
-			Title:"添加",Width:500,Height:380});
+			URL:"/gys/addView",
+			Title:"添加",Width:500,Height:500});
 }
 //查看
 function onView(rowid){
 	top.Dialog.open({
-		URL:"/user/detailView?id="+rowid,
+		URL:"/gys/detailView?id="+rowid,
 		Title:"查看",Width:500,Height:240});
 }
 

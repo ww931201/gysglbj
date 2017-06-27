@@ -7,4 +7,16 @@
 		from E_SUPPLIER
 	#end
 
+	
+	
+	### 根据供应商编号查询供应商
+	#sql("findByGysbh")
+		select * from E_SUPPLIER where GYSBH = ?
+	#end
+	
+	### 根据供应商Id查询供应商
+	#sql("selectById")
+		select * from E_SUPPLIER where Id = ?
+	#end
+	
 #end
