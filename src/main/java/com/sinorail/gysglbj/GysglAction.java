@@ -1,11 +1,15 @@
 package com.sinorail.gysglbj;
 
+
+import org.apache.log4j.Logger;
+
 import com.jfinal.plugin.activerecord.Page;
 import com.sinorail.gysglbj.extend.QuiController;
-import com.sinorail.gysglbj.model.DicUser;
 import com.sinorail.gysglbj.model.Supplier;
 
 public class GysglAction extends QuiController {
+	
+	private Logger log = Logger.getLogger(GysglAction.class);
 
 	public void index() {
 		render("view.html");
@@ -46,16 +50,22 @@ public class GysglAction extends QuiController {
 			supplier.remove("ID");
 			if(!Supplier.dao.isExistGysbh(supplier.getGysbh())) {		
 				status = supplier.save();
+				log.info("****保存供应商,编号为"+ supplier.getGysbh());
 			}else {
 				setAttr("content", "供应商编号已存在!");
 			}
 		} else {
 			//修改
-			if(!Supplier.dao.isExistGysbh(supplier.getGysbh(), supplier.getId())) {	
-				status = supplier.update();
-			}else {
-				setAttr("content", "供应商编号已存在!");
+			try {
+				if(!Supplier.dao.isExistGysbh(supplier.getGysbh(), supplier.getId())) {	
+					status = supplier.update();
+				}else {
+					setAttr("content", "供应商编号已存在!");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			
 		}
 		setAttr("message", status ? "保存成功!" : "保存失败!");
 		renderJson();
@@ -71,6 +81,43 @@ public class GysglAction extends QuiController {
 	public void detailView() {
 		setAttr("supplier", Supplier.dao.queryById(getPara("id")));
 		render("detail.html");
+	}
+	
+	/**
+	 * 
+	 * 删除对应的一行
+	 */
+	
+	public void delete(){
+		if(Supplier.dao.deleteById(getPara("id"))){
+			setAttr("status", 1);
+			log.info("****删除供应商记录ID="+ getPara("id"));
+		}
+		renderJson(); 
+		
+	}
+	
+	/**
+	 * 
+	 * 批量删除
+	 */ 
+	public void deleteBatch(){
+		
+		if(Supplier.dao.deleteByIds(getPara("ids"))){
+			setAttr("status",1);
+			log.info("****删除供应商记录ID="+ getPara("ids")); 
+		}
+		renderJson();
+		
+	}
+	
+	/**
+	 * 修改供应商记录在save.html页面展示
+	 * 
+	 */ 
+	public void updateView(){
+		setAttr("supplier",Supplier.dao.queryById(getPara("id")));
+		render("save.html");
 	}
 }
 	

@@ -19,4 +19,10 @@
 		select * from E_SUPPLIER where Id = ?
 	#end
 	
+	### 根据供应商ID和供应商编号查询
+	
+	#sql("findByGysbhAndId")
+		select * from E_SUPPLIER where GYSBH = ? and Id != ?
+	#end
+	
 #end
