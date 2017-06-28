@@ -48,7 +48,6 @@ public class LoginInterceptor implements Interceptor {
 	                c.setHttpServletRequest(req);
 	                c.setHttpServletResponse(rep);
 	                c.renderJson();
-	                
 	            } else {            	
 	            	c.redirect("/static/errorPage/no_permisson.html");
 	            }

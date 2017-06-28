@@ -96,6 +96,7 @@ function initComplete(){
                                 + '<span class="img_list hand" title="查看" onclick='+'onViewProject("' + rowdata.ID + '")'+'></span>'
                                 + '<span class="img_edit hand" title="修改" onclick='+'onEditProject("' + rowdata.ID + '")'+'></span>' 
                                 + '<span class="img_delete hand" title="删除" onclick='+'onDeleteProject("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
+                                + '<span class="img_export hand" title="模板" onclick='+'onExport("' + rowdata.ID + '")'+'></span>'
                            	  + '</div>';
                  }
             }
@@ -111,9 +112,8 @@ function initComplete(){
      },
      toolbar:{
     	 items:[
-    		  {text: '新增', click: addProject, iconClass: 'icon_add'},
-    		  
-    		]
+    		  {text: '新增', click: addProject, iconClass: 'icon_add'}
+    	 ]
      	}
 	});
 	grid = $("#dataBasic").quiGrid({
@@ -188,7 +188,7 @@ function onEditProject(rowid){
 		Title:"修改",Width:500,Height:280});
 }
 //删除	
-function onDeleteProject(rowid,rowidx){
+function onDeleteProject(rowid, rowidx){
 	top.Dialog.confirm("确定要删除该记录吗？",function(){
 	  	//删除记录
 	  	$.post("/project/delete",
@@ -200,7 +200,10 @@ function onDeleteProject(rowid,rowidx){
 				gridProject.loadData();
 		});
 }
-
+//导出项目模板
+function onExport(rowid){
+	location.href = "/project/export?id="+rowid;
+}
 
 
 //导入

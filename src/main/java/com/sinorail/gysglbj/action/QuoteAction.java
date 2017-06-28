@@ -1,5 +1,6 @@
 package com.sinorail.gysglbj.action;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +13,9 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.action.service.QuoteService;
+import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.extend.QuiController;
+import com.sinorail.gysglbj.model.Project;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
@@ -79,7 +82,18 @@ public class QuoteAction extends QuiController {
 		renderJson();
 	}
 	
+	/**
+	 * 导出模板
+	 */
+	public void export() {
+		String projectId = getPara("id");
+		Project project = Project.dao.findById(projectId);
+		File file = new File(Const.temp_file_path+project.getNo()+getSessionUser().getId()+".xls");
+	}
+	
 	public void importExcel() throws IOException {
+		
+		String msg  = "0"; // renderText 参数不能为汉字
 		
 		UploadFile file = getFile("excel");
 		
@@ -90,11 +104,11 @@ public class QuoteAction extends QuiController {
 		//System.out.println("*********"+supplierId+"************");
 		Supplier supplier = Supplier.dao.findFirst("select * from e_supplier where GYSBH = ?", supplierNo);
 		
-			if(supplier == null) {renderJson("msg","检查文件中供应商编码是否填写,获取系统中是否录入该供应商!"); return;}
+			if(supplier == null) {renderText("1"); return;}
 		
 		Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?",projectId, supplier.getId());
 		
-			if(quote != null) {renderJson("msg","已导入该供应商信息!"); return;}
+			if(quote != null) {renderText("2"); return;}
 		
 		List<List<Object>> list = null;
 		
@@ -106,39 +120,47 @@ public class QuoteAction extends QuiController {
 			
 		} catch (IOException e1) {
 			
-			setAttr("msg", file.getFileName()+"上传失败!");
+			//setAttr("msg", file.getFileName()+"上传失败!");
+			//msg = file.getFileName()+"上传失败!";
 			e1.printStackTrace();
+			renderText("3"); return;
 			
 		}
 		List<Record> recordList = new LinkedList<Record>();
 		
-		int temp_i = 0;
+		boolean temp_is_stop = false;
 		
 		for (List<Object> listm : list) {
 			
-			if(temp_i == 53)  break;
 			
 			Record r = new Record().set("PROJECT_ID", projectId).set("SUPPLIER_ID", supplier.getId());
 			
 			for(int i=0; i<field.length; i++) {
 				
+				if(field[i] == "WZBM" && (listm.get(i) == null || listm.get(i).equals(""))) {	
+					temp_is_stop= true;
+					break;
+				}
 				r.set(field[i], listm.get(i));
 				
 			}
+			if(temp_is_stop) break;
 			
 			if(r != null) recordList.add(r);
 			
-			temp_i++;
 		}
 		
 		
 		if(!(Db.batchSave("E_QUOTE", recordList, recordList.size()).length > 0) ) {
 			
-			setAttr("msg", "导入失败!");
-			
+			//setAttr("msg", "导入失败!");
+			msg = "导入失败!";
+			renderText("4"); return;
 		}
 		
 		file.getFile().delete();//删除上传的缓存文件
-		renderJson();
+		
+		//renderJson();
+		renderText(msg);
 	}
 }
