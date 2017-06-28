@@ -1,5 +1,6 @@
 package com.sinorail.gysglbj.model;
 
+
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
@@ -42,7 +43,7 @@ public class Supplier extends BaseSupplier<Supplier> {
 	 * @return
 	 */
 	public boolean isExistGysbh(String gysBh, String SupId) {
-		Supplier supplier = findFirst(getSql("supplier.findByGysbhAndId"),gysBh, SupId);
+		Supplier supplier = findFirst(getSql("supplier.findByGysbhAndId"), gysBh, SupId);
 		if(supplier == null){
 			return false;
 		}
@@ -57,5 +58,17 @@ public class Supplier extends BaseSupplier<Supplier> {
 	 */
 	public Object queryById(String SupId) {
 		return findFirst(getSql("supplier.selectById"), SupId);
+	}
+	/**
+	 * 批量删除
+	 * 
+	 */
+	public boolean deleteByIds(String ids){
+		
+		String[] idArr = ids.split(",");
+		for (String id : idArr) {
+			deleteById(id);
+		}
+		return true;
 	}
 }
