@@ -13,13 +13,13 @@ public class DbTools {
 
 		dbs.start();
 
-		List<Record> rList = dbs.getFieldsAttributeByTableName("E_QUOTE");
+		List<Record> rList = dbs.getFieldsAttributeByTableName("E_SUPPLIER");
 
 		System.out.println("字段个数: " + rList.size());
 
 		// createGrid(rList);
 		// createJSNewRowData(rList,"popedom");
-		createQuiGrid(rList, "quote");
+		createQuiGrid(rList, "supplier");
 		createFiledArray(rList);
 	}
 
@@ -32,7 +32,7 @@ public class DbTools {
 			colName = r.getStr(DataBaseSchema.col_name);
 			colComment = r.getStr(DataBaseSchema.col_comment);
 			System.out.println("{ display: '" + colComment + "', name: '" + colName
-					+ "', align: 'center', editor: { type: 'text'}, width: '" + 100 / 13 + "%'},");
+					+ "', align: 'center', editor: { type: 'text'}, width: '" + 100 / 31 + "%'},");
 		}
 		//详情
 		System.out.println("\r\n******************详情**********************\r\n");
@@ -40,7 +40,7 @@ public class DbTools {
 			// System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
 			colName = r.getStr(DataBaseSchema.col_name);
 			colComment = r.getStr(DataBaseSchema.col_comment);
-			System.out.println("<tr><td width='10%'>"+colComment+"</td><td width='30%'>#("+modelName+"."+colName+" ??)</td></tr>");
+			System.out.println("<tr><td>"+colComment+"</td><td>#("+modelName+"."+colName+" ??)</td></tr>");
 		}
 		//保存页
 		System.out.println("\r\n******************保存**********************\r\n");
@@ -49,7 +49,7 @@ public class DbTools {
 			// System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
 			colName = r.getStr(DataBaseSchema.col_name);
 			colComment = r.getStr(DataBaseSchema.col_comment);
-			System.out.println("<tr><td style='width:150'>"+colComment+"：</td><td><input style='width:200px' type='text' name='"+modelName+"."+colName+"' value='#("+modelName+"."+colName+" ??)' class='validate[required,length[0,30]]'/><span class='star'>*</span></td></tr>");
+			System.out.println("<tr><td>"+colComment+"：</td><td><input type='text' name='"+modelName+"."+colName+"' value='#("+modelName+"."+colName+" ??)' class='validate[required,length[0,30]]'/><span class='star'>*</span></td></tr>");
 		}
 	}
 	
