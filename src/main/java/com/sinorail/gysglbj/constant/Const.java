@@ -1,5 +1,6 @@
 package com.sinorail.gysglbj.constant;
 
+import java.io.File;
 import java.math.BigDecimal;
 
 public class Const {
@@ -20,17 +21,11 @@ public class Const {
 	public static String r_footer = "footer";
 	
 	/**
-	 * 是否 删除 1是 2否
+	 * 是否 删除 1 是 2 否
 	 */
 	public static BigDecimal is_del = new BigDecimal(1);
 	public static BigDecimal not_del = new BigDecimal(2);
 	
-	/**
-	 * 0/1.计划 2.写实
-	 */
-	public static String data_check_type_jh = "0";
-	public static String data_check_type_xs = "2";
-	
-	
+	public static String temp_file_path = "temp"+File.separator;
 	
 }
