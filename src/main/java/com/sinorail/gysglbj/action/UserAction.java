@@ -3,13 +3,12 @@ package com.sinorail.gysglbj.action;
 import org.apache.log4j.Logger;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.sinorail.gysglbj.aop.LoginInterceptor;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.DicUser;
 
 public class UserAction extends QuiController {
 	
-	private static final Logger LOG = Logger.getLogger(LoginInterceptor.class);
+	private static final Logger LOG = Logger.getLogger(UserAction.class);
 	
 	public void index() {
 		render("view.html");

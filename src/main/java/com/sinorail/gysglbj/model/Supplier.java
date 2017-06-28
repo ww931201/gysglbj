@@ -1,6 +1,7 @@
 package com.sinorail.gysglbj.model;
 
 
+
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
@@ -12,15 +13,12 @@ import com.sinorail.gysglbj.model.base.BaseSupplier;
 public class Supplier extends BaseSupplier<Supplier> {
 	public static final Supplier dao = new Supplier().dao();
 	
-	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize) {
+	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier) {
 		
-		SqlPara sqlp = getSqlPara("supplier.supplierList");
+		SqlPara sqlp = getSqlPara("supplier.supplierList",supplier);
 		
 		return paginate(pageNumber, pageSize, sqlp);
 	}
-	
-	
-	
 	
 	/**
 	 * 根据供应商编号查询供应商是否存在(添加)
@@ -34,7 +32,6 @@ public class Supplier extends BaseSupplier<Supplier> {
 		}
 		return true;
 	}
-	
 	
 	/**
 	 * 根据供应商编号和id查供应商是否存在(修改)
@@ -59,6 +56,7 @@ public class Supplier extends BaseSupplier<Supplier> {
 	public Object queryById(String SupId) {
 		return findFirst(getSql("supplier.selectById"), SupId);
 	}
+	
 	/**
 	 * 批量删除
 	 * 

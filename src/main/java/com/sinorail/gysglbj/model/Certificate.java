@@ -1,5 +1,7 @@
 package com.sinorail.gysglbj.model;
 
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseCertificate;
 
 /**
@@ -8,4 +10,9 @@ import com.sinorail.gysglbj.model.base.BaseCertificate;
 @SuppressWarnings("serial")
 public class Certificate extends BaseCertificate<Certificate> {
 	public static final Certificate dao = new Certificate().dao();
+
+	public Page<Certificate> queryBySupplierId(Integer pageNumber, Integer pageSize, String supplierid) {
+		SqlPara sqlp = getSqlPara("certificate.findBySupplierId", supplierid);
+		return paginate(pageNumber, pageSize, sqlp);
+	}
 }

@@ -1,10 +1,12 @@
 package com.sinorail.gysglbj;
 
 
+
 import org.apache.log4j.Logger;
 
 import com.jfinal.plugin.activerecord.Page;
 import com.sinorail.gysglbj.extend.QuiController;
+import com.sinorail.gysglbj.model.Certificate;
 import com.sinorail.gysglbj.model.Supplier;
 
 public class GysglAction extends QuiController {
@@ -24,10 +26,8 @@ public class GysglAction extends QuiController {
 	 * 
 	 * 展示供应商管理信息
 	 */
-	public void list(){
-		 
-		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize());
-		
+	public void list(){ 
+		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
 	}
 	
@@ -70,14 +70,11 @@ public class GysglAction extends QuiController {
 		setAttr("message", status ? "保存成功!" : "保存失败!");
 		renderJson();
 	}
-	
-	
 	/***
 	 * detailView
 	 * 查看每一行的信息
 	 * 
 	 */
-	
 	public void detailView() {
 		setAttr("supplier", Supplier.dao.queryById(getPara("id")));
 		render("detail.html");
@@ -118,6 +115,18 @@ public class GysglAction extends QuiController {
 	public void updateView(){
 		setAttr("supplier",Supplier.dao.queryById(getPara("id")));
 		render("save.html");
+	}
+	
+	/**
+	 * 子窗口信息展示
+	 * 
+	 */
+	
+	public void showCer(){
+		
+		Page<Certificate> page = Certificate.dao.queryBySupplierId(pageNumber(), pageSize(), getPara("supplierId"));
+		
+		renderJson(page);
 	}
 }
 	
