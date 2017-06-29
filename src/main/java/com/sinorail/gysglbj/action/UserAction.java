@@ -121,5 +121,6 @@ public class UserAction extends QuiController {
 		setAttr("modifyOk", modifyOk);
 		renderJson();
 	}
-	
+	//System.out.println(Thread.currentThread().getContextClassLoader().getResource("templates/").getPath());
+	//System.out.println(getSession().getServletContext().getRealPath("templates"));
 }

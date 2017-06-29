@@ -1,6 +1,5 @@
 package com.sinorail.gysglbj.action;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,9 +12,7 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.action.service.QuoteService;
-import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.extend.QuiController;
-import com.sinorail.gysglbj.model.Project;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
@@ -80,15 +77,6 @@ public class QuoteAction extends QuiController {
 			}
 		}
 		renderJson();
-	}
-	
-	/**
-	 * 导出模板
-	 */
-	public void export() {
-		String projectId = getPara("id");
-		Project project = Project.dao.findById(projectId);
-		File file = new File(Const.temp_file_path+project.getNo()+getSessionUser().getId()+".xls");
 	}
 	
 	public void importExcel() throws IOException {

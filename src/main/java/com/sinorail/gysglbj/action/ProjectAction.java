@@ -1,9 +1,14 @@
 package com.sinorail.gysglbj.action;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.SqlPara;
+import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Project;
+import com.sinorail.gysglbj.util.ExcelUtils;
 
 public class ProjectAction extends QuiController {
 
@@ -25,6 +30,21 @@ public class ProjectAction extends QuiController {
 	public void list() {
 		SqlPara sqp = Db.getSqlPara("project.paginateList", getModel(Project.class));
 		renderJson(Db.paginate(pageNumber(), pageSize(), sqp));
+	}
+	
+	/**
+	 * 导出模板
+	 * @throws IOException 
+	 */
+	public void export() throws IOException {
+		String projectId = getPara("id");
+		Project project = Project.dao.findById(projectId);
+		
+		File file = new File(Const.temp_file_path+project.getName()+project.getNo()+".xls");
+		
+		String path = Thread.currentThread().getContextClassLoader().getResource("templates/quote_template.xls").getPath();
+		renderFile(ExcelUtils.replaceCell(new File(path), 1, 0, "项目名称："+project.getName()+" 项目编号："+project.getNo(), file));
+		//renderJson();
 	}
 	
 	public void save() {
