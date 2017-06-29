@@ -15,4 +15,32 @@ public class Certificate extends BaseCertificate<Certificate> {
 		SqlPara sqlp = getSqlPara("certificate.findBySupplierId", supplierid);
 		return paginate(pageNumber, pageSize, sqlp);
 	}
+
+	/**
+	 * 查询单行记录
+	 */
+	public Object queryById(String cerId) {
+		
+		return findFirst(getSql("certificate.selectById"),cerId);
+	}
+
+	public boolean isExistZsbh(String no) { 
+		
+		Certificate certificate = findFirst(getSql("certificate.findByZsbh"),no);
+		if(certificate == null){
+			return false;
+		}
+		return true;
+	} 
+
+	public boolean isExistZsbh(String no, String id) {
+		Certificate certificate = findFirst(getSql("certificate.findByZsbhAndId"), no, id);
+		if(certificate == null){
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 }

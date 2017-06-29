@@ -52,7 +52,7 @@ public abstract class BaseCertificate<M extends BaseCertificate<M>> extends Mode
 	public void setEndTime(java.util.Date endTime) {
 		set("END_TIME", endTime);
 	}
-
+	
 	public java.util.Date getEndTime() {
 		return get("END_TIME");
 	}
@@ -63,6 +63,14 @@ public abstract class BaseCertificate<M extends BaseCertificate<M>> extends Mode
 
 	public java.lang.String getUnit() {
 		return get("UNIT");
+	}
+
+	public void setSupplierId(java.lang.String supplierId) {
+		set("SUPPLIER_ID", supplierId);
+	}
+
+	public java.lang.String getSupplierId() {
+		return get("SUPPLIER_ID");
 	}
 
 }

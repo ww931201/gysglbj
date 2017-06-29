@@ -43,6 +43,7 @@ public class GeneratorDemo {
 		// 添加不需要生成的表名
 
 		gernerator.addExcludedTable("VIEW_DIC_USER");
+		gernerator.addExcludedTable("E_SUPPLIER_CERTIFICATE");
 
 
 		// 设置是否在 Model 中生成 dao 对象

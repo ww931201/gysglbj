@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.dialect.OracleDialect;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
+import com.sinorail.gysglbj.action.CertificateAction;
 import com.sinorail.gysglbj.action.IndexAction;
 import com.sinorail.gysglbj.action.LoginAction;
 import com.sinorail.gysglbj.action.PopedomAction;
@@ -67,7 +68,7 @@ public class MainConfig extends JFinalConfig {
 		me.add("/gys", GysglAction.class, "WEB-INF/view/gl");
 		me.add("/project", ProjectAction.class, "WEB-INF/view/base/project");
 		me.add("/quote", QuoteAction.class, "WEB-INF/view/base/quote");
-
+		me.add("/certificate", CertificateAction.class, "WEB-INF/view/zzzs");
 	}
 	
 	/**
@@ -109,6 +110,7 @@ public class MainConfig extends JFinalConfig {
 		arp.addSqlTemplate("sql/supplier.sql");
 		arp.addSqlTemplate("sql/project.sql");
 		arp.addSqlTemplate("sql/quote.sql");
+		arp.addSqlTemplate("sql/certificate.sql");
 		
 
 		/********在此添加数据库 表-Model 映射*********/

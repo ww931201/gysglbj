@@ -19,7 +19,7 @@ public class DbTools {
 
 		// createGrid(rList);
 		// createJSNewRowData(rList,"popedom");
-		createQuiGrid(rList, "supplier");
+		createQuiGrid(rList, "certificate");
 		createFiledArray(rList);
 	}
 
