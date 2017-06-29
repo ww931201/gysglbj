@@ -3,6 +3,7 @@ package com.sinorail.gysglbj.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,9 +43,189 @@ public class ExcelUtils {
             throw new IOException("不支持的文件类型");
         }
     }
+   
+    /**
+     * 根据RecordList封装excel并导出
+     * 
+     * 注意: 表头和字段名顺序个数必须一致
+     * 
+     * @param list RecordList
+     * @param title 表头名称数组
+     * @param field 字段名称数组
+     * @param file	输出到目标文件的file
+     * @throws IOException
+     */
+    public static void export(List<Record> list, String[] title, String[] field, File file) throws IOException{
+    	
+		HSSFWorkbook wb = new HSSFWorkbook();
+				
+		try {
+			HSSFSheet s = wb.createSheet();
+			
+			HSSFCellStyle cs = wb.createCellStyle();
+			HSSFCellStyle csbody = wb.createCellStyle();
+			HSSFFont f = wb.createFont();
+			f.setFontHeightInPoints((short) 12);
+			f.setBold(true);
+			
+			cs.setVerticalAlignment(VerticalAlignment.CENTER);
+			csbody.setVerticalAlignment(VerticalAlignment.CENTER);
+			
+
+			cs.setFont(f);
+			cs.setFillForegroundColor((short) 0xA);
+			
+			wb.setSheetName(0, "sheet1");
+			int rownum;
+			//System.out.println("***************"+list.size());
+			for (rownum = 0; rownum <= list.size(); rownum++) {
+				HSSFRow r = null;
+				Record es = null;
+				int titleRows = 1;
+				if(rownum < titleRows) { //表头
+					r = s.createRow(rownum);
+					r.setHeight((short) 0x240);
+					for (int cellnum = 0; cellnum < title.length; cellnum ++) {
+						HSSFCell c = r.createCell(cellnum);
+						c.setCellValue(title[cellnum]);
+						c.setCellStyle(cs);
+						s.setColumnWidth(cellnum, (int) (title[cellnum].length()*1000));
+					}
+				} else {					
+					r = s.createRow(rownum);
+					r.setHeight((short) 0x160);
+					es = list.get(rownum-titleRows);
+					for (int cellnum = 0; cellnum < title.length; cellnum ++) {
+						HSSFCell c = r.createCell(cellnum);
+						Object value = es.get(field[cellnum]);
+						if(value == null) {
+							c.setCellValue("");
+						} else {
+							c.setCellValue(value.toString());
+						}
+						c.setCellStyle(csbody);
+					}
+				}
+				
+			}
+			// create a sheet, set its title then delete it
+			wb.createSheet();	
+			wb.setSheetName(1, "DeletedSheet");
+			wb.removeSheetAt(1);
+			// end deleted sheet
+			FileOutputStream out = new FileOutputStream(file);
+			try {
+				wb.write(out);
+			} finally {
+				out.close();
+			}
+		} finally {
+			wb.close();
+		}
+    }
 
     /**
-     *  读取Office HSSF excel
+     * 根据行数和列数确定的位置获取excel文件中单元格的值	
+     * @param file excel文件
+     * @param rowNum 行数
+     * @param colNum 列数
+     * @return 获取到单元格的值
+     * @throws IOException
+     */
+    public static Object getCellValueFromExcel(File file, Integer rowNum, Integer colNum) throws IOException {
+		String fileName = file.getName();
+		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xls".equals(extension)) {
+			return getValueHSSFExcel(file, rowNum, colNum);
+		} else if ("xlsx".equals(extension)) {
+			return getValueXSSFExcel(file, rowNum, colNum);
+		} else {
+			throw new IOException("不支持的文件类型");
+		}
+	}
+
+    /**
+     * 根据行数和列数确定的位置替换excel文件中单元格的值 (xls)
+     * @param file 要替换的excel文件
+     * @param rowNum 行数
+     * @param colNum 列数
+     * @param value 要替换的值
+     * @param aimfile 
+     * @return 替换后的excel文件
+     * @throws IOException 
+     */
+    public static File replaceCell(File file, Integer rowNum, Integer colNum, String value, File aimfile) throws IOException {
+		String fileName = file.getName();
+		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xls".equals(extension)) {
+			return replaceCellValueHSSFExcel(file, rowNum, colNum, value, aimfile);
+		} else if ("xlsx".equals(extension)) {
+			return replaceCellValueXSSFExcel(file, rowNum, colNum, value, aimfile);
+		} else {
+			throw new IOException("不支持的文件类型");
+		}
+    }
+    
+    
+    private static File replaceCellValueHSSFExcel(File file, Integer rowNum, Integer colNum, String value, File aimfile) {
+		
+		// 创建一个HSSF workbook
+		POIFSFileSystem fs;
+
+		try {
+
+			fs = new POIFSFileSystem(file);
+
+			HSSFWorkbook wb = new HSSFWorkbook(fs);
+
+			try {
+
+				HSSFSheet sheet = wb.getSheetAt(0);
+				HSSFRow row = sheet.getRow(rowNum);
+				HSSFCell cell = row.getCell(colNum);
+				cell.setCellValue(value);
+				
+				wb.write(aimfile);
+			} finally {
+				wb.close();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return aimfile;
+    }
+
+    private static File replaceCellValueXSSFExcel(File file, Integer rowNum, Integer colNum, String value, File aimfile) {
+
+		try {
+
+			// 创建一个HSSF workbook
+			XSSFWorkbook wb = new XSSFWorkbook(file);
+
+			try {
+
+				XSSFSheet sheet = wb.getSheetAt(0);
+				XSSFRow row = sheet.getRow(rowNum);
+				XSSFCell cell = row.getCell(colNum);
+				cell.setCellValue(value);
+				
+				OutputStream out = new FileOutputStream(aimfile);
+				wb.write(out);
+			} finally {
+				wb.close();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		}
+		return aimfile;
+	}
+
+	/**
+     * 读取Office HSSF excel
      * @param file
      * @param startRowNum 起始行数,从0开始
      * @return
@@ -236,88 +417,7 @@ public class ExcelUtils {
 		}
 		return list;
     }
-   
-    public static void export(List<Record> list, String[] title, String[] field, File file) throws IOException{
-    	
-		HSSFWorkbook wb = new HSSFWorkbook();
-				
-		try {
-			HSSFSheet s = wb.createSheet();
-			
-			HSSFCellStyle cs = wb.createCellStyle();
-			HSSFCellStyle csbody = wb.createCellStyle();
-			HSSFFont f = wb.createFont();
-			f.setFontHeightInPoints((short) 12);
-			f.setBold(true);
-			
-			cs.setVerticalAlignment(VerticalAlignment.CENTER);
-			csbody.setVerticalAlignment(VerticalAlignment.CENTER);
-			
-
-			cs.setFont(f);
-			cs.setFillForegroundColor((short) 0xA);
-			
-			wb.setSheetName(0, "sheet1");
-			int rownum;
-			//System.out.println("***************"+list.size());
-			for (rownum = 0; rownum <= list.size(); rownum++) {
-				HSSFRow r = null;
-				Record es = null;
-				int titleRows = 1;
-				if(rownum < titleRows) { //表头
-					r = s.createRow(rownum);
-					r.setHeight((short) 0x240);
-					for (int cellnum = 0; cellnum < title.length; cellnum ++) {
-						HSSFCell c = r.createCell(cellnum);
-						c.setCellValue(title[cellnum]);
-						c.setCellStyle(cs);
-						s.setColumnWidth(cellnum, (int) (title[cellnum].length()*1000));
-					}
-				} else {					
-					r = s.createRow(rownum);
-					r.setHeight((short) 0x160);
-					es = list.get(rownum-titleRows);
-					for (int cellnum = 0; cellnum < title.length; cellnum ++) {
-						HSSFCell c = r.createCell(cellnum);
-						Object value = es.get(field[cellnum]);
-						if(value == null) {
-							c.setCellValue("");
-						} else {
-							c.setCellValue(value.toString());
-						}
-						c.setCellStyle(csbody);
-					}
-				}
-				
-			}
-			// create a sheet, set its title then delete it
-			wb.createSheet();	
-			wb.setSheetName(1, "DeletedSheet");
-			wb.removeSheetAt(1);
-			// end deleted sheet
-			FileOutputStream out = new FileOutputStream(file);
-			try {
-				wb.write(out);
-			} finally {
-				out.close();
-			}
-		} finally {
-			wb.close();
-		}
-    }
-
-    public static Object getCellValueFromExcel(File file, Integer rowNum, Integer colNum) throws IOException {
-		String fileName = file.getName();
-		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
-		if ("xls".equals(extension)) {
-			return getValueHSSFExcel(file, rowNum, colNum);
-		} else if ("xlsx".equals(extension)) {
-			return getValueXSSFExcel(file, rowNum, colNum);
-		} else {
-			throw new IOException("不支持的文件类型");
-		}
-	}
-
+    
 	private static Object getValueHSSFExcel(File file, Integer rowNum, Integer colNum) {
 
 		Object value = null;
@@ -458,4 +558,5 @@ public class ExcelUtils {
 
 		return value;
 	}
+	
 }
