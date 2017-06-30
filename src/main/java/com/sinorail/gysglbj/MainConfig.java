@@ -17,6 +17,7 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 import com.sinorail.gysglbj.action.CertificateAction;
+import com.sinorail.gysglbj.action.GysglAction;
 import com.sinorail.gysglbj.action.IndexAction;
 import com.sinorail.gysglbj.action.LoginAction;
 import com.sinorail.gysglbj.action.PopedomAction;

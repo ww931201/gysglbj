@@ -1,13 +1,10 @@
 package com.sinorail.gysglbj.action;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
 
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Certificate;
-import com.sinorail.gysglbj.model.Supplier;
 
 /**
  * 
