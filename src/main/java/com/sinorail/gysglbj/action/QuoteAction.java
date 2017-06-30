@@ -39,11 +39,21 @@ public class QuoteAction extends QuiController {
 		setAttr("projectId", getPara("projectId"));
 		render("importView.html");
 	}
+	public void filterView() {
+		setAttr("projectId", getPara("projectId"));
+		render("filterView.html");
+	}
 	
 	public void list() {
 		Quote quote = getModel(Quote.class);
 		SqlPara sqp = Db.getSqlPara("quote.paginateList", quote);
 		renderJson(Db.paginate(pageNumber(), pageSize(), sqp));
+	}
+	
+	public void filterList() {
+		Quote quote = getModel(Quote.class);
+		SqlPara sqp = Db.getSqlPara("quote.filterList", quote);
+		renderJson("rows", Db.find(sqp));
 	}
 	
 	public void save() {

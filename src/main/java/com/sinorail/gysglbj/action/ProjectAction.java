@@ -44,7 +44,6 @@ public class ProjectAction extends QuiController {
 		
 		String path = Thread.currentThread().getContextClassLoader().getResource("templates/quote_template.xls").getPath();
 		renderFile(ExcelUtils.replaceCell(new File(path), 1, 0, "项目名称："+project.getName()+" 项目编号："+project.getNo(), file));
-		//renderJson();
 	}
 	
 	public void save() {
