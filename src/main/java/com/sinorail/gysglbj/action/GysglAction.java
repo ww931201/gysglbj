@@ -70,7 +70,7 @@ public class GysglAction extends QuiController {
 		setAttr("message", status ? "保存成功!" : "保存失败!");
 		renderJson();
 	}
-	/***
+	/**
 	 * detailView
 	 * 查看每一行的信息
 	 * 

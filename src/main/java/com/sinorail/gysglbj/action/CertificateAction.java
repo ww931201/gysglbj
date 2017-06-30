@@ -27,7 +27,6 @@ public class CertificateAction extends QuiController{
 		render("detail.html");
 	}
 	
-	
 	public void addViewSon(){
 		String fatherId = getPara("fatherId");
 		setAttr("certificate.SUPPLIER_ID", fatherId);
@@ -55,7 +54,11 @@ public class CertificateAction extends QuiController{
 		} else {
 			//修改
 			try {
-				if(!Certificate.dao.isExistZsbh(certificate.getNo(), certificate.getId())) {	
+				if(!Certificate.dao.isExistZsbh(certificate.getNo(), certificate.getId())) {
+					
+					//取消资质证书的父ID
+					
+					certificate.remove("SUPPLIER_ID");
 					status = certificate.update();
 				}else {
 					setAttr("content", "证书编号已存在!");
@@ -72,24 +75,20 @@ public class CertificateAction extends QuiController{
 	/**
 	 * 证书修改
 	 */ 
-	
 	public void updateViewSon(){
-		
 		setAttr("certificate", Certificate.dao.queryById(getPara("id")));
 		render("save.html");
-		
 	}
+	
 	/**
 	 * 证书删除
 	 * 
 	 */
-	
 	public void deleteSon(){
 		if(Certificate.dao.deleteById(getPara("id"))){
 			setAttr("status", 1);
 			log.info("****删除ID="+ getPara("id"));
 		}
 		renderJson(); 
-		
 	}
 }

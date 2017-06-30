@@ -57,9 +57,11 @@ public class Supplier extends BaseSupplier<Supplier> {
 		return findFirst(getSql("supplier.selectById"), SupId);
 	}
 	
+
 	/**
 	 * 批量删除
-	 * 
+	 * @param ids
+	 * @return
 	 */
 	public boolean deleteByIds(String ids){
 		
