@@ -29,7 +29,7 @@ public class GysglAction extends QuiController {
 	public void list(){ 
 		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
-	}
+	} 
 	
 	/**
 	 * 保存信息的方法
