@@ -7,6 +7,7 @@
 <script src="../../libs/js/form/form.js" type="text/javascript"></script>
 <!--表单异步提交end-->
 
+
 </head>
 <body>
 <div class="box2" panelTitle="查询报价企业" id="searchPanel">
@@ -14,21 +15,17 @@
 		<input type="hidden" id="parentId" name="parentId" value="1"/>
 		<table>
 			<tr>
-				<td>供应商编号：</td>
+				<td>供应商编码：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.GYSBH" />
+					<input type="text" id="searchInput" name="supplier.GYSBH" />
 				</td>
-				<td>社会信用代码：</td>
+				<td>企业名称：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.SHXYDM" />
+					<input type="text" id="searchInput" name="supplier.QYMC" />
 				</td>
-				<td>所属省：</td>
+				<td>黑名单：</td>
 				<td>
-					<input type="text" id="searchInput" name="user.SSS" />
-				</td>
-				<td>企业类型：</td>
-				<td>
-					<input type="text" id="searchInput" name="user.SSS1" />
+					<input type="text" id="searchInput" name="supplier.HMD" />
 				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
@@ -63,7 +60,7 @@ function initComplete(){
 			{ display: '注册资本', name: 'ZCZB', align: 'center', width: '7%'},
 			{ display: '成立日期', name: 'CLRQ', align: 'center', width: '7%'},
 			{ display: '营业期限', name: 'YYQX', align: 'center', width: '7%'},
-			{ display: '企业类型', name: 'QYLX', align: 'center', width: '7%'},
+		  /*{ display: '企业类型', name: 'QYLX', align: 'center', width: '7%'}, */
 			/* { display: '组织机构代码', name: 'ZZJGDM', align: 'center', width: '3%'},
 			{ display: '税务登记号', name: 'SWDJH', align: 'center', width: '3%'}, */
 			{ display: '有效期', name: 'YXQ', align: 'center', width: '7%'},
@@ -79,7 +76,7 @@ function initComplete(){
 			{ display: '黑名单', name: 'HMD', align: 'center', width: '7%'},
 			{ display: '不良供应商信用评价等级', name: 'BLGYSXYPJDJ', align: 'center', width: '9%'},
 			{ display: '供应商经营范围', name: 'GYSJYFW', align: 'center', width: '7%'},
-			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '7%'},
+			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '12%'},
 			/*资质证书ID*/
 			/* { display: '资质证书ID', name: 'CERTIFICATE_ID', align: 'center', width: '3%'}, */
 			/* ID */
@@ -93,9 +90,16 @@ function initComplete(){
                  }
             }
 		  ],
-	 url: '/gys/list', sortName: 'userId',rownumbers:true,checkbox:true,
+
+		  
+	 frozen:false,
+	 url: '/gys/list', sortName: 'userId',detailClickExpand:true,rownumbers:true,checkbox:true,
      height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
      headerRowHeight: 40,
+     detail: { onShowDetail: showCertificate, height: 'auto' },
+     onError: function (a, b){
+         //错误事件
+     },
      toolbar:{
     	 items:[
     		  {text: '新增', click: addUnit,    iconClass: 'icon_add'},
@@ -118,6 +122,26 @@ function initComplete(){
 		grid.resetHeight();
 	});
 }
+
+//子页面展示
+function showCertificate(row, detailPanel,callback){
+		var childGrid = document.createElement('div'); 
+           $(detailPanel).append(childGrid);
+           $(childGrid).css('margin',20).quiGrid({
+                columns: [
+				{ display: '编号', name: 'NO', align: 'center'},
+				{ display: '名称', name: 'NAME', align: 'center', },
+				{ display: '内容', name: 'CONTENT', align: 'center'},
+				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center'},
+				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center'},
+				{ display: '发证单位', name: 'UNIT', align: 'center'}
+                ], 
+                isScroll: false,width: '50%', columnWidth: 120,
+                url: '/gys/showCer?supplierId='+row.ID, rownumbers:true,
+                height: '100%', pageSize:10,
+           });  
+}
+
 
 //新增
 function addUnit() {
@@ -145,6 +169,7 @@ function onDelete(rowid,rowidx){
 	  	$.post("/gys/delete",
 	  			{"id":rowid},
 	  			function(result){
+		  			console.log(result)
 	  				handleResult(result.status);
 				},"json");
 				//刷新表格
@@ -210,7 +235,7 @@ function searchHandler(){
 //重置查询
 function resetSearch(){
 	$("#queryForm")[0].reset();
-    $('#search').click();
+   /*  $('#search').click(); */
 }
 
 //刷新表格数据并重置排序和页数

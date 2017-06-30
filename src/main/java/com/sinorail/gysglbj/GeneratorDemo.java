@@ -1,5 +1,6 @@
 package com.sinorail.gysglbj;
 
+
 import javax.sql.DataSource;
 
 import com.jfinal.kit.PathKit;
@@ -44,6 +45,7 @@ public class GeneratorDemo {
 
 		gernerator.addExcludedTable("VIEW_DIC_USER");
 		gernerator.addExcludedTable("VIEW_QUOTE");
+		gernerator.addExcludedTable("E_SUPPLIER_CERTIFICATE");
 
 
 		// 设置是否在 Model 中生成 dao 对象

@@ -41,7 +41,7 @@
 <script type="text/javascript">
 
 var grid = null;
-
+var childGrid = null;
 function initComplete(){
 	//当提交表单刷新本页面时关闭弹窗
 	top.Dialog.close();
@@ -122,26 +122,41 @@ function initComplete(){
 		grid.resetHeight();
 	});
 }
-
 //子页面展示
 function showCertificate(row, detailPanel,callback){
-		var childGrid = document.createElement('div'); 
-           $(detailPanel).append(childGrid);
-           $(childGrid).css('margin',20).quiGrid({
+	 /* console.log(row) */
+		var	sonGrid = document.createElement('div'); 
+           $(detailPanel).append(sonGrid).css("background-color","#f0faf9");
+          childGrid = $(sonGrid).css('margin',10).quiGrid({
                 columns: [
 				{ display: '编号', name: 'NO', align: 'center'},
 				{ display: '名称', name: 'NAME', align: 'center', },
 				{ display: '内容', name: 'CONTENT', align: 'center'},
 				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center'},
 				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center'},
-				{ display: '发证单位', name: 'UNIT', align: 'center'}
+				{ display: '发证单位', name: 'UNIT', align: 'center'},
+				{ display: '操作', isAllowHide: false, align: 'left',
+					 render: function (rowdata, rowindex, value, column){
+                	    return '<div class="padding_top4 padding_left5">'
+                                + '<span class="img_list hand" title="查看" onclick='+'onViewSon("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_edit hand" title="修改" onclick='+'onEditSon("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_delete hand" title="删除" onclick='+'onDeleteSon("' + rowdata.ID + '")'+'></span>'
+                            + '</div>';
+	                 }
+	            }
                 ], 
-                isScroll: false,width: '50%', columnWidth: 120,
+                isScroll: false,width: '1085', columnWidth: 150,
                 url: '/gys/showCer?supplierId='+row.ID, rownumbers:true,
                 height: '100%', pageSize:10,
+
+                toolbar:{
+		        	 items:[
+		        		  {text: '新增', click: function(){addUnitSon(row.ID)},    iconClass: 'icon_add'},
+		        		  { line : true }
+		        		]
+		         	}
            });  
 }
-
 
 //新增
 function addUnit() {
@@ -235,7 +250,7 @@ function searchHandler(){
 //重置查询
 function resetSearch(){
 	$("#queryForm")[0].reset();
-    $('#search').click();
+   /*  $('#search').click(); */
 }
 
 //刷新表格数据并重置排序和页数
@@ -248,6 +263,63 @@ function refresh(isUpdate){
 		grid.setNewPage(1);
 	}
 	grid.loadData();
+}
+
+//子新增
+function addUnitSon(fatherId) {
+	/* console.log(fatherId) */
+	top.Dialog.open({
+			URL:"/certificate/addViewSon?fatherId="+fatherId,
+			Title:"添加",Width:500,Height:500});
+}
+//子查看
+function onViewSon(rowid){
+	top.Dialog.open({
+		URL:"/certificate/detailViewSon?id="+rowid,
+		Title:"查看",Width:500,Height:500});
+}
+
+//子修改	
+function onEditSon(rowid){
+	top.Dialog.open({
+		URL:"/certificate/updateViewSon?id=" + rowid,
+		Title:"修改",Width:500,Height:500});
+}
+//子删除	
+function onDeleteSon(rowid,rowidx){
+	top.Dialog.confirm("确定要删除该记录吗？",function(){
+	  	//删除记录
+	  	$.post("/certificate/deleteSon",
+	  			{"id":rowid},
+	  			function(result){
+		  			console.log(result)
+	  				handleResultSon(result.status);
+				},"json");
+				//刷新表格
+				childGrid.loadData();
+		});
+}
+
+//子删除后的提示
+function handleResultSon(result){
+	if(result == 1){
+		top.Dialog.alert("删除成功！",null,null,null,1);
+		childGrid.loadData();
+	}else{
+		top.Dialog.alert("删除失败！");
+	}
+}
+
+//刷新表格数据并重置排序和页数
+function refreshSon(isUpdate){
+	if(!isUpdate){
+		//重置排序
+    	 childGrid.options.sortName='userId';
+    	childGrid.options.sortOrder="desc";
+    	//页号重置为1
+		childGrid.setNewPage(1);
+	}
+	childGrid.loadData();
 }
 
 </script>	

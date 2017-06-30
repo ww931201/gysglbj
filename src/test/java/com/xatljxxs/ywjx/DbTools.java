@@ -21,6 +21,8 @@ public class DbTools {
 		// createJSNewRowData(rList,"popedom");
 		createSeletSql(rList, "q");
 		createQuiGrid(rList, "supplier");
+		createQuiGrid(rList, "certificate");
+
 		createFiledArray(rList);
 	}
 

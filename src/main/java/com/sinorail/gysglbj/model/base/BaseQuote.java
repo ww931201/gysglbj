@@ -65,19 +65,19 @@ public abstract class BaseQuote<M extends BaseQuote<M>> extends Model<M> impleme
 		return get("YCSL");
 	}
 
-	public void setDjxjBhs(java.lang.String djxjBhs) {
+	public void setDjxjBhs(java.math.BigDecimal djxjBhs) {
 		set("DJXJ_BHS", djxjBhs);
 	}
 
-	public java.lang.String getDjxjBhs() {
+	public java.math.BigDecimal getDjxjBhs() {
 		return get("DJXJ_BHS");
 	}
 
-	public void setZxjBhs(java.lang.String zxjBhs) {
+	public void setZxjBhs(java.math.BigDecimal zxjBhs) {
 		set("ZXJ_BHS", zxjBhs);
 	}
 
-	public java.lang.String getZxjBhs() {
+	public java.math.BigDecimal getZxjBhs() {
 		return get("ZXJ_BHS");
 	}
 
@@ -89,19 +89,19 @@ public abstract class BaseQuote<M extends BaseQuote<M>> extends Model<M> impleme
 		return get("SYDWJDQ");
 	}
 
-	public void setCsbdjBhs(java.lang.String csbdjBhs) {
+	public void setCsbdjBhs(java.math.BigDecimal csbdjBhs) {
 		set("CSBDJ_BHS", csbdjBhs);
 	}
 
-	public java.lang.String getCsbdjBhs() {
+	public java.math.BigDecimal getCsbdjBhs() {
 		return get("CSBDJ_BHS");
 	}
 
-	public void setCsbzxjBhs(java.lang.String csbzxjBhs) {
+	public void setCsbzxjBhs(java.math.BigDecimal csbzxjBhs) {
 		set("CSBZXJ_BHS", csbzxjBhs);
 	}
 
-	public java.lang.String getCsbzxjBhs() {
+	public java.math.BigDecimal getCsbzxjBhs() {
 		return get("CSBZXJ_BHS");
 	}
 
