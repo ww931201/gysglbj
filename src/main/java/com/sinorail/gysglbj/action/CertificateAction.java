@@ -30,7 +30,7 @@ public class CertificateAction extends QuiController{
 	
 	public void addViewSon(){
 		String fatherId = getPara("fatherId");
-		setAttr("fatherId", fatherId);
+		setAttr("certificate.SUPPLIER_ID", fatherId);
 		render("save.html");
 	}
 	
