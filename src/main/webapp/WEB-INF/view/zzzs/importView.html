@@ -1,0 +1,50 @@
+#include("/WEB-INF/view/common/qui/header.html")
+<script type="text/javascript" src="/libs/js/other/progressbar.js"></script>
+</head>
+<body>
+<div class="box11 padding5">
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>选择要导入的excel文件(该文件必须为下载的对应模板)</span>
+        <input id="fileupload" type="file" name="excel" multiple  data-url="/certificate/importExcel?supplierId=#(supplierId ??)">
+    </span><br>
+	<div id="pb1"></div><span id="pb1-label"></span>
+</div>
+
+<script type="text/javascript" src="/static/jQuery-File-Upload-9.18.0/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/static/jQuery-File-Upload-9.18.0/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="/static/jQuery-File-Upload-9.18.0/js/jquery.fileupload.js"></script>
+<script type="text/javascript">
+
+var _progress;
+function initComplete(){
+    _progress = $("#pb1").progressCtrl({ skin: '/libs/images/loading/progress.png', width:300} ) ;   
+}
+$(function () {
+
+	// 导入数据
+	$('#fileupload').fileupload({
+        dataType: 'json',
+        done: function (e, data) {
+			if(data.result == "0"){
+        		top.frmright.childGrid.loadData();
+        		top.Dialog.close();
+        	}else if (data.result == "1"){
+        		top.Dialog.alert("检查文件中供应商编码是否填写,或 系统中是否录入该供应商!");
+        	}else if (data.result == "2"){
+        		top.Dialog.alert("已导入该证书信息!");
+        	}else if (data.result == "3"){
+        		top.Dialog.alert("上传失败!");
+        	}else {
+        		top.Dialog.alert("导入失败!");
+        	}
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            _progress.progressCtrl(progress)
+        }
+    });
+});
+</script>
+</body>
+</html>
