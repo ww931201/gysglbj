@@ -1,10 +1,22 @@
 package com.sinorail.gysglbj.action;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Certificate;
+import com.sinorail.gysglbj.util.ExcelUtils;
 
 /**
  * 
@@ -29,7 +41,7 @@ public class CertificateAction extends QuiController{
 	
 	public void addViewSon(){
 		String fatherId = getPara("fatherId");
-		setAttr("certificate.SUPPLIER_ID", fatherId);
+		setAttr("fatherId", fatherId);
 		render("save.html");
 	}
 	
@@ -90,5 +102,96 @@ public class CertificateAction extends QuiController{
 			log.info("****删除ID="+ getPara("id"));
 		}
 		renderJson(); 
+	}
+	
+	/**
+	 * 
+	 */
+	public void importView(){
+		setAttr("supplierId", getPara("supplierId"));
+		render("importView.html");
+		
+	}
+	
+	public void importExcel() throws IOException, ParseException{
+		  
+		String msg  = "0"; // renderText 参数不能为汉字
+		
+		UploadFile file = getFile("excel");
+		
+		/*String supplierId = getPara("supplierId");*/
+		
+		Object result = ExcelUtils.getCellValueFromExcel(file.getFile());
+		
+		log.info(result);
+		
+		List<List<Object>> list = null;
+		
+		String[] field = {"NO", "NAME", "CONTENT", "START_TIME", "END_TIME", "UNIT"};
+		
+		try {
+			list = ExcelUtils.readExcel(file.getFile(), 1);
+		} catch (IOException e1) {
+			
+			e1.printStackTrace();
+			renderText("3"); return;
+			
+		}
+		List<Record> recordList = new LinkedList<Record>();
+		
+		boolean temp_is_stop = false;
+		
+		for (List<Object> listm : list) {
+			
+			Record r = new Record().set("SUPPLIER_ID", getPara("supplierId"));
+			
+			for(int i=0; i<field.length; i++) {
+				
+				r.set(field[i], listm.get(i));
+				
+				if(i == 3 || i == 4){
+					r.set(field[i], new Timestamp(((Date) listm.get(i)).getTime()));
+				}
+				/* 
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				
+				if(i == 3 || i == 4){
+					
+					long str = new Double((Double) listm.get(i)).longValue();
+					
+					new Timestamp(str);
+					System.out.println(new Date(str));
+					r.set(field[i], new Timestamp(str));
+				}*/
+			}
+			if(temp_is_stop) break;
+			
+			if(r != null) recordList.add(r);
+			
+		}
+		
+		if(!(Db.batchSave("E_CERTIFICATE", recordList, recordList.size()).length > 0) ) {
+			
+			msg = "导入失败!";
+			renderText("4"); return;
+		}
+		
+		file.getFile().delete();//删除上传的缓存文件
+		
+		//renderJson();
+		renderText(msg);
+		
+		}
+	/**
+	 * 导出证书模板
+	 */
+	public void export(){
+		
+		String path = Thread.currentThread().getContextClassLoader().getResource("templates/certificate_template.xls").getPath();
+		
+		File file = new File(path);
+		
+		renderFile(file);
+		
 	}
 }

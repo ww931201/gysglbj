@@ -15,6 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -24,6 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.jfinal.plugin.activerecord.Record;
 
 public class ExcelUtils {
+	
 	
 	/**
 	 * 对外提供读取excel 的方法
@@ -139,6 +141,26 @@ public class ExcelUtils {
 			return getValueHSSFExcel(file, rowNum, colNum);
 		} else if ("xlsx".equals(extension)) {
 			return getValueXSSFExcel(file, rowNum, colNum);
+		} else {
+			throw new IOException("不支持的文件类型");
+		}
+	}
+    
+    
+    /**
+     *         *****王渭写********
+     * 根据行数和列数确定的位置获取excel文件中单元格的值	
+     * @param file excel文件
+     * @param rowNum 行数
+     * @param colNum 列数
+     * @return 获取到单元格的值
+     * @throws IOException
+     */
+    public static Object getCellValueFromExcel(File file) throws IOException {
+		String fileName = file.getName();
+		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
+		if ("xls".equals(extension) || "xlsx".equals(extension)) {
+			return "true";
 		} else {
 			throw new IOException("不支持的文件类型");
 		}
@@ -368,10 +390,17 @@ public class ExcelUtils {
 										//value = cell.getCellFormula();
 										value = cell.getNumericCellValue();
 										break;
-	
+									
 									case NUMERIC:
 										//value1 = "NUMERIC value=" + cell.getNumericCellValue();
+										
 										value = cell.getNumericCellValue();
+										
+										//如果是日期格式
+										if(DateUtil.isCellDateFormatted(cell)){ 
+											value = cell.getDateCellValue();
+										}
+										
 										break;
 	
 									case STRING:
