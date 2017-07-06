@@ -139,7 +139,7 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center'},
 				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center'},
 				{ display: '发证单位', name: 'UNIT', align: 'center'},
-				{ display: '操作', isAllowHide: false, align: 'left',
+				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
                                 + '<span class="img_list hand" title="查看" onclick='+'onViewSon("' + rowdata.ID + '")'+'></span>'
