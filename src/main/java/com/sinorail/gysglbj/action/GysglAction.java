@@ -48,24 +48,18 @@ public class GysglAction extends QuiController {
 			
 			UploadFile file = getFile("excel");
 			
-			Object result = ExcelUtils.getCellValueFromExcel(file.getFile());
-			
-			log.info(result);
-			
 			List<List<Object>> list = null;
 			
 			
 			String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW" };
-			/*int length = field.length;*/
 			try {
-				list = ExcelUtils.readExcel(file.getFile(), 1);
+				list = ExcelUtils.readExcel(file.getFile(), 1,field.length);
 				
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				renderText("3"); return;
 				
 			}
-			/*int size = list.size();*/
 			List<Record> recordList = new LinkedList<Record>();
 			
 			boolean temp_is_stop = false;

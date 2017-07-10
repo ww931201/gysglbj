@@ -45,6 +45,26 @@ public class ExcelUtils {
             throw new IOException("不支持的文件类型");
         }
     }
+    
+    /**
+	 * 对外提供读取excel 的方法
+	 * @param file
+	 * @param startRowNum 起始行数,从0开始,结束到行末尾
+	 * @return
+	 * @throws IOException
+	 */
+    public static List<List<Object>> readExcel(File file, Integer startRowNum,Integer endRowNum) throws IOException {
+        String fileName = file.getName();
+        String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
+        if ("xls".equals(extension)) {
+            return readHSSFExcel(file, startRowNum,endRowNum);
+        } else if ("xlsx".equals(extension)) {
+            return readXSSFExcel(file, startRowNum,endRowNum);
+        } else {
+            throw new IOException("不支持的文件类型");
+        }
+    }
+    
    
     /**
      * 根据RecordList封装excel并导出
@@ -343,6 +363,104 @@ public class ExcelUtils {
 		}
 		return list;
     }
+	
+	/**
+     * 读取Office HSSF excel
+     * @param file
+     * @param startRowNum 起始行数,从0开始,行末尾结束
+     * @return
+     */
+	private static List<List<Object>> readHSSFExcel(File file, Integer startRowNum,Integer endRowNum)  {
+
+        //创建一个HSSF workbook
+        POIFSFileSystem fs;
+        
+        List<List<Object>> list = new LinkedList<List<Object>>();
+        
+		try {
+			
+			fs = new POIFSFileSystem(file);
+			
+			HSSFWorkbook wb = new HSSFWorkbook(fs);
+			
+			try {
+				//System.out.println(file.getPath()+file.getName());
+				
+				for (int k = 0; k < wb.getNumberOfSheets(); k++) {
+					
+					HSSFSheet sheet = wb.getSheetAt(k);
+					int rows = sheet.getPhysicalNumberOfRows();
+					
+					//System.out.println("Sheet " + k + " \"" + wb.getSheetName(k) + "\" has " + rows + " row(s).");
+					
+					
+					for (int r = startRowNum; r < rows; r++) {
+						HSSFRow row = sheet.getRow(r);
+						if (row == null) {
+							continue;
+						}
+
+						List<Object> linked = new LinkedList<Object>();
+						//System.out.println("\nROW " + row.getRowNum() + " has " + row.getPhysicalNumberOfCells() + " cell(s).");
+						for (int c = 0; c < endRowNum; c++) {
+							HSSFCell cell = row.getCell(c);
+							//String value1;
+							Object value = null;
+							if(cell != null) {
+								switch (cell.getCellTypeEnum()) {
+
+									case FORMULA:
+										//value1 = "FORMULA value=" + cell.getCellFormula();
+										//value = cell.getCellFormula();
+										value = cell.getNumericCellValue();
+										break;
+
+									case NUMERIC:
+										//value1 = "NUMERIC value=" + cell.getNumericCellValue();
+										value = cell.getNumericCellValue();
+										break;
+
+									case STRING:
+										//value1 = "STRING value=" + cell.getStringCellValue();
+										value = cell.getStringCellValue();
+										break;
+
+									case BLANK:
+										//value1 = "<BLANK>";
+										value = null;
+										break;
+
+									case BOOLEAN:
+										//value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
+										value = cell.getBooleanCellValue();
+										break;
+
+									case ERROR:
+										//value1 = "ERROR value=" + cell.getErrorCellValue();
+										value = cell.getErrorCellValue();
+										break;
+
+									default:
+										//value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
+										value = cell.getCellTypeEnum();
+								}
+								//System.out.print("CELL col=" + cell.getColumnIndex() + " VALUE="+ value1);
+							}
+							linked.add(value);
+						}
+						list.add(linked);
+						//System.out.println();
+					}
+				}
+			} finally {
+				wb.close();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return list;
+    }
 
 	/**
 	 * 读取Office XSSF excel
@@ -379,6 +497,109 @@ public class ExcelUtils {
 						List<Object> linked = new LinkedList<Object>();
 						//System.out.println("\nROW " + row.getRowNum() + " has " + row.getPhysicalNumberOfCells() + " cell(s).");
 						for (int c = 0; c < row.getLastCellNum(); c++) {
+							XSSFCell cell = row.getCell(c);
+							//String value1;
+							Object value = null;
+							if(cell != null) {
+								switch (cell.getCellTypeEnum()) {
+	
+									case FORMULA:
+										//value1 = "FORMULA value=" + cell.getCellFormula();
+										//value = cell.getCellFormula();
+										value = cell.getNumericCellValue();
+										break;
+									
+									case NUMERIC:
+										//value1 = "NUMERIC value=" + cell.getNumericCellValue();
+										
+										value = cell.getNumericCellValue();
+										
+										//如果是日期格式
+										if(DateUtil.isCellDateFormatted(cell)){ 
+											value = cell.getDateCellValue();
+										}
+										
+										break;
+	
+									case STRING:
+										//value1 = "STRING value=" + cell.getStringCellValue();
+										value = cell.getStringCellValue();
+										break;
+	
+									case BLANK:
+										//value1 = "<BLANK>";
+										value = null;
+										break;
+	
+									case BOOLEAN:
+										//value1 = "BOOLEAN value-" + cell.getBooleanCellValue();
+										value = cell.getBooleanCellValue();
+										break;
+	
+									case ERROR:
+										//value1 = "ERROR value=" + cell.getErrorCellValue();
+										value = cell.getErrorCellValue();
+										break;
+	
+									default:
+										//value1 = "UNKNOWN value of type " + cell.getCellTypeEnum();
+										value = cell.getCellTypeEnum();
+								}
+								//System.out.print("CELL col=" + cell.getColumnIndex() + " VALUE="+ value1);
+							}
+							linked.add(value);
+						}
+						list.add(linked);
+						//System.out.println();
+					}
+				}
+			} finally {
+				wb.close();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		}
+		return list;
+    }
+    
+    /**
+	 * 读取Office XSSF excel 
+	 * @param file 0行开始,行末结束
+	 * @return
+	 */
+    private static List<List<Object>> readXSSFExcel(File file, Integer startRowNum,Integer endRowNum) {
+	
+	    //创建一个XSSF workbook
+	    
+	    List<List<Object>> list = new LinkedList<List<Object>>();
+	    
+		try {
+			
+			XSSFWorkbook wb = new XSSFWorkbook(file);
+			
+			try {
+				//System.out.println(file.getPath()+file.getName());
+				
+				for (int k = 0; k < wb.getNumberOfSheets(); k++) {
+					
+					XSSFSheet sheet = wb.getSheetAt(k);
+					int rows = sheet.getPhysicalNumberOfRows();
+					
+					//System.out.println("Sheet " + k + " \"" + wb.getSheetName(k) + "\" has " + rows + " row(s).");
+					
+					
+					for (int r = startRowNum; r < rows; r++) {
+						XSSFRow row = sheet.getRow(r);
+						if (row == null) {
+							continue;
+						}
+	
+						List<Object> linked = new LinkedList<Object>();
+						//System.out.println("\nROW " + row.getRowNum() + " has " + row.getPhysicalNumberOfCells() + " cell(s).");
+						for (int c = 0; c < endRowNum; c++) {
 							XSSFCell cell = row.getCell(c);
 							//String value1;
 							Object value = null;
