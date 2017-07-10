@@ -37,6 +37,7 @@ public class GysglAction extends QuiController {
 	public void importView(){
 		render("importView.html");
 	}
+	
 	/**
 	 * 导入供应商excel数据
 	 * @throws IOException
@@ -76,8 +77,8 @@ public class GysglAction extends QuiController {
 				for(int i=0; i<field.length; i++) {
 					
 					r.set(field[i], listm.get(i));
+					
 				}
-				
 				if(temp_is_stop) break;
 				
 				if(r != null) recordList.add(r);
@@ -207,7 +208,7 @@ public class GysglAction extends QuiController {
 	 */
 	public void export() throws IOException {
 		
-		String path = Thread.currentThread().getContextClassLoader().getResource("templates/supplier_template.xls").getPath();
+		String path = Thread.currentThread().getContextClassLoader().getResource("templates/supplier_template.xlsx").getPath();
 		
 		File file = new File(path);
 		

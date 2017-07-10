@@ -187,7 +187,7 @@ public class CertificateAction extends QuiController{
 	 */
 	public void export(){
 		
-		String path = Thread.currentThread().getContextClassLoader().getResource("templates/certificate_template.xls").getPath();
+		String path = Thread.currentThread().getContextClassLoader().getResource("templates/certificate_template.xlsx").getPath();
 		
 		File file = new File(path);
 		
