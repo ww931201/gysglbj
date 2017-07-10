@@ -4,6 +4,7 @@ package com.sinorail.gysglbj.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,6 +61,45 @@ public class GysglAction extends QuiController {
 				renderText("3"); return;
 				
 			}
+			
+			//EXCEL文件供应商编码重复
+			String temp ="";
+			List<Object> lists = new ArrayList<Object>();
+			
+			if(list!=null){
+				for (List<Object> fileGysbh : list) { 
+					if(lists!=null){
+						for (Object object : lists) {
+							if(fileGysbh.get(0).equals(object)){
+								 temp += fileGysbh.get(0)+",";
+							}
+						}
+					}
+					lists.add(fileGysbh.get(0));
+					}
+				}
+			if(temp.length()>0){
+				renderText("5"); return;
+			}
+			
+			//数据库已经存在此供应商编码
+			//创建一个List用于保存数据库
+			String duipler = "";
+			List<Supplier> findGysbh = Supplier.dao.findGysbh();
+			if(findGysbh!=null){
+				for (Supplier supplier : findGysbh) {
+					String gysbh = supplier.getGysbh();
+					for (List<Object> listm : list) { 
+						if(listm.get(0).equals(gysbh)){
+							duipler += gysbh+",";
+						}
+					}
+				}
+			}
+			if(duipler.length()>0){
+				renderText("6"); return;
+			}
+			
 			List<Record> recordList = new LinkedList<Record>();
 			
 			boolean temp_is_stop = false;
@@ -67,19 +107,18 @@ public class GysglAction extends QuiController {
 			for (List<Object> listm : list) { 
 				
 				Record r = new Record();
-				
+
 				for(int i=0; i<field.length; i++) {
 					
 					r.set(field[i], listm.get(i));
-					
 				}
+				
 				if(temp_is_stop) break;
 				
 				if(r != null) recordList.add(r);
 				
 			}
 			if(!(Db.batchSave("E_SUPPLIER", recordList, recordList.size()).length > 0) ) {
-				msg = "导入失败!";
 				renderText("4"); return;
 			}
 			file.getFile().delete();//删除上传的缓存文件

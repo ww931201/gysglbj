@@ -119,12 +119,6 @@ public class CertificateAction extends QuiController{
 		
 		UploadFile file = getFile("excel");
 		
-		/*String supplierId = getPara("supplierId");*/
-		
-		Object result = ExcelUtils.getCellValueFromExcel(file.getFile());
-		
-		log.info(result);
-		
 		List<List<Object>> list = null;
 		
 		String[] field = {"NO", "NAME", "CONTENT", "START_TIME", "END_TIME", "UNIT"};

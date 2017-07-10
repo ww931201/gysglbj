@@ -47,7 +47,7 @@ public class ExcelUtils {
     }
     
     /**
-	 * 对外提供读取excel 的方法
+	 * 对外提供读取excel 的方法：按单元格读取
 	 * @param file
 	 * @param startRowNum 起始行数,从0开始,结束到行末尾
 	 * @return
@@ -166,25 +166,6 @@ public class ExcelUtils {
 		}
 	}
     
-    
-    /**
-     *         *****王渭写********
-     * 根据行数和列数确定的位置获取excel文件中单元格的值	
-     * @param file excel文件
-     * @param rowNum 行数
-     * @param colNum 列数
-     * @return 获取到单元格的值
-     * @throws IOException
-     */
-    public static Object getCellValueFromExcel(File file) throws IOException {
-		String fileName = file.getName();
-		String extension = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
-		if ("xls".equals(extension) || "xlsx".equals(extension)) {
-			return "true";
-		} else {
-			throw new IOException("不支持的文件类型");
-		}
-	}
 
     /**
      * 根据行数和列数确定的位置替换excel文件中单元格的值 (xls)
@@ -208,9 +189,17 @@ public class ExcelUtils {
 		}
     }
     
-    
+    /**
+     * 
+     * 
+     * @param file
+     * @param rowNum
+     * @param colNum
+     * @param value
+     * @param aimfile
+     * @return
+     */
     private static File replaceCellValueHSSFExcel(File file, Integer rowNum, Integer colNum, String value, File aimfile) {
-		
 		// 创建一个HSSF workbook
 		POIFSFileSystem fs;
 
@@ -237,7 +226,16 @@ public class ExcelUtils {
 		}
 		return aimfile;
     }
-
+    
+    /**
+     * 
+     * @param file
+     * @param rowNum
+     * @param colNum
+     * @param value
+     * @param aimfile
+     * @return
+     */
     private static File replaceCellValueXSSFExcel(File file, Integer rowNum, Integer colNum, String value, File aimfile) {
 
 		try {
@@ -267,9 +265,9 @@ public class ExcelUtils {
 	}
 
 	/**
-     * 读取Office HSSF excel
+     * 读取Office HSSF excel 07版本之前
      * @param file
-     * @param startRowNum 起始行数,从0开始
+     * @param startRowNum 起始行数,从0开始,行末输入为null,就结束.
      * @return
      */
 	private static List<List<Object>> readHSSFExcel(File file, Integer startRowNum)  {
@@ -365,9 +363,9 @@ public class ExcelUtils {
     }
 	
 	/**
-     * 读取Office HSSF excel
+     * 读取Office HSSF excel 07版本之前
      * @param file
-     * @param startRowNum 起始行数,从0开始,行末尾结束
+     * @param startRowNum 起始行数,从0开始,行末尾结束(endRowNum)
      * @return
      */
 	private static List<List<Object>> readHSSFExcel(File file, Integer startRowNum,Integer endRowNum)  {
@@ -464,7 +462,9 @@ public class ExcelUtils {
 
 	/**
 	 * 读取Office XSSF excel
-	 * @param file
+	 * 
+	 * @param file 0行开始读取整行(整行长度),row.getLastCellNum()结束
+	 * @param startRowNum
 	 * @return
 	 */
     private static List<List<Object>> readXSSFExcel(File file, Integer startRowNum) {
@@ -556,7 +556,7 @@ public class ExcelUtils {
 			} finally {
 				wb.close();
 			}
-			
+		
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidFormatException e) {
@@ -564,12 +564,15 @@ public class ExcelUtils {
 		}
 		return list;
     }
-    
+
     /**
-	 * 读取Office XSSF excel 
-	 * @param file 0行开始,行末结束
-	 * @return
-	 */
+     * 
+     * 读取Office XSSF excel 07版本以后
+     * @param file  0行开始,行末结束(行标题长度),读取一行数据
+     * @param startRowNum
+     * @param endRowNum
+     * @return
+     */
     private static List<List<Object>> readXSSFExcel(File file, Integer startRowNum,Integer endRowNum) {
 	
 	    //创建一个XSSF workbook
