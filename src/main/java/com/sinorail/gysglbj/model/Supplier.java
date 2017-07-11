@@ -2,6 +2,8 @@ package com.sinorail.gysglbj.model;
 
 
 
+import java.util.List;
+
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
@@ -19,6 +21,12 @@ public class Supplier extends BaseSupplier<Supplier> {
 		
 		return paginate(pageNumber, pageSize, sqlp);
 	}
+	
+	public List<Supplier> findGysbh(){
+		String sql  = "select GYSBH from E_SUPPLIER ";
+		return find(sql);  
+	}
+	
 	
 	/**
 	 * 根据供应商编号查询供应商是否存在(添加)

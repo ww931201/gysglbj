@@ -22,6 +22,7 @@
 
 	
 	
+	
 	### 根据供应商编号查询供应商
 	#sql("findByGysbh")
 		select * from E_SUPPLIER where GYSBH = ?

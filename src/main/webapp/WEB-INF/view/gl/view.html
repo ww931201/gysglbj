@@ -93,7 +93,7 @@ function initComplete(){
 
 		  
 	 frozen:false,
-	 url: '/gys/list', sortName: 'userId',detailClickExpand:true,rownumbers:true,checkbox:true,
+	 url: '/gys/list', sortName: 'userId',detailClickExpand:false,rownumbers:true,checkbox:true,
      height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
      headerRowHeight: 40,
      detail: { onShowDetail: showCertificate, height: 'auto' },
@@ -104,8 +104,12 @@ function initComplete(){
     	 items:[
     		  {text: '新增', click: addUnit,    iconClass: 'icon_add'},
     		  { line : true },
-    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'}
-    		  
+    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
+    		  { line : true },
+    		  {text: '导入', click: importQuote,   iconClass: 'icon_import'},
+    		  { line : true },
+    		  {text: '导出模板', click: onExport,   iconClass: 'icon_export'},
+    		  { line : true }, 
     		]
      	}
 	});
@@ -124,7 +128,7 @@ function initComplete(){
 }
 //子页面展示
 function showCertificate(row, detailPanel,callback){
-	 /* console.log(row) */
+	 	 console.log(row) 
 		var	sonGrid = document.createElement('div'); 
            $(detailPanel).append(sonGrid).css("background-color","#f0faf9");
           childGrid = $(sonGrid).css('margin',10).quiGrid({
@@ -135,7 +139,7 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center'},
 				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center'},
 				{ display: '发证单位', name: 'UNIT', align: 'center'},
-				{ display: '操作', isAllowHide: false, align: 'left',
+				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
                                 + '<span class="img_list hand" title="查看" onclick='+'onViewSon("' + rowdata.ID + '")'+'></span>'
@@ -152,7 +156,11 @@ function showCertificate(row, detailPanel,callback){
                 toolbar:{
 		        	 items:[
 		        		  {text: '新增', click: function(){addUnitSon(row.ID)},    iconClass: 'icon_add'},
-		        		  { line : true }
+		        		  { line : true },
+		        		  {text: '导入', click: function(){importQuoteSon(row.ID)},   iconClass: 'icon_import'},
+		        		  { line : true },
+		        		  {text: '导出模板', click: function(){onExportSon()},   iconClass: 'icon_export'},
+		        		  { line : true }, 
 		        		]
 		         	}
            });  
@@ -282,7 +290,7 @@ function onViewSon(rowid){
 //子修改	
 function onEditSon(rowid){
 	top.Dialog.open({
-		URL:"/certificate/updateViewSon?id=" + rowid,
+		URL:"/certificate/updateViewSon?id="+rowid,
 		Title:"修改",Width:500,Height:500});
 }
 //子删除	
@@ -310,6 +318,34 @@ function handleResultSon(result){
 	}
 }
 
+//导入供应商管理
+function importQuote(){
+	top.Dialog.open({
+		URL:"/gys/importView?",
+		Title:"导入模板",Width:350,Height:150});
+}
+
+//导出供应商
+function onExport(){
+	location.href = "/gys/export";
+}
+
+
+//子页面证书的导入
+function importQuoteSon(rowId){
+	/* alert(rowId); */
+	top.Dialog.open({
+		URL:"/certificate/importView?supplierId="+rowId,
+		Title:"导入模板",Width:350,Height:150});
+	
+}
+
+//子页面导出模板
+function onExportSon(){
+	
+	location.href = "/certificate/export";
+}
+
 //刷新表格数据并重置排序和页数
 function refreshSon(isUpdate){
 	if(!isUpdate){
@@ -321,6 +357,10 @@ function refreshSon(isUpdate){
 	}
 	childGrid.loadData();
 }
+
+
+
+
 
 </script>	
 </body>

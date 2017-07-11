@@ -130,7 +130,6 @@ public class QuoteAction extends QuiController {
 		
 		for (List<Object> listm : list) {
 			
-			
 			Record r = new Record().set("PROJECT_ID", projectId).set("SUPPLIER_ID", supplier.getId());
 			
 			for(int i=0; i<field.length; i++) {

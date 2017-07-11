@@ -2,12 +2,22 @@ package com.sinorail.gysglbj.action;
 
 
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Certificate;
 import com.sinorail.gysglbj.model.Supplier;
+import com.sinorail.gysglbj.util.ExcelUtils;
 
 public class GysglAction extends QuiController {
 	
@@ -21,6 +31,100 @@ public class GysglAction extends QuiController {
 	public void addView(){
 		render("save.html");
 	}
+	
+	/**
+	 * 导入excel跳转页面
+	 */
+	public void importView(){
+		render("importView.html");
+	}
+	
+	/**
+	 * 导入供应商excel数据
+	 * @throws IOException
+	 */
+	public void importExcel() throws IOException {
+		
+			String msg  = "0"; // renderText 参数不能为汉字
+			
+			UploadFile file = getFile("excel");
+			
+			List<List<Object>> list = null;
+			
+			
+			String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW" };
+			try {
+				list = ExcelUtils.readExcel(file.getFile(), 1,field.length);
+				
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				renderText("3"); return;
+				
+			}
+			
+			//EXCEL文件供应商编码重复
+			String temp ="";
+			List<Object> lists = new ArrayList<Object>();
+			
+			if(list!=null){
+				for (List<Object> fileGysbh : list) { 
+					if(lists!=null){
+						for (Object object : lists) {
+							if(fileGysbh.get(0).equals(object)){
+								 temp += fileGysbh.get(0)+",";
+							}
+						}
+					}
+					lists.add(fileGysbh.get(0));
+				}
+			}
+			if(temp.length()>0){
+				renderText("5"); return;
+			}
+			
+			//数据库已经存在此供应商编码
+			String duipler = "";
+			List<Supplier> findGysbh = Supplier.dao.findGysbh();
+			if(findGysbh!=null){
+				for (Supplier supplier : findGysbh) {
+					String gysbh = supplier.getGysbh();
+					if(list!=null){
+						for (List<Object> listm : list) { 
+							if(listm.get(0).equals(gysbh)){
+								duipler += gysbh+",";
+							}
+						}
+					}
+				}
+			}
+			if(duipler.length()>0){
+				renderText("6"); return;
+			}
+			
+			List<Record> recordList = new LinkedList<Record>();
+			
+			boolean temp_is_stop = false;
+			
+			for (List<Object> listm : list) { 
+				
+				Record r = new Record();
+
+				for(int i=0; i<field.length; i++) {
+					
+					r.set(field[i], listm.get(i));
+				}
+				
+				if(temp_is_stop) break;
+				
+				if(r != null) recordList.add(r);
+				
+			}
+			if(!(Db.batchSave("E_SUPPLIER", recordList, recordList.size()).length > 0) ) {
+				renderText("4"); return;
+			}
+			file.getFile().delete();//删除上传的缓存文件
+			renderText(msg);
+		}
 	
 	/**
 	 * 
@@ -86,6 +190,7 @@ public class GysglAction extends QuiController {
 	 */
 	
 	public void delete(){
+		
 		if(Supplier.dao.deleteById(getPara("id"))){
 			setAttr("status", 1);
 			log.info("****删除供应商记录ID="+ getPara("id"));
@@ -127,6 +232,21 @@ public class GysglAction extends QuiController {
 		Page<Certificate> page = Certificate.dao.queryBySupplierId(pageNumber(), pageSize(), getPara("supplierId"));
 		
 		renderJson(page);
+	}
+	
+	/**
+	 * 
+	 * 导出模板:将需要的模板进行上传到resources--templates--supplier_template.xls(supplier_template.xlsx)
+	 * 直接下载模板
+	 * @throws IOException 
+	 */
+	public void export() throws IOException {
+		
+		String path = Thread.currentThread().getContextClassLoader().getResource("templates/supplier_template.xlsx").getPath();
+		
+		File file = new File(path);
+		
+		renderFile(file);
 	}
 }
 	
