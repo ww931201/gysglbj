@@ -1,6 +1,7 @@
 package com.sinorail.gysglbj.action;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.action.service.QuoteService;
 import com.sinorail.gysglbj.extend.QuiController;
+import com.sinorail.gysglbj.model.Project;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
@@ -41,7 +43,13 @@ public class QuoteAction extends QuiController {
 	}
 	public void filterView() {
 		setAttr("projectId", getPara("projectId"));
-		render("filterView.html");
+		Project project = Project.dao.findById(getPara("projectId"));
+		//类型 1 竞买  2 竞价(整包)
+		if(project.getType().equals(new BigDecimal("1"))) {
+			render("filterView.html");
+		} else {
+			render("filterJJView.html");
+		}
 	}
 	
 	public void list() {
@@ -52,7 +60,14 @@ public class QuoteAction extends QuiController {
 	
 	public void filterList() {
 		Quote quote = getModel(Quote.class);
-		SqlPara sqp = Db.getSqlPara("quote.filterList", quote);
+		SqlPara sqp;
+		//类型 1 竞买  2 竞价(整包)
+		Project project = Project.dao.findById(quote.getProjectId());
+		if(project.getType().equals(new BigDecimal("1"))) {
+			sqp = Db.getSqlPara("quote.filterList", quote);
+		} else {
+			sqp = Db.getSqlPara("quote.filterJJList", quote);
+		}
 		renderJson("rows", Db.find(sqp));
 	}
 	
