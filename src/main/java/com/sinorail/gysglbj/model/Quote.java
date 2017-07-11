@@ -1,5 +1,7 @@
 package com.sinorail.gysglbj.model;
 
+import java.util.List;
+
 import com.sinorail.gysglbj.model.base.BaseQuote;
 
 /**
@@ -8,4 +10,15 @@ import com.sinorail.gysglbj.model.base.BaseQuote;
 @SuppressWarnings("serial")
 public class Quote extends BaseQuote<Quote> {
 	public static final Quote dao = new Quote().dao();
+	
+	
+	/**
+	 * 
+	 * 根据供应商id查询报价表
+	 */
+	public List<Quote> queryByCerId(String cerId){
+		
+		String sql = "select * from E_QUOTE where SUPPLIER_ID = ?";
+		return find(sql, cerId);
+	}
 }

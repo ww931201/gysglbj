@@ -73,10 +73,16 @@ public class Supplier extends BaseSupplier<Supplier> {
 	 */
 	public boolean deleteByIds(String ids){
 		
+		boolean flag = true;
 		String[] idArr = ids.split(",");
 		for (String id : idArr) {
-			deleteById(id);
+			if(Quote.dao.queryByCerId(id).size()>0){
+				flag = false;
+				continue;
+			}else{
+				deleteById(id);
+			}
 		}
-		return true;
+		return flag;
 	}
 }

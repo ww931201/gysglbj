@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Certificate;
+import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
 
@@ -191,10 +192,17 @@ public class GysglAction extends QuiController {
 	
 	public void delete(){
 		
-		if(Supplier.dao.deleteById(getPara("id"))){
-			setAttr("status", 1);
-			log.info("****删除供应商记录ID="+ getPara("id"));
+		if(Quote.dao.queryByCerId(getPara("id")).size()>0){
+			setAttr("status",2);
+			log.info("****删除供应商记录ID在报价表存在了="+ getPara("id"));
+		}else{
+			if(Supplier.dao.deleteById(getPara("id"))){
+				setAttr("status", 1);
+				log.info("****删除供应商记录ID="+ getPara("id"));
+			}
 		}
+		
+		
 		renderJson(); 
 		
 	}
@@ -208,6 +216,8 @@ public class GysglAction extends QuiController {
 		if(Supplier.dao.deleteByIds(getPara("ids"))){
 			setAttr("status",1);
 			log.info("****删除供应商记录ID="+ getPara("ids")); 
+		}else{
+			setAttr("status",2);
 		}
 		renderJson();
 		

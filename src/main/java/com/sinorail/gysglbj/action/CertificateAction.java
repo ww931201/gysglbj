@@ -217,6 +217,7 @@ public class CertificateAction extends QuiController{
 		renderText(msg);
 		
 		}
+	
 	/**
 	 * 导出证书模板
 	 */
