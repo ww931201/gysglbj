@@ -76,22 +76,23 @@ public class GysglAction extends QuiController {
 						}
 					}
 					lists.add(fileGysbh.get(0));
-					}
 				}
+			}
 			if(temp.length()>0){
 				renderText("5"); return;
 			}
 			
 			//数据库已经存在此供应商编码
-			//创建一个List用于保存数据库
 			String duipler = "";
 			List<Supplier> findGysbh = Supplier.dao.findGysbh();
 			if(findGysbh!=null){
 				for (Supplier supplier : findGysbh) {
 					String gysbh = supplier.getGysbh();
-					for (List<Object> listm : list) { 
-						if(listm.get(0).equals(gysbh)){
-							duipler += gysbh+",";
+					if(list!=null){
+						for (List<Object> listm : list) { 
+							if(listm.get(0).equals(gysbh)){
+								duipler += gysbh+",";
+							}
 						}
 					}
 				}

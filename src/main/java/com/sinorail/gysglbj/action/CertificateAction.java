@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,6 +132,46 @@ public class CertificateAction extends QuiController{
 			renderText("3"); return;
 			
 		}
+		/**进行证书编码重复校验*/
+		//1.导入excel文件本身的证书编码重复
+		 
+		String temp = "";
+		List<Object> lists = new ArrayList<Object>();
+		for (List<Object> cerNo : list) {
+			if(lists!=null){
+				for (Object object : lists) {
+					if(cerNo.get(0).equals(object)){
+						temp += cerNo.get(0)+",";
+					}
+				}
+			}
+			  lists.add(cerNo.get(0));
+		}
+		
+		if(temp.length()>0){
+			renderText("5"); return;
+		}
+		
+		//2.导入的excel文件与系统数据库的编码重复
+		String temps = "";
+		List<Certificate> noList = Certificate.dao.find("select NO from E_CERTIFICATE"); 
+		if(noList!=null){
+				for (Certificate certificate : noList) {
+					if(list!=null){
+						for (List<Object> excNo : list) {
+							if(excNo.get(0).equals(certificate.getNo())){
+								temps += certificate.getNo()+",";
+							}
+						}
+					}
+				}
+			}
+		
+		if(temps.length()>0){
+			renderText("6");
+			return;
+		}
+		
 		List<Record> recordList = new LinkedList<Record>();
 		
 		boolean temp_is_stop = false;

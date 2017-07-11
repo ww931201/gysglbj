@@ -35,9 +35,15 @@ $(function () {
         		top.Dialog.alert("已导入该证书信息!");
         	}else if (data.result == "3"){
         		top.Dialog.alert("上传失败!");
-        	}else {
+        	}else if(data.result == "5"){
+        		top.Dialog.alert("EXCEL文件中证书编码重复,导入失败!");
+        	}else if(data.result == "6"){
+        		top.Dialog.alert("系统已经存在证书编码,导入失败!");
+        	}else{
         		top.Dialog.alert("导入失败!");
-        	}
+        		top.Dialog.close();
+        		
+            }
         },
         progressall: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
