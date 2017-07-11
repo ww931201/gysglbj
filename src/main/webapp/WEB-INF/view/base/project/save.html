@@ -29,9 +29,7 @@
 		<tr>
 			<td>类型：</td>
 			<td>
-				<select name="project.TYPE">
-					<option value="1">竞买</option>
-					<option value="2">竞价</option>
+				<select name="project.TYPE" data='{"list":[{"key":"竞买","value":"1"},{"key":"竞价","value":"2"}]}' selectedValue="#(project.TYPE ??)">
 				</select>
 				<span class="star">*</span>
 			</td>
@@ -50,6 +48,7 @@
 </div>
 <!-- 异步提交start -->
 <script type="text/javascript">
+
 function submitHandler() {
 	var valid = $('#myFormId').validationEngine({returnIsValid: true});
 	if(valid){
