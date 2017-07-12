@@ -20,7 +20,7 @@
 
 </head>
 <body>
-<div class="box1" overflow="true" panelHeight="450" id="formContent" whiteBg="true">
+<div class="box1" overflow="true" panelHeight="250" id="formContent" whiteBg="true">
 	<form id="myFormId" onsubmit="return false;" method="post">
 	<table class="tableStyle" formMode="transparent">
 	
@@ -29,7 +29,7 @@
 				<input type='hidden' name='certificate.SUPPLIER_ID'
 					value='#(fatherId ??)' />
 				<tr>
-					<td>编号：</td>
+					<td  style="width: 190px">编号：</td>
 					<td><input type='text' name='certificate.NO'
 						value='#(certificate.NO ??)' class='validate[required,length[0,30]]'/><span class='star'>*</span></td>
 				</tr>
