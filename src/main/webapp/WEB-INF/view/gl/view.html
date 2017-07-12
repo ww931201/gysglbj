@@ -225,8 +225,12 @@ function handleResult(result){
 	if(result == 1){
 		top.Dialog.alert("删除成功！",null,null,null,1);
 		grid.loadData();
+	}else if(result == 2){
+		top.Dialog.alert("供应商信息在报价中使用,无法删除!");
+		grid.loadData();
 	}else{
 		top.Dialog.alert("删除失败！");
+		grid.loadData();
 	}
 }
 
@@ -321,7 +325,7 @@ function handleResultSon(result){
 //导入供应商管理
 function importQuote(){
 	top.Dialog.open({
-		URL:"/gys/importView?",
+		URL:"/gys/importView",
 		Title:"导入模板",Width:350,Height:150});
 }
 
