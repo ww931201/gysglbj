@@ -11,5 +11,10 @@
 		#end
 		ORDER BY ENTRY_TIME DESC
 	#end
+	
+	### 是否重复
+	#sql("isDuplicated")
+		select * from E_PROJECT where no = ?
+	#end
 
 #end

@@ -52,7 +52,11 @@ public class ProjectAction extends QuiController {
 		if (project.getId() == null) {
 			project.remove("ID");
 			project.setCreaterId(getSessionUser().getId());
-			status = project.save();
+			if(null == Project.dao.findFirst(Db.getSql("project.isDuplicated"), project.getNo())) {				
+				status = project.save();
+			}else {
+				setAttr("message","项目编号重复!");renderJson();return;
+			}
 		} else {
 			status = project.update();
 		}
