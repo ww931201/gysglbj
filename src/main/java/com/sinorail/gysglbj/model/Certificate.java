@@ -41,6 +41,4 @@ public class Certificate extends BaseCertificate<Certificate> {
 		return true;
 	}
 	
-	
-	
 }

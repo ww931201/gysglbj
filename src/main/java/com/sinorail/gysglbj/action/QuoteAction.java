@@ -1,5 +1,6 @@
 package com.sinorail.gysglbj.action;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -44,6 +45,7 @@ public class QuoteAction extends QuiController {
 	public void filterView() {
 		setAttr("projectId", getPara("projectId"));
 		Project project = Project.dao.findById(getPara("projectId"));
+		setAttr("projectName", project.getName());
 		//类型 1 竞买  2 竞价(整包)
 		if(project.getType().equals(new BigDecimal("1"))) {
 			render("filterView.html");
@@ -174,5 +176,39 @@ public class QuoteAction extends QuiController {
 		
 		//renderJson();
 		renderText(msg);
+	}
+	
+	/**
+	 * 导出数据过滤结果
+	 * @throws IOException 
+	 */
+	public void filterDataExport() throws IOException {
+		
+		Quote quote = getModel(Quote.class);
+		File file = new File("filter.xls");
+		
+		//类型 1 竞买  2 竞价(整包)
+		Project project = Project.dao.findById(quote.getProjectId());
+		if(project.getType().equals(new BigDecimal("1"))) {
+			
+			SqlPara sqp = Db.getSqlPara("quote.filterList", quote);
+			List<Record> list = Db.find(sqp);
+			
+			String[] title = {"包件号", "供应商编号", "企业名称", "物资编码", "物资名称", "规格型号", "技术要求", "计量单位", "预测数量", "单价限价(不含税）", "总限价（不含税）", "使用单位及地区", "厂商报单价(不含税）", "厂商报总限价（不含税）"};
+			String[] field = {"BJH", "GYSBH", "QYMC", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
+			
+			ExcelUtils.export(list, title, field, file);
+		} else {
+			
+			SqlPara sqp = Db.getSqlPara("quote.filterJJList", quote);
+			List<Record> list = Db.find(sqp);
+			
+			String[] title = {"供应商编号", "企业名称", "总报价"};
+			String[] field = {"GYSBH", "QYMC", "ZXJ_BHS"};
+			
+			ExcelUtils.export(list, title, field, file);
+		}
+		
+		renderFile(file);
 	}
 }

@@ -7,6 +7,13 @@
 <script src="../../libs/js/form/form.js" type="text/javascript"></script>
 <!--表单异步提交end-->
 
+<!--弹出式提示框start-->
+
+<script type="text/javascript" src="/libs/js/popup/messager.js"></script>
+
+<!--弹出式提示框end-->
+
+<script src="/static/js/date.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -63,7 +70,7 @@ function initComplete(){
 		  /*{ display: '企业类型', name: 'QYLX', align: 'center', width: '7%'}, */
 			/* { display: '组织机构代码', name: 'ZZJGDM', align: 'center', width: '3%'},
 			{ display: '税务登记号', name: 'SWDJH', align: 'center', width: '3%'}, */
-			{ display: '有效期', name: 'YXQ', align: 'center', width: '7%'},
+			{ display: '有效期', name: 'YXQ', align: 'center', type:'dateRed', width: '7%'},
 			{ display: '业务联系人', name: 'YWLXR', align: 'center', width: '7%'},
 			{ display: '联系人手机', name: 'LXRSJ', align: 'center', width: '7%'},
 			/* { display: '办公传真', name: 'BGCZ', align: 'center', width: '3%'},
@@ -90,28 +97,30 @@ function initComplete(){
                  }
             }
 		  ],
-
-		  
-	 frozen:false,
-	 url: '/gys/list', sortName: 'userId',detailClickExpand:false,rownumbers:true,checkbox:true,
-     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
-     headerRowHeight: 40,
-     detail: { onShowDetail: showCertificate, height: 'auto' },
-     onError: function (a, b){
-         //错误事件
-     },
-     toolbar:{
-    	 items:[
-    		  {text: '新增', click: addUnit,    iconClass: 'icon_add'},
-    		  { line : true },
-    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
-    		  { line : true },
-    		  {text: '导入', click: importQuote,   iconClass: 'icon_import'},
-    		  { line : true },
-    		  {text: '导出模板', click: onExport,   iconClass: 'icon_export'},
-    		  { line : true }, 
-    		]
-     	}
+		 frozen:false,
+		 url: '/gys/list', sortName: 'userId',detailClickExpand:false,rownumbers:true,checkbox:true,
+	     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
+	     headerRowHeight: 40,
+	     detail: { onShowDetail: showCertificate, height: 'auto' },
+	     onError: function (a, b){
+	         //错误事件
+	     },
+	     toolbar:{
+	    	 items:[
+	    		  {text: '新增', click: addUnit,    iconClass: 'icon_add'},
+	    		  { line : true },
+	    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
+	    		  { line : true },
+	    		  {text: '导入', click: importQuote,   iconClass: 'icon_import'},
+	    		  { line : true },
+	    		  {text: '导出模板', click: onExport,   iconClass: 'icon_export'},
+	    		  { line : true }, 
+	    		]
+	     	},alternatingRow: false,
+	        rowAttrRender: function(rowdata, rowid){
+	          	 var b = rowdata.YXQ != null && Date.today().isAfter(new Date(rowdata.YXQ));
+	              return b ? "style=\"background-color:Yellow;\"" : '';
+	        }
 	});
 
 	
@@ -125,10 +134,26 @@ function initComplete(){
 	 $("#searchPanel").bind("stateChange",function(e,state){
 		grid.resetHeight();
 	});
+	
+	 $.quiDefaults.Grid.formatters['date'] = function (value, column) {
+ 	  	if(value != null) { 	  		
+ 	   		return value.substring(0,10);
+ 	  	}
+	 	return value;
+     }
+   	 $.quiDefaults.Grid.formatters['dateRed'] = function (value, column) {
+ 	  	if(value != null) { 	  		
+	 	  	value = value.substring(0, 10);
+	 	  	if(Date.today().isAfter(new Date(value))) {        	  		
+	 	    	return "<span style='color:red'>"+value+"</span>";
+	 	  	}
+ 	  	}
+	 	return value;
+     }
 }
 //子页面展示
 function showCertificate(row, detailPanel,callback){
-	 	 console.log(row) 
+	 	 //console.log(row) 
 		var	sonGrid = document.createElement('div'); 
            $(detailPanel).append(sonGrid).css("background-color","#f0faf9");
           childGrid = $(sonGrid).css('margin',10).quiGrid({
@@ -136,8 +161,8 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '编号', name: 'NO', align: 'center'},
 				{ display: '名称', name: 'NAME', align: 'center', },
 				{ display: '内容', name: 'CONTENT', align: 'center'},
-				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center'},
-				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center'},
+				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center', type:'date'},
+				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center', type:'dateRed'},
 				{ display: '发证单位', name: 'UNIT', align: 'center'},
 				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
@@ -164,6 +189,7 @@ function showCertificate(row, detailPanel,callback){
 		        		]
 		         	}
            });  
+
 }
 
 //新增
@@ -288,14 +314,14 @@ function addUnitSon(fatherId) {
 function onViewSon(rowid){
 	top.Dialog.open({
 		URL:"/certificate/detailViewSon?id="+rowid,
-		Title:"查看",Width:500,Height:500});
+		Title:"查看",Width:500,Height:300});
 }
 
 //子修改	
 function onEditSon(rowid){
 	top.Dialog.open({
 		URL:"/certificate/updateViewSon?id="+rowid,
-		Title:"修改",Width:500,Height:500});
+		Title:"修改",Width:500,Height:300});
 }
 //子删除	
 function onDeleteSon(rowid,rowidx){
@@ -354,7 +380,7 @@ function onExportSon(){
 function refreshSon(isUpdate){
 	if(!isUpdate){
 		//重置排序
-    	 childGrid.options.sortName='userId';
+    	childGrid.options.sortName='userId';
     	childGrid.options.sortOrder="desc";
     	//页号重置为1
 		childGrid.setNewPage(1);
@@ -363,7 +389,16 @@ function refreshSon(isUpdate){
 }
 
 
-
+$.post("/gys/findOverDate", function(data){
+	if(data.length < 1) return; 
+	var html = "<div style='overflow:auto'>";
+	for(var i=0; i < data.length; i++) {
+        html += "<div>"+data[i].GYSBH+"-"+data[i].QYMC+"</div>";
+    }
+	html += "</div>"
+	$.messager.lays(400,200)
+	$.messager.show("以下供应商资质已过期",html,'stay');
+});
 
 
 </script>	

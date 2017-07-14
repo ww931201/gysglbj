@@ -41,19 +41,19 @@ public abstract class BaseCertificate<M extends BaseCertificate<M>> extends Mode
 		return get("CONTENT");
 	}
 
-	public void setStartTime(java.util.Date startTime) {
+	public void setStartTime(java.lang.String startTime) {
 		set("START_TIME", startTime);
 	}
 
-	public java.util.Date getStartTime() {
+	public java.lang.String getStartTime() {
 		return get("START_TIME");
 	}
 
-	public void setEndTime(java.util.Date endTime) {
+	public void setEndTime(java.lang.String endTime) {
 		set("END_TIME", endTime);
 	}
-	
-	public java.util.Date getEndTime() {
+
+	public java.lang.String getEndTime() {
 		return get("END_TIME");
 	}
 

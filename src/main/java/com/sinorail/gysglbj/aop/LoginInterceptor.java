@@ -76,10 +76,11 @@ public class LoginInterceptor implements Interceptor {
 	public boolean isExistUrl(String uri, DicUser user, HttpServletRequest request) {
 
 		boolean isPassed = false;
-		
+		System.out.println("roleId: "+user.getRoleId());
 		List<DicPopedom> perList = DicPopedom.dao.queryByRoleId(user.getRoleId());
 		if(perList != null) {
 			for (DicPopedom p : perList) {
+				//System.out.println(p.getForwardAction().trim());
 				if(uri.trim().equals(p.getForwardAction().trim())){
 					isPassed = true;
 					return isPassed;

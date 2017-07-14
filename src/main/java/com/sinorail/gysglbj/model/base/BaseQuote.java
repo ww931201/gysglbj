@@ -9,11 +9,11 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseQuote<M extends BaseQuote<M>> extends Model<M> implements IBean {
 
-	public void setBjh(java.lang.String bjh) {
+	public void setBjh(java.math.BigDecimal bjh) {
 		set("BJH", bjh);
 	}
 
-	public java.lang.String getBjh() {
+	public java.math.BigDecimal getBjh() {
 		return get("BJH");
 	}
 

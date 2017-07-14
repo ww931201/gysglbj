@@ -13,7 +13,7 @@ public class DbTools {
 
 		dbs.start();
 
-		List<Record> rList = dbs.getFieldsAttributeByTableName("E_CERTIFICATE");
+		List<Record> rList = dbs.getFieldsAttributeByTableName("E_QUOTE");
 
 		System.out.println("字段个数: " + rList.size());
 

@@ -9,7 +9,7 @@
 
 </head>
 <body  style="padding:10px">
-<div class="box2" paneltitle="竞买项目报价详情">
+<div class="box2" paneltitle="#(projectName ??)---竞买项目报价详情">
 
 	<form id="queryForm" method="post">
 		<input type="hidden" id="parentId" name="parentId" value="1"/>
@@ -33,6 +33,7 @@
 				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
+				<td><button type="button" onclick="exportExcel()"><span class="icon_export">导出</span></button></td>
 			</tr>
 		</table>
 	</form>
@@ -54,11 +55,25 @@
 			{ display: '技术要求', name: 'JSYQ', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '计量单位', name: 'JLDW', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '预测数量', name: 'YCSL', align: 'center', editor: { type: 'text'}, width: '6%'},
-			{ display: '单价限价(不含税）', name: 'DJXJ_BHS', align: 'center', editor: { type: 'text'}, width: '6%'},
+			{ display: '单价限价（不含税）', name: 'DJXJ_BHS', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '总限价（不含税）', name: 'ZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '使用单位及地区', name: 'SYDWJDQ', align: 'center', editor: { type: 'text'}, width: '7%'},
-			{ display: '厂商报单价(不含税）', name: 'CSBDJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%'},
-			{ display: '厂商报总限价（不含税）', name: 'CSBZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%'}
+			{ display: '厂商报单价（不含税）', name: 'CSBDJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%', 
+				render: function (rowdata, rowindex, value, column){
+					if(value*1 > rowdata.DJXJ_BHS*1) {
+		        	    return "<span style='color:red'>"+value+"</span>";
+					}
+					return value;
+	 			}
+			},
+			{ display: '厂商报总限价（不含税）', name: 'CSBZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%',
+				render: function (rowdata, rowindex, value, column){
+					if(value*1 > rowdata.ZXJ_BHS*1) {
+		        	    return "<span style='color:red'>"+value+"</span>";
+					}
+					return value;
+	 			}
+			}
 		  ],
 	 url: '/quote/filterList?quote.PROJECT_ID=#(projectId)', sortName: 'userId',rownumbers:true,checkbox:false,
 	 height: '100%', width:"100%", usePager:false, percentWidthMode:true
@@ -67,16 +82,23 @@
 	//查询
 	function searchHandler(){
 		var query = $("#queryForm").serializeArray(); 
-	    grid.setOptions({ params : query});
+	    grid.setOptions({params : query});
 	    //页号重置为1
 	    grid.setNewPage(1);
-	    grid.loadData();//加载数据
+	    //加载数据
+	    grid.loadData();
 	}
+	
+	function exportExcel() {
+		window.location.href = "/quote/filterDataExport?quote.PROJECT_ID=#(projectId)"
+	}
+	
 	//重置查询
 	function resetSearch(){
 		$("#queryForm")[0].reset();
 	    $('#search').click();
 	}
+	
 </script>	
 </body>
 </html>

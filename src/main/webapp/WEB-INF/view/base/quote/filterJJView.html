@@ -9,7 +9,16 @@
 
 </head>
 <body  style="padding:10px">
-<div class="box2" paneltitle="竞买项目报价详情">
+<div class="box2" paneltitle="#(projectName ??)---竞买项目报价详情">
+
+	<form id="queryForm" method="post">
+		<input type="hidden" id="parentId" name="parentId" value="1"/>
+		<table>
+			<tr>
+				<td><button type="button" onclick="exportExcel()"><span class="icon_export">导出</span></button></td>
+			</tr>
+		</table>
+	</form>
 </div>
 <div id="dataBasic"></div>
 
@@ -26,6 +35,10 @@
 	 url: '/quote/filterList?quote.PROJECT_ID=#(projectId)', sortName: 'userId',rownumbers:true,checkbox:false,
 	 height: '100%', width:"100%", usePager:false, percentWidthMode:true
 	});
+	
+	function exportExcel() {
+		window.location.href = "/quote/filterDataExport?quote.PROJECT_ID=#(projectId)"
+	}
 			
 </script>	
 </body>

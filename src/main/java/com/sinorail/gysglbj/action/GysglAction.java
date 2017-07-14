@@ -52,7 +52,6 @@ public class GysglAction extends QuiController {
 			
 			List<List<Object>> list = null;
 			
-			
 			String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW" };
 			try {
 				list = ExcelUtils.readExcel(file.getFile(), 1,field.length);
@@ -257,6 +256,13 @@ public class GysglAction extends QuiController {
 		File file = new File(path);
 		
 		renderFile(file);
+	}
+	
+	/**
+	 * 查找资质过期的供应商
+	 */
+	public void findOverDate() {
+		renderJson(Db.find(Db.getSql("supplier.findOverDate")));
 	}
 }
 	

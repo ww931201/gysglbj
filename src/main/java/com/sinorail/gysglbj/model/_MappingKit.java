@@ -16,13 +16,9 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
-		// Composite Primary Key order: ID,ID,ID,ID,ID,ID
 		arp.addMapping("DIC_POPEDOM", "ID", DicPopedom.class);
-		// Composite Primary Key order: ID,ID,ID,ID,ID,ID
 		arp.addMapping("DIC_ROLE", "ID", DicRole.class);
-		// Composite Primary Key order: ID,ID,ID,ID,ID,ID
 		arp.addMapping("DIC_ROLE_POPEDOM", "ID", DicRolePopedom.class);
-		// Composite Primary Key order: ID,ID,ID,ID,ID,ID,ID,USER_ID
 		arp.addMapping("DIC_USER", "ID", DicUser.class);
 		arp.addMapping("E_CERTIFICATE", "ID", Certificate.class);
 		arp.addMapping("E_PROJECT", "ID", Project.class);

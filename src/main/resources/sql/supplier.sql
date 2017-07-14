@@ -45,6 +45,13 @@
 		select ecer.no,ecer.name,ecer.content,ecer.start_time,ecer.end_time,ecer.unit from E_SUPPLIER esup,E_CERTIFICATE ecer where esup.ID = ecer.SUPPLIER_ID and esup.ID = #para(0)
 	#end
 	
+	#查找资质过期的供应商
+	#sql("findOverDate")
+		select gysbh, qymc from E_SUPPLIER where id in(select SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE, 'yyyy-mm-dd'))
+		UNION
+		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')
+	#end
+	
 #end
 
 #namespace("certificate")

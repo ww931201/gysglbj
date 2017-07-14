@@ -13,7 +13,7 @@
 	<tbody>
 		<tr>
 			<td class="ver01">
-				<div class="box2" paneltitle="项目">
+				<div class="box2" panelHeight="300px" paneltitle="项目">
 					<form id="queryFormProject" method="post">
 						<table>
 							<tr>
@@ -33,6 +33,8 @@
 					<div id="dataBasicProject"></div>
 				</div>
 			</td>
+		</tr>
+		<tr>
 			<td width="90%" class="ver01">
 				<div class="box2" paneltitle="项目报价详情">
 										<form id="queryForm" method="post">
@@ -102,7 +104,7 @@ function initComplete(){
             }
 		  ],
 	 url: '/project/list', rownumbers:true,checkbox:false,minColumnWidth:100,
-     height: '100%', width:"100%",pageSize:30,percentWidthMode:true,
+      width:"100%",pageSize:5,percentWidthMode:true,
      onSelectRow: function (rowdata) {
     	console.log(rowdata)
    	    //页号重置为1
@@ -144,7 +146,7 @@ function initComplete(){
             }
 		  ],
 	 url: '/quote/list', sortName: 'userId',rownumbers:true,checkbox:true,
-     height: '100%', width:"100%",pageSize:30,percentWidthMode:true,
+     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
      headerRowHeight: 40,
      toolbar:{
     	 items:[
