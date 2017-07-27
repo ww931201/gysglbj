@@ -27,7 +27,7 @@ $(function () {
         dataType: 'json',
         done: function (e, data) {
 
-			if(data.result.result == null){
+			if(data.result.result == 0){ 
         		top.frmright.grid.loadData();
         	 	top.Dialog.close();
         	}else{

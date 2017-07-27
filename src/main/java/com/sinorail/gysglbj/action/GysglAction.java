@@ -170,7 +170,8 @@ public class GysglAction extends QuiController {
 			}
 			file.getFile().delete();//删除上传的缓存文件
 			
-			renderJson("result", null); 
+			renderJson("result", 0); 
+			
 		}
 	
 	/**
