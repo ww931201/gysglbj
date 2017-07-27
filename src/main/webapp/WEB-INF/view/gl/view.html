@@ -121,6 +121,7 @@ function initComplete(){
 	    		  { line : true }, 
 	    		]
 	     	},alternatingRow: false,
+	     	
 	        rowAttrRender: function(rowdata, rowid){
 	          	 var b = rowdata.YXQ != null && Date.today().isAfter(new Date(rowdata.YXQ));
 	              return b ? "style=\"background-color:Yellow;\"" : '';

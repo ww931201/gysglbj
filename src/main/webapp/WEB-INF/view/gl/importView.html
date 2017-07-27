@@ -26,20 +26,25 @@ $(function () {
 	$('#fileupload').fileupload({
         dataType: 'json',
         done: function (e, data) {
-			if(data.result == "0"){
+
+			if(data.result.result == null){
         		top.frmright.grid.loadData();
         	 	top.Dialog.close();
-        	}else if (data.result == "3"){
-        		top.Dialog.alert("上传失败!");
-        	}else if(data.result == "5"){
+        	}else{
+        		top.Dialog.alert(data.result.result);
+        	}
+        	/* else if(data.result == "5"){
         		top.Dialog.alert("EXCEL文件中供应商编码重复,导入失败!");
         	}else if(data.result == "6"){
         		top.Dialog.alert("系统已经存在供应商编码,导入失败!");
         	}else if(data.result == "7"){
-        		top.Dialog.alert("日期格式填写错误！请修改后重新填写！");
+        		top.Dialog.alert("第10列'成立日期'日期格式填写错误！请修改后重新填写！");
+        	}else if(data.result == "8"){
+        		top.Dialog.alert("第15列'有效期'日期格式填写错误！请修改后重新填写！");
         	}else{
         		top.Dialog.alert("导入失败!");
-            }
+        		
+            } */
         },
         progressall: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);

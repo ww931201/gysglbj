@@ -48,7 +48,7 @@ public class GysglAction extends QuiController {
 	 */
 	public void importExcel() throws IOException {
 		
-			String msg  = "0"; // renderText 参数不能为汉字
+			//String msg  = "0"; // renderText 参数不能为汉字
 			
 			UploadFile file = getFile("excel");
 			
@@ -60,14 +60,14 @@ public class GysglAction extends QuiController {
 				
 			} catch (IOException e1) {
 				e1.printStackTrace();
-				renderText("3"); return;
+				renderJson("result", "上传失败！"); return;
 				
 			}
 			
 			//EXCEL文件供应商编码重复
 			String temp ="";
 			List<Object> lists = new ArrayList<Object>();
-			
+			int a = 1;
 			if(list!=null){
 				for (List<Object> fileGysbh : list) { 
 					if(lists!=null){
@@ -75,17 +75,23 @@ public class GysglAction extends QuiController {
 							if(fileGysbh.get(0).equals(object)){
 								 temp += fileGysbh.get(0)+",";
 							}
+							if(temp.length()>0){
+								renderJson("result", "第" + a + "行供应商编码在excel已经存在，请修改后再导入数据"); return; 
+							}
+							
 						}
 					}
 					lists.add(fileGysbh.get(0));
+					a++;
 				}
 			}
-			if(temp.length()>0){
+			/*if(temp.length()>0){
 				renderText("5"); return;
-			}
+			}*/
 			
 			//数据库已经存在此供应商编码
 			String duipler = "";
+			int b = 1;
 			List<Supplier> findGysbh = Supplier.dao.findGysbh();
 			if(findGysbh!=null){
 				for (Supplier supplier : findGysbh) {
@@ -95,13 +101,16 @@ public class GysglAction extends QuiController {
 							if(listm.get(0).equals(gysbh)){
 								duipler += gysbh+",";
 							}
+							
+							if(duipler.length()>0){
+								renderJson("result", "第" + b + "行供应商编码在数据库已经存在，请修改后再导入数据"); return; 
+							}
 						}
 					}
+					b++;
 				}
 			}
-			if(duipler.length()>0){
-				renderText("6"); return;
-			}
+			
 			
 			List<Record> recordList = new LinkedList<Record>();
 			
@@ -112,8 +121,8 @@ public class GysglAction extends QuiController {
 				Record r = new Record();
 
 				for(int i=0; i<field.length; i++) {
-					
-						if(i == 10 || i == 15){
+						
+						if(i == 10){
 						
 						Object obj = listm.get(i);
 						
@@ -126,13 +135,28 @@ public class GysglAction extends QuiController {
 						if(m.matches()){
 							System.out.println("匹配");
 						
-						}else{
-							renderText("7"); return;
+						}else{ 
+							renderJson("result", "第11列'成立日期'日期格式填写错误！请修改后重新填写！"); return;
+						}
+					}
+						
+						if(i == 15){
+							Object obj2 = listm.get(i);
+							String result2 = obj2.toString();
+							String pattern2  = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
+							
+							Pattern p2=Pattern.compile(pattern2);
+							Matcher m2=p2.matcher(result2);
+							
+							if(m2.matches()){
+								System.out.println("匹配");
+							
+							}else{
+								renderJson("result", "第16列'有效期'日期格式填写错误！请修改后重新填写！"); return;
+							}
 						}
 						
 					r.set(field[i], listm.get(i));
-					
-					
 				}
 				
 				if(temp_is_stop) break;
@@ -141,14 +165,12 @@ public class GysglAction extends QuiController {
 				
 			}
 			if(!(Db.batchSave("E_SUPPLIER", recordList, recordList.size()).length > 0) ) {
-				renderText("4"); return;
+				/*renderText("4"); return;*/
+				renderJson("result", "导入数据失败，请修改后重试！"); return;
 			}
 			file.getFile().delete();//删除上传的缓存文件
 			
-			renderText(msg);
-			
-			}
-			
+			renderJson("result", null); 
 		}
 	
 	/**
@@ -198,6 +220,7 @@ public class GysglAction extends QuiController {
 			
 		}
 		setAttr("message", status ? "保存成功!" : "保存失败!");
+		
 		renderJson();
 	}
 	/**
