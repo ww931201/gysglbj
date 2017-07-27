@@ -17,6 +17,9 @@
 		#if(HMD ??)
 			and HMD like '%#(HMD)%'
 		#end
+		#if(GYSJYFW ??)
+			and GYSJYFW like '%#(GYSJYFW)%'
+		#end
 		ORDER BY ENTRY_TIME DESC
 	#end
 

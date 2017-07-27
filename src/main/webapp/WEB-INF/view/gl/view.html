@@ -34,6 +34,10 @@
 				<td>
 					<input type="text" id="searchInput" name="supplier.HMD" />
 				</td>
+				<td>经营范围：</td>
+				<td>
+					<input type="text" id="searchInput" name="supplier.GYSJYFW" />
+				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
 			</tr>
@@ -278,6 +282,7 @@ function getSelectIds(grid) {
 
 //查询
 function searchHandler(){
+	
 	var query = $("#queryForm").formToArray(); 
     grid.setOptions({ params : query});
     //页号重置为1

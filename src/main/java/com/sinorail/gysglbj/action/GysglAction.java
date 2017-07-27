@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -111,7 +113,26 @@ public class GysglAction extends QuiController {
 
 				for(int i=0; i<field.length; i++) {
 					
+						if(i == 10 || i == 15){
+						
+						Object obj = listm.get(i);
+						
+						String result = obj.toString();
+						String pattern  = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
+						
+						Pattern p=Pattern.compile(pattern);
+						Matcher m=p.matcher(result);
+						
+						if(m.matches()){
+							System.out.println("匹配");
+						
+						}else{
+							renderText("7"); return;
+						}
+						
 					r.set(field[i], listm.get(i));
+					
+					
 				}
 				
 				if(temp_is_stop) break;
@@ -123,7 +144,11 @@ public class GysglAction extends QuiController {
 				renderText("4"); return;
 			}
 			file.getFile().delete();//删除上传的缓存文件
+			
 			renderText(msg);
+			
+			}
+			
 		}
 	
 	/**
@@ -131,6 +156,7 @@ public class GysglAction extends QuiController {
 	 * 展示供应商管理信息
 	 */
 	public void list(){ 
+		
 		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
 	} 

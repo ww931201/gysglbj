@@ -35,6 +35,8 @@ $(function () {
         		top.Dialog.alert("EXCEL文件中供应商编码重复,导入失败!");
         	}else if(data.result == "6"){
         		top.Dialog.alert("系统已经存在供应商编码,导入失败!");
+        	}else if(data.result == "7"){
+        		top.Dialog.alert("日期格式填写错误！请修改后重新填写！");
         	}else{
         		top.Dialog.alert("导入失败!");
             }
