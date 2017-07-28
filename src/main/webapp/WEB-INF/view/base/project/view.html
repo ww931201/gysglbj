@@ -75,7 +75,6 @@
 
 var grid = null;
 var gridProject = null;
-
 var typeData = {list:[{value:1,key:"竞买"},{value:2,key:"竞价"}]};
 
 function initComplete(){
@@ -105,10 +104,10 @@ function initComplete(){
                  }
             }
 		  ],
-	  url: '/project/list', rownumbers:true,checkbox:false,minColumnWidth:100,
-      width:"100%",pageSize:5,percentWidthMode:true,
+	    url: '/project/list', rownumbers:true,checkbox:false,minColumnWidth:100,
+        width:"100%",pageSize:5,percentWidthMode:true,
      	onSelectRow: function (rowdata) {
-    	console.log(rowdata)
+		$("#message").remove();
     	//console.log(rowdata)
     	
    	    //页号重置为1
@@ -117,16 +116,15 @@ function initComplete(){
     	grid.setOptions({url : "/quote/list?quote.PROJECT_ID="+rowdata.ID});
 
 		$.post("/gys/findProjectOverDate",{ PROJECT_ID: rowdata.ID },function(data){
-			console.log(data)
 			if(data.length < 1) return; 
-
 			var html = "<div>";
 			for(var i = 0; i<data.length;i++){
 					html += "<div>"+data[i].GYSBH+"-"+data[i].QYMC+"</div>";
 				}
 			 html +="</div>";
 			 $.messager.lays(400,200)
-			 $.messager.show('以下供应商资质已过期',html,'stay');
+			 $.messager.show('以下供应商资质有效期不满一年',html,'stay');
+			 //console.log($.messager.title);
 		});
    		 return false;
      },
