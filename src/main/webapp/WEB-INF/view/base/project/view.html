@@ -109,8 +109,11 @@ function initComplete(){
       width:"100%",pageSize:5,percentWidthMode:true,
      	onSelectRow: function (rowdata) {
     	console.log(rowdata)
+    	//console.log(rowdata)
+    	
    	    //页号重置为1
    	    grid.setNewPage(1);
+   	    
     	grid.setOptions({url : "/quote/list?quote.PROJECT_ID="+rowdata.ID});
 
 		$.post("/gys/findProjectOverDate",{ PROJECT_ID: rowdata.ID },function(data){
@@ -122,14 +125,9 @@ function initComplete(){
 					html += "<div>"+data[i].GYSBH+"-"+data[i].QYMC+"</div>";
 				}
 			 html +="</div>";
-
 			 $.messager.lays(400,200)
-			 
 			 $.messager.show('以下供应商资质已过期',html,'stay');
-			
-			
 		});
-		
    		 return false;
      },
      toolbar:{
@@ -171,8 +169,8 @@ function initComplete(){
      toolbar:{
     	 items:[
     		  {text: '导入', click: importQuote,    iconClass: 'icon_import'},
-    		  { line : true },
-    		  {text: '新增', click: addQuote,    iconClass: 'icon_add'},
+    		  //{ line : true },
+    		  //{text: '新增', click: addQuote,    iconClass: 'icon_add'},
     		  { line : true },
     		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
     		  { line : true },

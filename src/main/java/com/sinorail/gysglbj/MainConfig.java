@@ -113,7 +113,6 @@ public class MainConfig extends JFinalConfig {
 		arp.addSqlTemplate("sql/quote.sql");
 		arp.addSqlTemplate("sql/certificate.sql");
 		
-
 		/********在此添加数据库 表-Model 映射*********/
 		_MappingKit.mapping(arp);
 		
