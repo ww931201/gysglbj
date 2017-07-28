@@ -24,8 +24,6 @@
 	#end
 
 	
-	
-	
 	### 根据供应商编号查询供应商
 	#sql("findByGysbh")
 		select * from E_SUPPLIER where GYSBH = ?
@@ -53,6 +51,14 @@
 		select gysbh, qymc from E_SUPPLIER where id in(select SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE, 'yyyy-mm-dd'))
 		UNION
 		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')
+	#end
+	
+	#根据项目中编码查找过期供应商
+	
+	#sql("findProjectOverDate")
+		select gysbh, qymc from E_SUPPLIER where id in(select SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE+365, 'yyyy-mm-dd')) and id IN(select supplier_id from E_QUOTE where PROJECT_ID  = (select id from E_PROJECT where id = ?))
+		UNION
+		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')  and id IN(select supplier_id from E_QUOTE where PROJECT_ID  = (select id from E_PROJECT where id = ?))
 	#end
 	
 #end

@@ -4,6 +4,9 @@ package com.sinorail.gysglbj.model;
 
 import java.util.List;
 
+import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
+
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
@@ -84,5 +87,13 @@ public class Supplier extends BaseSupplier<Supplier> {
 			}
 		}
 		return flag;
+	}
+	
+	
+	public List<Supplier> findProjectOverDate(String strId){
+		
+		List<Supplier> supResult = find(getSql("supplier.findProjectOverDate"), strId , strId); 
+		
+		return supResult;
 	}
 }

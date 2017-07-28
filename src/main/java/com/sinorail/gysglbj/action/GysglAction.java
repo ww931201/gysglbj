@@ -234,6 +234,9 @@ public class GysglAction extends QuiController {
 		render("detail.html");
 	}
 	
+	
+	
+
 	/**
 	 * 
 	 * 删除对应的一行
@@ -314,5 +317,20 @@ public class GysglAction extends QuiController {
 	public void findOverDate() {
 		renderJson(Db.find(Db.getSql("supplier.findOverDate")));
 	}
-}
+	
+	
+	/**
+	 * 项目中供应商信息的编号查询供应商信息
+	 */
+	public void findProjectOverDate() {
+		
+		List<Supplier> findProjectOverDate = Supplier.dao.findProjectOverDate(getPara("PROJECT_ID"));
+		
+	/*	for (Supplier supplier : findProjectOverDate) {
+			
+			renderJson(supplier);
+			}*/
+		renderJson(findProjectOverDate);
+		}
+	}
 	
