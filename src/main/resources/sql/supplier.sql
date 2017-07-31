@@ -58,7 +58,7 @@
 	#sql("findProjectOverDate")
 		select gysbh, qymc from E_SUPPLIER where id in(select SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE+365, 'yyyy-mm-dd')) and id IN(select supplier_id from E_QUOTE where PROJECT_ID  = (select id from E_PROJECT where id = ?))
 		UNION
-		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')  and id IN(select supplier_id from E_QUOTE where PROJECT_ID  = (select id from E_PROJECT where id = ?))
+		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE+365, 'yyyy-mm-dd')  and id IN(select supplier_id from E_QUOTE where PROJECT_ID  = (select id from E_PROJECT where id = ?))
 	#end
 	
 #end

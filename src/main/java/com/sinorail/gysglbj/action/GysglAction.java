@@ -168,6 +168,7 @@ public class GysglAction extends QuiController {
 				/*renderText("4"); return;*/
 				renderJson("result", "导入数据失败，请修改后重试！"); return;
 			}
+			
 			file.getFile().delete();//删除上传的缓存文件
 			
 			renderJson("result", 0); 
