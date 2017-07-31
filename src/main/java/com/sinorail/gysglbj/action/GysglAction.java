@@ -85,6 +85,7 @@ public class GysglAction extends QuiController {
 					a++;
 				}
 			}
+			
 			/*if(temp.length()>0){
 				renderText("5"); return;
 			}*/
@@ -111,21 +112,21 @@ public class GysglAction extends QuiController {
 				}
 			}
 			
-			
 			List<Record> recordList = new LinkedList<Record>();
-			
+			int c= 1;
 			boolean temp_is_stop = false;
 			
-			for (List<Object> listm : list) { 
-				
+			/*for (List<Object> listm : list) { */
+				for(int n = 0;n<list.size();n++){
 				Record r = new Record();
 
 				for(int i=0; i<field.length; i++) {
-						
+					
 						if(i == 10){
 						
-						Object obj = listm.get(i);
-						
+						/*Object obj = list.get(n).get(i); */
+						 Object obj = listm.get(i);
+							
 						String result = obj.toString();
 						String pattern  = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
 						
@@ -134,11 +135,11 @@ public class GysglAction extends QuiController {
 						
 						if(m.matches()){
 							System.out.println("匹配");
-						
 						}else{ 
-							renderJson("result", "第11列'成立日期'日期格式填写错误！请修改后重新填写！"); return;
+							renderJson("result", "第"+c+"行"+"第11列'成立日期'日期格式填写错误！请修改后重新填写！"); return;
 						}
 					}
+						
 						
 						if(i == 15){
 							Object obj2 = listm.get(i);
@@ -152,22 +153,49 @@ public class GysglAction extends QuiController {
 								System.out.println("匹配");
 							
 							}else{
-								renderJson("result", "第16列'有效期'日期格式填写错误！请修改后重新填写！"); return;
+								renderJson("result", "第"+c+"行"+"第16列'有效期'日期格式填写错误！请修改后重新填写！"); return;
 							}
 						}
 						
 					r.set(field[i], listm.get(i));
+					
+				/*		int d= 1;	
+						String[] arr = {"([\\s\\S]*)","",""};
+						String[] arr2 = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "资质证书", "不良供应商处罚周期", "黑名单", "供应商信用评价等级", "供应商经营范围" };
+						
+						Object obj = listm.get(i);
+						
+						String result = obj.toString();
+						
+						for (int j = 0; j<arr.length ; j++) {
+							
+							arr[j];arr2[j];
+							Pattern p=Pattern.compile(arr[j]);
+							Matcher m=p.matcher(result);
+							
+							boolean matches = Pattern.matches(arr[j], result);
+							if(matches){
+								System.out.println("匹配");
+							}else{ 
+								renderJson("result", "第"+d+"行"+"第"+j+"列'"+arr2[j]+"'格式填写错误！请修改后重新填写！"); return;
+							}
+						}
+						d++;*/
 				}
+				
+				c++;
 				
 				if(temp_is_stop) break;
 				
 				if(r != null) recordList.add(r);
-				
 			}
 			if(!(Db.batchSave("E_SUPPLIER", recordList, recordList.size()).length > 0) ) {
 				/*renderText("4"); return;*/
 				renderJson("result", "导入数据失败，请修改后重试！"); return;
 			}
+			
+			File file2 = file.getFile();
+			System.out.println(file2.getName()); 
 			file.getFile().delete();//删除上传的缓存文件
 			
 			renderJson("result", 0); 
@@ -253,8 +281,6 @@ public class GysglAction extends QuiController {
 				log.info("****删除供应商记录ID="+ getPara("id"));
 			}
 		}
-		
-		
 		renderJson(); 
 		
 	}
@@ -326,7 +352,7 @@ public class GysglAction extends QuiController {
 		
 		List<Supplier> findProjectOverDate = Supplier.dao.findProjectOverDate(getPara("PROJECT_ID"));
 		
-	/*	for (Supplier supplier : findProjectOverDate) {
+		/*for (Supplier supplier : findProjectOverDate) {
 			
 			renderJson(supplier);
 			}*/

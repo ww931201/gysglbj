@@ -593,7 +593,6 @@ public class ExcelUtils {
 					
 					//System.out.println("Sheet " + k + " \"" + wb.getSheetName(k) + "\" has " + rows + " row(s).");
 					
-					
 					for (int r = startRowNum; r < rows; r++) {
 						XSSFRow row = sheet.getRow(r);
 						if (row == null) {
