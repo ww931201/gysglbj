@@ -26,17 +26,8 @@ $(function () {
 	$('#fileupload').fileupload({
         dataType: 'json',
         done: function (e, data) {
-			if(data.result == "0"){
-				top.Dialog.close();
-        		top.frmright.grid.loadData();
-        	}else if (data.result == "1"){
-        		top.Dialog.alert("检查文件中供应商编码是否填写,或 系统中是否录入该供应商!");
-        	}else if (data.result == "2"){
-        		top.Dialog.alert("已导入该供应商信息!");
-        	}else if (data.result == "3"){
-        		top.Dialog.alert("上传失败!");
-        	}else {
-        		top.Dialog.alert("导入失败!");
+			if(data.result.msg){
+        		top.Dialog.alert(data.result.msg);
         	}
         },
         progressall: function (e, data) {
