@@ -126,7 +126,7 @@ public class QuoteAction extends QuiController {
 		List<List<Object>> list = null;
 		
 		//String[] field = {"BJH", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
-		String[][] field = {{"BJH","^\\d+$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW","^\\d+$","计量单位"}, {"YCSL",".*","预测数量"}, {"DJXJ_BHS","^[1-9][0-9]*$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
+		String[][] field = {{"BJH","^[0-9]+(.[0]{1,2})?$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW",".*","计量单位"}, {"YCSL","^[0-9]+(.[0]{1,2})?$","预测数量"}, {"DJXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
 		
 		try {
 			
@@ -140,23 +140,31 @@ public class QuoteAction extends QuiController {
 		}
 		List<Record> recordList = new LinkedList<Record>();
 		
-		for (int j=0; j<list.size(); j++) {
+		int rows = 1;
+		boolean temp_is_stop = false;
+		
+		for (List<Object> listm : list) {
 			
 			Record r = new Record().set("PROJECT_ID", projectId).set("SUPPLIER_ID", supplier.getId());
 			
 			for(int i=0; i<field.length; i++) {
 				
-				if(field[i][1] == "WZBM" && (list.get(j).get(i) == null || list.get(j).get(i).equals(""))) {	
-					
-					if(!list.get(j).get(i).toString().matches(field[i][2])) renderJson("msg", "第"+i+1+"行，"+field[i][3]+"：规则不匹配！"); return;
-
+				if(field[i][0] == "WZBM") {
+					if( listm.get(i) == null || listm.get(i).toString().trim().equals("")){						
+						temp_is_stop = true;
+						break;
+					}
 				}
-				r.set(field[i][1], list.get(j).get(i));
-				
+				if(listm.get(i) != null && !listm.get(i).toString().matches(field[i][1])) {
+					renderJson("msg", "第"+(rows+4)+"行，"+field[i][2]+"："+listm.get(i)+" 规则不匹配！"); return;
+				}
+				r.set(field[i][0], listm.get(i));
+				System.out.println(field[i][0]+": "+listm.get(i));
 			}
-			
+			if(temp_is_stop) break;
 			if(r != null) recordList.add(r);
 			
+			rows++;
 		}
 		
 		
@@ -165,7 +173,7 @@ public class QuoteAction extends QuiController {
 			renderJson("msg", "导入失败!"); return;
 		}
 		
-		file.getFile().delete();//删除上传的缓存文件
+		file.getFile().delete(); //删除上传的缓存文件
 		
 		renderJson("msg", "导入成功！");
 	}
