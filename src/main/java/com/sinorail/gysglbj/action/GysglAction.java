@@ -65,7 +65,7 @@ public class GysglAction extends QuiController {
 			//EXCEL文件供应商编码重复
 			String temp ="";
 			List<Object> lists = new ArrayList<Object>();
-			int a = 1;
+			int a = 2;
 			if(list!=null){
 				for (List<Object> fileGysbh : list) { 
 					if(lists!=null){
@@ -100,7 +100,7 @@ public class GysglAction extends QuiController {
 								duipler += gysbh+",";
 							}
 							if(duipler.length()>0){
-								renderJson("result", "第" + (l+1) + "行供应商编码'"+gysbh+"'在数据库已经存在，请修改后再导入数据"); return; 
+								renderJson("result", "第" + (l+2) + "行供应商编码'"+gysbh+"'在数据库已经存在，请修改后再导入数据"); return; 
 							}
 						}
 					}
@@ -118,11 +118,11 @@ public class GysglAction extends QuiController {
 				for(int i=0; i<fields.length; i++) {
 					
 					if(fields[i][0] == "GYSBH" && (list.get(n).get(i) == null || list.get(n).get(i) == "")){
-						renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+						renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 					}else{
 						boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
 						if(!flag){
-							renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+							renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 						}
 					}
 					r.set(fields[i][0], list.get(n).get(i));
