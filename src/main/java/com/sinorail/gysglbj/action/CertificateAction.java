@@ -184,9 +184,10 @@ public class CertificateAction extends QuiController{
 				
 				r.set(field[i], listm.get(i));
 				
-				if(i == 3 || i == 4){
+				/*if(i == 3 || i == 4){
 					r.set(field[i], new Timestamp(((Date) listm.get(i)).getTime()));
-				}
+				}*/
+				
 				/* 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				

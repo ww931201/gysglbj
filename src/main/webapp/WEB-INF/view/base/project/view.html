@@ -23,7 +23,7 @@
 								<td>
 									<input type="text" id="searchInput" name="project.NAME" />
 								</td>
-								<td>编码：</td>
+								<td>编号：</td>
 								<td>
 									<input type="text" id="searchInput" name="project.NO" />
 								</td>
@@ -108,7 +108,6 @@ function initComplete(){
         width:"100%",pageSize:5,percentWidthMode:true,
      	onSelectRow: function (rowdata) {
 		$("#message").remove();
-    	//console.log(rowdata)
     	
    	    //页号重置为1
    	    grid.setNewPage(1);
@@ -123,8 +122,8 @@ function initComplete(){
 				}
 			 html +="</div>";
 			 $.messager.lays(400,200)
-			 $.messager.show('以下供应商资质有效期不满一年',html,'stay');
-			 //console.log($.messager.title);
+			 $.messager.show('以下供应商资质有效期不满一年即将过期',html,'stay');
+				console.log($.messager.title);
 		});
    		 return false;
      },
