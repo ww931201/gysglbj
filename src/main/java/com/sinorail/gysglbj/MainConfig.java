@@ -1,5 +1,7 @@
 package com.sinorail.gysglbj;
 
+import java.nio.file.Files;
+
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
 import com.jfinal.config.Constants;
@@ -148,6 +150,11 @@ public class MainConfig extends JFinalConfig {
 	public static void main(String[] args) {
 		JFinal.start("src/main/webapp", 80, "/", 5);
 	}
-	
 
+	@Override
+	public void afterJFinalStart() {
+		//Files.notExists(path, options)
+	}
+	
+	
 }
