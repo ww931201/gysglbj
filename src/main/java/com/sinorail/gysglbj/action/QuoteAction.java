@@ -108,8 +108,6 @@ public class QuoteAction extends QuiController {
 	
 	public void importExcel() throws IOException {
 		
-		String msg  = "0"; // renderText 参数不能为汉字
-		
 		UploadFile file = getFile("excel");
 		
 		String projectId = getPara("projectId");
@@ -119,15 +117,16 @@ public class QuoteAction extends QuiController {
 		//System.out.println("*********"+supplierId+"************");
 		Supplier supplier = Supplier.dao.findFirst("select * from e_supplier where GYSBH = ?", supplierNo);
 		
-			if(supplier == null) {renderText("1"); return;}
+			if(supplier == null) {renderJson("msg", "检查文件中供应商编码是否填写,或 系统中是否录入该供应商!"); return;}
 		
 		Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?",projectId, supplier.getId());
 		
-			if(quote != null) {renderText("2"); return;}
+			if(quote != null) {renderJson("msg", "已导入该供应商信息!"); return;}
 		
 		List<List<Object>> list = null;
 		
-		String[] field = {"BJH", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
+		//String[] field = {"BJH", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
+		String[][] field = {{"BJH","^\\d+$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW","^\\d+$","计量单位"}, {"YCSL",".*","预测数量"}, {"DJXJ_BHS","^[1-9][0-9]*$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
 		
 		try {
 			
@@ -135,30 +134,26 @@ public class QuoteAction extends QuiController {
 			
 		} catch (IOException e1) {
 			
-			//setAttr("msg", file.getFileName()+"上传失败!");
-			//msg = file.getFileName()+"上传失败!";
 			e1.printStackTrace();
-			renderText("3"); return;
+			renderJson("msg", "上传失败!"); return;
 			
 		}
 		List<Record> recordList = new LinkedList<Record>();
 		
-		boolean temp_is_stop = false;
-		
-		for (List<Object> listm : list) {
+		for (int j=0; j<list.size(); j++) {
 			
 			Record r = new Record().set("PROJECT_ID", projectId).set("SUPPLIER_ID", supplier.getId());
 			
 			for(int i=0; i<field.length; i++) {
 				
-				if(field[i] == "WZBM" && (listm.get(i) == null || listm.get(i).equals(""))) {	
-					temp_is_stop= true;
-					break;
+				if(field[i][1] == "WZBM" && (list.get(j).get(i) == null || list.get(j).get(i).equals(""))) {	
+					
+					if(!list.get(j).get(i).toString().matches(field[i][2])) renderJson("msg", "第"+i+1+"行，"+field[i][3]+"：规则不匹配！"); return;
+
 				}
-				r.set(field[i], listm.get(i));
+				r.set(field[i][1], list.get(j).get(i));
 				
 			}
-			if(temp_is_stop) break;
 			
 			if(r != null) recordList.add(r);
 			
@@ -167,17 +162,14 @@ public class QuoteAction extends QuiController {
 		
 		if(!(Db.batchSave("E_QUOTE", recordList, recordList.size()).length > 0) ) {
 			
-			//setAttr("msg", "导入失败!");
-			msg = "导入失败!";
-			renderText("4"); return;
+			renderJson("msg", "导入失败!"); return;
 		}
 		
 		file.getFile().delete();//删除上传的缓存文件
 		
-		//renderJson();
-		renderText(msg);
+		renderJson("msg", "导入成功！");
 	}
-	
+
 	/**
 	 * 导出数据过滤结果
 	 * @throws IOException 

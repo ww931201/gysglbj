@@ -196,6 +196,7 @@ public class GysglAction extends QuiController {
 			
 			File file2 = file.getFile();
 			System.out.println(file2.getName()); 
+
 			file.getFile().delete();//删除上传的缓存文件
 			
 			renderJson("result", 0); 
