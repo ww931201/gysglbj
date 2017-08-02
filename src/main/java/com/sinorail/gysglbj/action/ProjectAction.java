@@ -41,8 +41,10 @@ public class ProjectAction extends QuiController {
 		Project project = Project.dao.findById(projectId);
 		
 		File file = new File(Const.temp_file_path+project.getName()+project.getNo()+".xls");
-		
+		System.out.println(Const.temp_file_path+project.getName()+project.getNo()+".xls");
+		System.out.println(file.getPath());
 		String path = Thread.currentThread().getContextClassLoader().getResource("templates/quote_template.xls").getPath();
+		System.out.println("******"+path);
 		renderFile(ExcelUtils.replaceCell(new File(path), 1, 0, "项目名称："+project.getName()+" 项目编号："+project.getNo(), file));
 	}
 	
