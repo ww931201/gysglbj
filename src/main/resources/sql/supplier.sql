@@ -9,7 +9,7 @@
 		from E_SUPPLIER
 		where 1 = 1
 		#if(GYSBH ??)
-			and GYSBH like '%#(GYSBH)%'
+			and upper(GYSBH) like upper('%#(GYSBH)%')
 		#end
 		#if(QYMC ??)
 			and QYMC like '%#(QYMC)%'
