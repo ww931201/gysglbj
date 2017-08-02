@@ -26,6 +26,7 @@ $(function () {
 	$('#fileupload').fileupload({
         dataType: 'json',
         done: function (e, data) {
+
 			if(data.result.msg){
         		top.Dialog.alert(data.result.msg,null,null,null,1);
         		top.frmright.grid.loadData();
