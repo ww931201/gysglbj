@@ -125,7 +125,7 @@ public class CertificateAction extends QuiController{
 		} catch (IOException e1) {
 			
 			e1.printStackTrace();
-			renderText("3"); return;
+			renderJson("result", "导入失败，请修改后再导入数据"); return; 
 			
 		}
 		/**进行证书编码重复校验*/
@@ -133,7 +133,7 @@ public class CertificateAction extends QuiController{
 		 
 		String temp = "";
 		List<Object> lists = new ArrayList<Object>();
-		int a = 1;
+		int a = 2;
 		if(list!=null){
 			for (List<Object> cerNo : list) {
 				if(lists!=null){
@@ -166,7 +166,7 @@ public class CertificateAction extends QuiController{
 								temps += cerno+",";
 							}
 							if(temps.length()>0){
-								renderJson("result", "第" + (l+1) + "行证书编码'"+cerno+"'在数据库已经存在，请修改后再导入数据"); return; 
+								renderJson("result", "第" + (l+2) + "行证书编码'"+cerno+"'在数据库已经存在，请修改后再导入数据"); return; 
 							}
 							
 						}
@@ -185,11 +185,11 @@ public class CertificateAction extends QuiController{
 			for(int i=0; i<fields.length; i++) {
 				
 				if(fields[i][0] == "NO" && (list.get(n).get(i) == null || list.get(n).get(i) == "")){
-					renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+					renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 				}else{
 					boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
 					if(!flag){
-						renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+						renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 					}
 				}
 				r.set(fields[i][0], list.get(n).get(i));
@@ -201,7 +201,7 @@ public class CertificateAction extends QuiController{
 		
 		if(!(Db.batchSave("E_CERTIFICATE", recordList, recordList.size()).length > 0) ) {
 			
-			renderJson("result", "导入数据失败，请修改后重试！"); return;
+			renderJson("result", "导入失败，请修改后再导入数据"); return; 
 		}
 		
 		file.getFile().delete();//删除上传的缓存文件
