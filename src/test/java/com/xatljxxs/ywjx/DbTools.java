@@ -69,6 +69,16 @@ public class DbTools {
 			 String colComment = r.getStr(DataBaseSchema.col_comment);
 			 System.out.print("\""+colName+"\", ");
 		 }
+		 System.out.println("带正则的表达式数组");
+		 
+		 	System.out.print("String[][] field = {");
+		 for(Record r : rList) {
+			 //System.out.println(r.get("COLUMN_NAME")+"\t"+r.getStr("COLUMN_COMMENT"));
+			 colName=r.getStr(DataBaseSchema.col_name);
+			 String colComment = r.getStr(DataBaseSchema.col_comment);
+			 System.out.print("{\""+colName+"\",\".*\",\""+colComment+"\"}, ");
+		 }
+		 	System.out.println("}");
 	 }
 
 	public static void createSeletSql(List<Record> rList, String tableTempName) {
