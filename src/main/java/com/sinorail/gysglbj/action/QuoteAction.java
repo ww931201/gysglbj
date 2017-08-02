@@ -159,7 +159,6 @@ public class QuoteAction extends QuiController {
 			
 		}
 		
-		
 		if(!(Db.batchSave("E_QUOTE", recordList, recordList.size()).length > 0) ) {
 			
 			renderJson("msg", "导入失败!"); return;

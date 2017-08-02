@@ -3,12 +3,11 @@ package com.sinorail.gysglbj.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -116,13 +115,10 @@ public class CertificateAction extends QuiController{
 	
 	public void importExcel() throws IOException, ParseException{
 		  
-		String msg  = "0"; // renderText 参数不能为汉字
 		
 		UploadFile file = getFile("excel");
 		
 		List<List<Object>> list = null;
-		
-		String[] field = {"NO", "NAME", "CONTENT", "START_TIME", "END_TIME", "UNIT"};
 		
 		try {
 			list = ExcelUtils.readExcel(file.getFile(), 1);
@@ -137,70 +133,67 @@ public class CertificateAction extends QuiController{
 		 
 		String temp = "";
 		List<Object> lists = new ArrayList<Object>();
-		for (List<Object> cerNo : list) {
-			if(lists!=null){
-				for (Object object : lists) {
-					if(cerNo.get(0).equals(object)){
-						temp += cerNo.get(0)+",";
+		int a = 1;
+		if(list!=null){
+			for (List<Object> cerNo : list) {
+				if(lists!=null){
+					for (Object object : lists) {
+						if(cerNo.get(0).equals(object)){
+							temp += cerNo.get(0)+",";
+						}
+						if(temp.length()>0){
+							renderJson("result", "第" + a + "行证书编码'"+object+"'在excel已经存在，请修改后再导入数据"); return; 
+						}
 					}
 				}
+				  lists.add(cerNo.get(0));
+				  a++;
 			}
-			  lists.add(cerNo.get(0));
 		}
 		
-		if(temp.length()>0){
-			renderText("5"); return;
-		}
+		
+		
 		
 		//2.导入的excel文件与系统数据库的编码重复
 		String temps = "";
 		List<Certificate> noList = Certificate.dao.find("select NO from E_CERTIFICATE"); 
 		if(noList!=null){
 				for (Certificate certificate : noList) {
+					String cerno = certificate.getNo();
 					if(list!=null){
-						for (List<Object> excNo : list) {
-							if(excNo.get(0).equals(certificate.getNo())){
-								temps += certificate.getNo()+",";
+						for (int l = 0;list.size()>l;l++) { 
+							if(list.get(l).get(0).equals(cerno)){
+								temps += cerno+",";
 							}
+							if(temps.length()>0){
+								renderJson("result", "第" + (l+1) + "行证书编码'"+cerno+"'在数据库已经存在，请修改后再导入数据"); return; 
+							}
+							
 						}
 					}
 				}
 			}
 		
-		if(temps.length()>0){
-			renderText("6");
-			return;
-		}
-		
 		List<Record> recordList = new LinkedList<Record>();
 		
-		boolean temp_is_stop = false;
-		
-		for (List<Object> listm : list) {
+		String[][] fields = {{"NO",".*","编号"}, {"NAME",".*","名称"}, {"CONTENT",".*","内容"}, {"START_TIME","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","证书有效期(起始日期)"}, {"END_TIME","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","证书有效期(终止日期)"}, {"UNIT",".*","发证单位"} };
+
+		for(int n = 0;n<list.size();n++){
 			
 			Record r = new Record().set("SUPPLIER_ID", getPara("supplierId"));
 			
-			for(int i=0; i<field.length; i++) {
+			for(int i=0; i<fields.length; i++) {
 				
-				r.set(field[i], listm.get(i));
-				
-				/*if(i == 3 || i == 4){
-					r.set(field[i], new Timestamp(((Date) listm.get(i)).getTime()));
-				}*/
-				
-				/* 
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				
-				if(i == 3 || i == 4){
-					
-					long str = new Double((Double) listm.get(i)).longValue();
-					
-					new Timestamp(str);
-					System.out.println(new Date(str));
-					r.set(field[i], new Timestamp(str));
-				}*/
+				if(fields[i][0] == "NO" && (list.get(n).get(i) == null || list.get(n).get(i) == "")){
+					renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+				}else{
+					boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
+					if(!flag){
+						renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+					}
+				}
+				r.set(fields[i][0], list.get(n).get(i));
 			}
-			if(temp_is_stop) break;
 			
 			if(r != null) recordList.add(r);
 			
@@ -208,14 +201,13 @@ public class CertificateAction extends QuiController{
 		
 		if(!(Db.batchSave("E_CERTIFICATE", recordList, recordList.size()).length > 0) ) {
 			
-			msg = "导入失败!";
-			renderText("4"); return;
+			renderJson("result", "导入数据失败，请修改后重试！"); return;
 		}
 		
 		file.getFile().delete();//删除上传的缓存文件
 		
 		//renderJson();
-		renderText(msg);
+		renderJson("result", "0"); 
 		
 		}
 	

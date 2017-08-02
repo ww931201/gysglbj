@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -63,7 +62,6 @@ public class GysglAction extends QuiController {
 				renderJson("result", "上传失败！"); return;
 				
 			}
-			
 			//EXCEL文件供应商编码重复
 			String temp ="";
 			List<Object> lists = new ArrayList<Object>();
@@ -76,7 +74,7 @@ public class GysglAction extends QuiController {
 								 temp += fileGysbh.get(0)+",";
 							}
 							if(temp.length()>0){
-								renderJson("result", "第" + a + "行供应商编码在excel已经存在，请修改后再导入数据"); return; 
+								renderJson("result", "第" + a + "行供应商编码'"+object+"'在excel已经存在，请修改后再导入数据"); return; 
 							}
 							
 						}
@@ -85,122 +83,64 @@ public class GysglAction extends QuiController {
 					a++;
 				}
 			}
-			
 			/*if(temp.length()>0){
 				renderText("5"); return;
 			}*/
-			
 			//数据库已经存在此供应商编码
 			String duipler = "";
-			int b = 1;
 			List<Supplier> findGysbh = Supplier.dao.findGysbh();
 			if(findGysbh!=null){
 				for (Supplier supplier : findGysbh) {
 					String gysbh = supplier.getGysbh();
+					
 					if(list!=null){
-						for (List<Object> listm : list) { 
-							if(listm.get(0).equals(gysbh)){
+						for (int l = 0;list.size()>l;l++) { 
+							
+							if(list.get(l).get(0).equals(gysbh)){
 								duipler += gysbh+",";
 							}
-							
 							if(duipler.length()>0){
-								renderJson("result", "第" + b + "行供应商编码在数据库已经存在，请修改后再导入数据"); return; 
+								renderJson("result", "第" + (l+1) + "行供应商编码'"+gysbh+"'在数据库已经存在，请修改后再导入数据"); return; 
 							}
 						}
 					}
-					b++;
 				}
 			}
 			
 			List<Record> recordList = new LinkedList<Record>();
-			int c= 1;
-			boolean temp_is_stop = false;
 			
-			/*for (List<Object> listm : list) { */
-				for(int n = 0;n<list.size();n++){
+			String[][] fields = {{"GYSBH",".*","供应商编号"}, {"SHXYDM",".*","社会信用代码"}, {"YYZZZCH",".*","营业执照注册号"}, {"QYMC",".*","企业名称"}, {"FDDBR",".*","法定代表人"}, {"FDDBRDH",".*","法定代表人电话"}, {"SSS",".*","所属省"}, {"SSS1",".*","所属市"}, {"ZS",".*","住所"}, {"ZCZB",".*","注册资本"}, {"CLRQ","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","成立日期"}, {"YYQX",".*","营业期限"}, {"QYLX",".*","企业类型"}, {"ZZJGDM",".*","组织机构代码"}, {"SWDJH",".*","税务登记号"}, {"YXQ","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","有效期"}, {"YWLXR",".*","业务联系人"}, {"LXRSJ",".*","联系人手机"}, {"BGCZ",".*","办公传真"}, {"BGDH",".*","办公电话"}, {"LXRYX",".*","联系人邮箱"}, {"LXRZW",".*","联系人职务"}, {"BGDZ",".*","办公地址"},  {"BLGYSCFZQ",".*","不良供应商处罚周期"}, {"HMD",".*","黑名单"}, {"BLGYSXYPJDJ",".*","供应商信用评价等级"}, {"GYSJYFW",".*","供应商经营范围"}};
+			
+			for(int n = 0;n<list.size();n++){
+				
 				Record r = new Record();
 
-				for(int i=0; i<field.length; i++) {
+				for(int i=0; i<fields.length; i++) {
 					
-						if(i == 10){
-						
-						/*Object obj = list.get(n).get(i); */
-						 Object obj = listm.get(i);
-							
-						String result = obj.toString();
-						String pattern  = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
-						
-						Pattern p=Pattern.compile(pattern);
-						Matcher m=p.matcher(result);
-						
-						if(m.matches()){
-							System.out.println("匹配");
-						}else{ 
-							renderJson("result", "第"+c+"行"+"第11列'成立日期'日期格式填写错误！请修改后重新填写！"); return;
+					if(fields[i][0] == "GYSBH" && (list.get(n).get(i) == null || list.get(n).get(i) == "")){
+						renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+					}else{
+						boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
+						if(!flag){
+							renderJson("result","第"+(n+1)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 						}
 					}
-						
-						
-						if(i == 15){
-							Object obj2 = listm.get(i);
-							String result2 = obj2.toString();
-							String pattern2  = "(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
-							
-							Pattern p2=Pattern.compile(pattern2);
-							Matcher m2=p2.matcher(result2);
-							
-							if(m2.matches()){
-								System.out.println("匹配");
-							
-							}else{
-								renderJson("result", "第"+c+"行"+"第16列'有效期'日期格式填写错误！请修改后重新填写！"); return;
-							}
-						}
-						
-					r.set(field[i], listm.get(i));
-					
-				/*		int d= 1;	
-						String[] arr = {"([\\s\\S]*)","",""};
-						String[] arr2 = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "资质证书", "不良供应商处罚周期", "黑名单", "供应商信用评价等级", "供应商经营范围" };
-						
-						Object obj = listm.get(i);
-						
-						String result = obj.toString();
-						
-						for (int j = 0; j<arr.length ; j++) {
-							
-							arr[j];arr2[j];
-							Pattern p=Pattern.compile(arr[j]);
-							Matcher m=p.matcher(result);
-							
-							boolean matches = Pattern.matches(arr[j], result);
-							if(matches){
-								System.out.println("匹配");
-							}else{ 
-								renderJson("result", "第"+d+"行"+"第"+j+"列'"+arr2[j]+"'格式填写错误！请修改后重新填写！"); return;
-							}
-						}
-						d++;*/
-				}
-				
-				c++;
-				
-				if(temp_is_stop) break;
+					r.set(fields[i][0], list.get(n).get(i));
+			}
 				
 				if(r != null) recordList.add(r);
-			}
+		}
+			
 			if(!(Db.batchSave("E_SUPPLIER", recordList, recordList.size()).length > 0) ) {
-				/*renderText("4"); return;*/
 				renderJson("result", "导入数据失败，请修改后重试！"); return;
 			}
 			
-			File file2 = file.getFile();
-			System.out.println(file2.getName()); 
+			/*File file2 = file.getFile();
+			System.out.println(file2.getName()); */
 
 			file.getFile().delete();//删除上传的缓存文件
 			
-			renderJson("result", 0); 
-			
+			renderJson("result", "0"); 
 		}
 	
 	/**
@@ -211,9 +151,9 @@ public class GysglAction extends QuiController {
 		
 		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
-	} 
+	}  
 	
-	/**
+	/** 
 	 * 保存信息的方法
 	 * 
 	 */
