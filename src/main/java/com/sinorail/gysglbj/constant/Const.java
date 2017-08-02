@@ -26,6 +26,6 @@ public class Const {
 	public static BigDecimal is_del = new BigDecimal(1);
 	public static BigDecimal not_del = new BigDecimal(2);
 	
-	public static String temp_file_path = "";//"temp"+File.separator;
+	public static String temp_file_path = "temp"+File.separator;
 	
 }

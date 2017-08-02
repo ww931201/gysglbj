@@ -29,7 +29,7 @@ $(function () {
 
 			if(data.result.msg){
         		top.Dialog.alert(data.result.msg);
-
+        		top.frmright.grid.loadData();
         	}
         },
         progressall: function (e, data) {

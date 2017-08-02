@@ -4,10 +4,10 @@
 	#sql("paginateList")
 		select * from E_PROJECT where 1=1
 		#if(NAME ??)
-			and NAME like '%#(NAME)%'
+			and upper(NAME) like upper('%#(NAME)%')
 		#end
 		#if(NO ??)
-			and no like '%#(NO)%'
+			and upper(NO) like upper('%#(NO)%')
 		#end
 		ORDER BY ENTRY_TIME DESC
 	#end

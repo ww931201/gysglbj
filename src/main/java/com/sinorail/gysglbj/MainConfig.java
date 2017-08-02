@@ -29,6 +29,7 @@ import com.sinorail.gysglbj.action.UserAction;
 import com.sinorail.gysglbj.aop.LoginInterceptor;
 import com.sinorail.gysglbj.constant.Const;
 import com.sinorail.gysglbj.model._MappingKit;
+import com.sinorail.gysglbj.util.FileUtils;
 
 public class MainConfig extends JFinalConfig {
 	
@@ -148,6 +149,11 @@ public class MainConfig extends JFinalConfig {
 	public static void main(String[] args) {
 		JFinal.start("src/main/webapp", 80, "/", 5);
 	}
-	
 
+	@Override
+	public void afterJFinalStart() {
+		FileUtils.createDir(Const.temp_file_path);
+	}
+	
+	
 }
