@@ -28,9 +28,10 @@
 
 	grid = $("#dataBasic").quiGrid({
 		columns:[
-			{ display: '供应商编号', name: 'GYSBH', align: 'center', editor: { type: 'text'}, width: '30%'},
-			{ display: '企业名称', name: 'QYMC', align: 'center', editor: { type: 'text'}, width: '30%'},
-			{ display: '总限价（不含税）', name: 'ZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '30%'}
+			{ display: '供应商编号', name: 'GYSBH', align: 'center', editor: { type: 'text'}, width: '25%'},
+			{ display: '企业名称', name: 'QYMC', align: 'center', editor: { type: 'text'}, width: '25%'},
+			{ display: '总限价（不含税）', name: 'ZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '25%'},
+			{ display: '厂商报总限价（不含税）', name: 'CSBZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '25%'}
 		  ],
 	 url: '/quote/filterList?quote.PROJECT_ID=#(projectId)', sortName: 'userId',rownumbers:true,checkbox:false,
 	 height: '100%', width:"100%", usePager:false, percentWidthMode:true
