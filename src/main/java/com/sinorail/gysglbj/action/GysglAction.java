@@ -119,19 +119,18 @@ public class GysglAction extends QuiController {
 					
 					if(fields[i][0] == "GYSBH" && (list.get(n).get(i) == null || list.get(n).get(i) == "")){
 						renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
-					}else{
-						if(list.get(n).get(i)!=null){
-							boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
-							if(!flag){
-								renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
-							}
+					}
+					if(list.get(n).get(i) != null) {
+						boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
+						if(!flag){
+							renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 						}
 					}
 					r.set(fields[i][0], list.get(n).get(i));
-			}
+				}
 				
 				if(r != null) recordList.add(r);
-		}
+			}
 			
 			if(!(Db.batchSave("E_SUPPLIER", recordList, recordList.size()).length > 0) ) {
 				renderJson("result", "导入数据失败，请修改后重试！"); return;
