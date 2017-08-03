@@ -177,10 +177,13 @@
 				<tr>
 					<td>黑名单：</td>
 					<td>
-					<select name="supplier.HMD" id="searchInput" style="text-align: center">
+					
+					<select name="supplier.HMD" data='{"list":[{"key":"是","value":"是"},{"key":"否","value":"否"}]}' selectedValue="#(supplier.HMD ?? '否')">
+					</select>
+					<!-- <select name="supplier.HMD" id="searchInput" style="text-align: center">
 					<option value="是">是</option>
 					<option value="否" selected="selected">否</option>
-					</select>
+					</select> -->
 					</td> 
 					<!-- <td>
 					<input type='text' name='supplier.HMD'
