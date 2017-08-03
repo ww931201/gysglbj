@@ -176,9 +176,16 @@
 				</tr>
 				<tr>
 					<td>黑名单：</td>
-					<td><input type='text' name='supplier.HMD'
+					<td>
+					<select name="supplier.HMD" id="searchInput" style="text-align: center">
+					<option value="是">是</option>
+					<option value="否" selected="selected">否</option>
+					</select>
+					</td> 
+					<!-- <td>
+					<input type='text' name='supplier.HMD'
 						value='#(supplier.HMD ??)' 
-						class=''/></td>
+						class=''/></td> -->
 				</tr>
 				<tr>
 					<td>不良供应商信用评价等级：</td>

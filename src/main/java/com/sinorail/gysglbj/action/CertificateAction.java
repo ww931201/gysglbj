@@ -152,8 +152,6 @@ public class CertificateAction extends QuiController{
 		}
 		
 		
-		
-		
 		//2.导入的excel文件与系统数据库的编码重复
 		String temps = "";
 		List<Certificate> noList = Certificate.dao.find("select NO from E_CERTIFICATE"); 
@@ -187,9 +185,11 @@ public class CertificateAction extends QuiController{
 				if(fields[i][0] == "NO" && (list.get(n).get(i) == null || list.get(n).get(i) == "")){
 					renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 				}else{
+					if(list.get(n).get(i)!=null){
 					boolean flag = Pattern.matches(fields[i][1], list.get(n).get(i).toString());
 					if(!flag){
 						renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
+						}
 					}
 				}
 				r.set(fields[i][0], list.get(n).get(i));
