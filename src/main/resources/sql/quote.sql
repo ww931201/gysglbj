@@ -33,7 +33,8 @@
 			and upper(GGXH) like upper('%#(GGXH)%')
 		#end
 		#if(PROJECT_ID ??)
-			and PROJECT_ID = '#(PROJECT_ID)'`
+			and PROJECT_ID = '#(PROJECT_ID)'
+		#end
 		#if(SYDWJDQ ??)
 			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
 		#end
