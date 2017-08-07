@@ -20,7 +20,7 @@
 		#if(GYSJYFW ??)
 			and GYSJYFW like '%#(GYSJYFW)%'
 		#end
-		ORDER BY ENTRY_TIME DESC
+		ORDER BY ENTRY_TIME DESC, ID
 	#end
 
 	
