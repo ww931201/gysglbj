@@ -1,7 +1,7 @@
 #include("/WEB-INF/view/common/qui/header.html")
 <link href="/libs/css/import_basic.css" rel="stylesheet" type="text/css"/>
-<link href="/libs/skins/#(qui_theme ?? 'orange')/style.css" rel="stylesheet" type="text/css" id="theme" themeColor="#(qui_theme ?? 'orange')" positionTarget="positionContent"/>
-<link href="/static/qui/system/#(qui_theme ?? 'orange')/skin/style.css" rel="stylesheet" type="text/css" id="skin" skinPath="static/qui/system/#(qui_theme ?? 'orange')/skin/"/>
+<link href="/libs/skins/#(qui_theme ?? 'blue')/style.css" rel="stylesheet" type="text/css" id="theme" themeColor="#(qui_theme ?? 'blue')" positionTarget="positionContent"/>
+<link href="/static/qui/system/#(qui_theme ?? 'blue')/skin/style.css" rel="stylesheet" type="text/css" id="skin" skinPath="static/qui/system/#(qui_theme ?? 'blue')/skin/"/>
 
 <!--数据表格start-->
 <script src="/libs/js/table/quiGrid.js" type="text/javascript"></script>
@@ -46,10 +46,11 @@
 
 	grid = $("#dataBasic").quiGrid({
 		columns:[
-			{ display: '包件号', name: 'BJH', align: 'center', editor: { type: 'text'}, width: '4%'},
+			{ display: '包件号', name: 'BJH', align: 'center', editor: { type: 'text'}, width: '3%'},
+			{ display: '序号', name: 'xh', align: 'center', editor: { type: 'text'}, width: '3%'},
 			{ display: '供应商编号', name: 'GYSBH', align: 'center', editor: { type: 'text'}, width: '3%'},
 			{ display: '企业名称', name: 'QYMC', align: 'center', editor: { type: 'text'}, width: '7%'},
-			{ display: '物资编码', name: 'WZBM', align: 'center', editor: { type: 'text'}, width: '10%'},
+			{ display: '物资编码', name: 'WZBM', align: 'center', editor: { type: 'text'}, width: '8%'},
 			{ display: '物资名称', name: 'WZMC', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '规格型号', name: 'GGXH', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '技术要求', name: 'JSYQ', align: 'center', editor: { type: 'text'}, width: '6%'},

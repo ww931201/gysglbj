@@ -46,11 +46,11 @@ public class QuoteAction extends QuiController {
 		setAttr("projectId", getPara("projectId"));
 		Project project = Project.dao.findById(getPara("projectId"));
 		setAttr("projectName", project.getName());
-		//类型 1 竞买  2 竞价(整包)
+		//类型 1 竞买(整包)  2 竞价
 		if(project.getType().equals(new BigDecimal("1"))) {
-			render("filterView.html");
-		} else {
 			render("filterJJView.html");
+		} else {
+			render("filterView.html");
 		}
 	}
 	
@@ -63,12 +63,12 @@ public class QuoteAction extends QuiController {
 	public void filterList() {
 		Quote quote = getModel(Quote.class);
 		SqlPara sqp;
-		//类型 1 竞买  2 竞价(整包)
+		//类型 1 竞买(整包)  2 竞价
 		Project project = Project.dao.findById(quote.getProjectId());
 		if(project.getType().equals(new BigDecimal("1"))) {
-			sqp = Db.getSqlPara("quote.filterList", quote);
-		} else {
 			sqp = Db.getSqlPara("quote.filterJJList", quote);
+		} else {
+			sqp = Db.getSqlPara("quote.filterList", quote);
 		}
 		renderJson("rows", Db.find(sqp));
 	}
@@ -191,24 +191,24 @@ public class QuoteAction extends QuiController {
 		Quote quote = getModel(Quote.class);
 		File file = new File("filter.xls");
 		
-		//类型 1 竞买  2 竞价(整包)
+		//类型 1 竞买(整包)  2 竞价
 		Project project = Project.dao.findById(quote.getProjectId());
 		if(project.getType().equals(new BigDecimal("1"))) {
+			
+			SqlPara sqp = Db.getSqlPara("quote.filterJJList", quote);
+			List<Record> list = Db.find(sqp);
+			
+			String[] title = {"供应商编号", "企业名称", "总限价（不含税）", "厂商报总限价（不含税）"};
+			String[] field = {"GYSBH", "QYMC", "ZXJ_BHS", "CSBZXJ_BHS"};
+			
+			ExcelUtils.export(list, title, field, file);
+		} else {
 			
 			SqlPara sqp = Db.getSqlPara("quote.filterList", quote);
 			List<Record> list = Db.find(sqp);
 			
 			String[] title = {"包件号", "供应商编号", "企业名称", "物资编码", "物资名称", "规格型号", "技术要求", "计量单位", "预测数量", "单价限价(不含税）", "总限价（不含税）", "使用单位及地区", "厂商报单价(不含税）", "厂商报总限价（不含税）"};
 			String[] field = {"BJH", "GYSBH", "QYMC", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
-			
-			ExcelUtils.export(list, title, field, file);
-		} else {
-			
-			SqlPara sqp = Db.getSqlPara("quote.filterJJList", quote);
-			List<Record> list = Db.find(sqp);
-			
-			String[] title = {"供应商编号", "企业名称", "总报价"};
-			String[] field = {"GYSBH", "QYMC", "ZXJ_BHS"};
 			
 			ExcelUtils.export(list, title, field, file);
 		}
