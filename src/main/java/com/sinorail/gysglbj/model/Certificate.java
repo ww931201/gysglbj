@@ -34,6 +34,7 @@ public class Certificate extends BaseCertificate<Certificate> {
 	} 
 
 	public boolean isExistZsbh(String no, String id) {
+		
 		Certificate certificate = findFirst(getSql("certificate.findByZsbhAndId"), no, id);
 		if(certificate == null){
 			return false;

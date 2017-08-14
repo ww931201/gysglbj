@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Certificate;
+import com.sinorail.gysglbj.model.CertificateSupcode;
 import com.sinorail.gysglbj.util.ExcelUtils;
 
 /**
@@ -33,9 +34,13 @@ public class CertificateAction extends QuiController{
 		log.info("***跳转到证书的展示页面");
 	}
 	
-	
+    
 	public void detailViewSon(){
+		
 		setAttr("certificate", Certificate.dao.queryById(getPara("id")));
+		
+		setAttr("certificatesupcode", CertificateSupcode.dao.queryById(getPara("id")));
+		
 		render("detail.html");
 	}
 	
@@ -52,14 +57,52 @@ public class CertificateAction extends QuiController{
 		
 		boolean status = false;
 		Certificate certificate = getModel(Certificate.class,"certificate");
+		
+		String codefirst = getPara("certificatesupcode.CODE");
+		
+		
+		/*CertificateSupcode certificatesupcode = getModel(CertificateSupcode.class,"certificatesupcode");
+		
+		String codefirst = certificatesupcode.getCode();*/
+		
 		/*certificate.setStartTime(new Timestamp(getParaToDate("START_TIME").getTime()));
 		certificate.setEndTime(new Timestamp(getParaToDate("END_TIME").getTime()));*/
 		
+		String[] rescode ={};
+		
+		if(codefirst != null){
+			if((!codefirst.trim().equals(""))){
+				
+				String code = codefirst.replaceAll("，", ",");
+				rescode = code.split(",");
+				
+			}
+		}
+		
 		if (certificate.getId() == null) {
+			
 			certificate.remove("ID");
+			
 			if(!Certificate.dao.isExistZsbh(certificate.getNo())) {		
+				
 				status = certificate.save();
+				
+				String cerId = certificate.getId();
+				
+				if(rescode.length!=0){
+					for (int i = 0; i<rescode.length;i++) {
+						
+						CertificateSupcode supcode = new CertificateSupcode();
+						
+						supcode.setCerid(cerId); 
+						supcode.setCode(rescode[i]);
+						supcode.setCodename(codefirst);
+						boolean save = supcode.save();
+						
+					}
+				}
 				log.info("****保存证书,编号为"+ certificate.getNo());
+				
 			}else {
 				setAttr("content", "证书编号已存在!");
 			}
@@ -69,9 +112,9 @@ public class CertificateAction extends QuiController{
 				if(!Certificate.dao.isExistZsbh(certificate.getNo(), certificate.getId())) {
 					
 					//取消资质证书的父ID
-					
 					certificate.remove("SUPPLIER_ID");
 					status = certificate.update();
+					
 				}else {
 					setAttr("content", "证书编号已存在!");
 				}
@@ -88,7 +131,10 @@ public class CertificateAction extends QuiController{
 	 * 证书修改
 	 */ 
 	public void updateViewSon(){
+		
+		
 		setAttr("certificate", Certificate.dao.queryById(getPara("id")));
+		
 		render("save.html");
 	}
 	
@@ -98,6 +144,15 @@ public class CertificateAction extends QuiController{
 	 */
 	public void deleteSon(){
 		if(Certificate.dao.deleteById(getPara("id"))){
+			
+			List<CertificateSupcode> find = CertificateSupcode.dao.find("select ID from E_CERTIFICATE_SUPCODE where CERID = ? ",getPara("id"));
+			
+			if(find!=null){
+				for (CertificateSupcode certificateSupcode : find) {
+					CertificateSupcode.dao.deleteById(certificateSupcode.getId());
+				}
+			}
+			
 			setAttr("status", 1);
 			log.info("****删除ID="+ getPara("id"));
 		}
@@ -114,7 +169,6 @@ public class CertificateAction extends QuiController{
 	}
 	
 	public void importExcel() throws IOException, ParseException{
-		  
 		
 		UploadFile file = getFile("excel");
 		

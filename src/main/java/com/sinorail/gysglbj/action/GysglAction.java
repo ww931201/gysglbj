@@ -17,6 +17,7 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Certificate;
+import com.sinorail.gysglbj.model.CertificateSupcode;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
@@ -83,6 +84,7 @@ public class GysglAction extends QuiController {
 					a++;
 				}
 			}
+			
 			/*if(temp.length()>0){
 				renderText("5"); return;
 			}*/
@@ -150,7 +152,10 @@ public class GysglAction extends QuiController {
 	 */
 	public void list(){ 
 		
-		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
+		
+		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"));
+		 
+//		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
 	}  
 	
@@ -260,6 +265,7 @@ public class GysglAction extends QuiController {
 	public void showCer(){
 		
 		Page<Certificate> page = Certificate.dao.queryBySupplierId(pageNumber(), pageSize(), getPara("supplierId"));
+		
 		
 		renderJson(page);
 	}

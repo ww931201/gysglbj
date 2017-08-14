@@ -43,10 +43,15 @@
 					</select>
 					<!-- <input type="text" id="searchInput" name="supplier.HMD" /> -->
 				</td>
-				<td>经营范围：</td>
+				<!-- <td>经营范围：</td>
 				<td>
 					<input type="text" id="searchInput" name="supplier.GYSJYFW" />
+				</td> -->
+				<td>物资编码：</td>
+				<td>
+					<input type="text" id="searchInput" name="certificatesupcode.CODE" />
 				</td>
+				
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
 			</tr>
@@ -178,6 +183,7 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center', type:'date'},
 				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center', type:'dateRed'},
 				{ display: '发证单位', name: 'UNIT', align: 'center'},
+				/* { display: '物资编码', name: 'CODE', align: 'center'}, */
 				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'

@@ -3,9 +3,7 @@
 	
 	### 查询所有的供应商供应商信息
 	#sql("supplierList")
-		select ID, GYSBH, SHXYDM, YYZZZCH, QYMC, FDDBR, FDDBRDH, SSS, SSS1, 
-		ZS, ZCZB, CLRQ, YYQX, QYLX, ZZJGDM, SWDJH, YXQ, YWLXR, LXRSJ, BGCZ, 
-		BGDH, LXRYX, LXRZW, BGDZ, ZZZS, BLGYSCFZQ, HMD, BLGYSXYPJDJ, GYSJYFW, ENTRY_TIME
+		select *
 		from E_SUPPLIER
 		where 1 = 1
 		#if(GYSBH ??)
@@ -19,6 +17,9 @@
 		#end
 		#if(GYSJYFW ??)
 			and GYSJYFW like '%#(GYSJYFW)%'
+		#end
+		#if(CODE ??)
+			and ID in(select SUPPLIER_ID from E_CERTIFICATE where ID in (SELECT CERID FROM E_CERTIFICATE_SUPCODE where CODE = #(CODE)))
 		#end
 		ORDER BY ENTRY_TIME DESC
 	#end

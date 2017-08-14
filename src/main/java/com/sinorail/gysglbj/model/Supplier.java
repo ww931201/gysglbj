@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
@@ -18,9 +19,24 @@ import com.sinorail.gysglbj.model.base.BaseSupplier;
 public class Supplier extends BaseSupplier<Supplier> {
 	public static final Supplier dao = new Supplier().dao();
 	
-	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier) {
+/*	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier, CertificateSupcode certificatesupcode) {
 		
-		SqlPara sqlp = getSqlPara("supplier.supplierList",supplier);
+		
+		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("HMD",supplier.getHmd()).set("GYSJYFW",supplier.getGysjyfw()).set("CODE",certificatesupcode.getCode());
+		
+		//supplier.set("CODE", certificatesupcode);
+		//SqlPara sqlp = getSqlPara("supplier.supplierList",supplier);
+		
+		
+		SqlPara sqlp = getSqlPara("supplier.supplierList",cond);
+		
+		return paginate(pageNumber, pageSize, sqlp);
+	}*/
+	
+	
+	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier, CertificateSupcode certificatesupcode) {
+		
+		SqlPara sqlp = getSqlPara("supplier.supplierList",supplier.put("CODE", certificatesupcode.getCode()));
 		
 		return paginate(pageNumber, pageSize, sqlp);
 	}

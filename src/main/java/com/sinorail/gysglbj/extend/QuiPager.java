@@ -27,7 +27,7 @@ public class QuiPager {
 		pager.put("sort", sort);
 		pager.put("direction", direction);
 	}
-
+	
 	public Map<String, Object> getPager() {
 		return pager;
 	}
