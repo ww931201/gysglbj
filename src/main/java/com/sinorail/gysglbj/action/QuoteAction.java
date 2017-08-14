@@ -119,7 +119,7 @@ public class QuoteAction extends QuiController {
 		
 			if(supplier == null) {renderJson("msg", "检查文件中供应商编码是否填写,或 系统中是否录入该供应商!"); return;}
 		
-		Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?",projectId, supplier.getId());
+		Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?", projectId, supplier.getId());
 		
 			if(quote != null) {renderJson("msg", "已导入该供应商信息!"); return;}
 		

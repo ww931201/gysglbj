@@ -21,7 +21,8 @@
 		#if(CODE ??)
 			and ID in(select SUPPLIER_ID from E_CERTIFICATE where ID in (SELECT CERID FROM E_CERTIFICATE_SUPCODE where CODE = #(CODE)))
 		#end
-		ORDER BY ENTRY_TIME DESC
+		
+		ORDER BY ENTRY_TIME DESC, ID
 	#end
 
 	
