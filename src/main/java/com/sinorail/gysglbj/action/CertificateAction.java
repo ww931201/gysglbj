@@ -98,7 +98,7 @@ public class CertificateAction extends QuiController{
 						supcode.setCode(rescode[i]);
 						supcode.setCodename(codefirst);
 						boolean save = supcode.save();
-						
+						log.info(save);
 					}
 				}
 				log.info("****保存证书,编号为"+ certificate.getNo());
@@ -131,7 +131,6 @@ public class CertificateAction extends QuiController{
 	 * 证书修改
 	 */ 
 	public void updateViewSon(){
-		
 		
 		setAttr("certificate", Certificate.dao.queryById(getPara("id")));
 		

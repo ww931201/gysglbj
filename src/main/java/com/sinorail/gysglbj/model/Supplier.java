@@ -4,10 +4,7 @@ package com.sinorail.gysglbj.model;
 
 import java.util.List;
 
-import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
-
 import com.jfinal.kit.Kv;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
@@ -34,11 +31,14 @@ public class Supplier extends BaseSupplier<Supplier> {
 	}*/
 	
 	
-	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier, CertificateSupcode certificatesupcode) {
+	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier, CertificateSupcode certificatesupcode,Certificate certificate) { 
 		
-		SqlPara sqlp = getSqlPara("supplier.supplierList",supplier.put("CODE", certificatesupcode.getCode()));
 		
-		return paginate(pageNumber, pageSize, sqlp);
+		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("HMD",supplier.getHmd()).set("GYSJYFW",supplier.getGysjyfw()).set("CODE",certificatesupcode.getCode())
+				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx());  
+		SqlPara sqlp = getSqlPara("supplier.supplierList",cond);
+		
+		return paginate(pageNumber, pageSize,sqlp);
 	}
 	
 	public List<Supplier> findGysbh(){

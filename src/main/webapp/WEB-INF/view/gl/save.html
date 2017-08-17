@@ -25,6 +25,7 @@
 <div class="box1" overflow="true" panelHeight="450" id="formContent" whiteBg="true">
 	<form id="myFormId" onsubmit="return false;" method="post">
 	<table class="tableStyle" formMode="transparent">
+	
 	<input type="hidden" name="supplier.ID" value="#(supplier.ID ??)" />
 				<tr>
 					<td width="200">供应商编号：</td>
@@ -177,7 +178,6 @@
 				<tr>
 					<td>黑名单：</td>
 					<td>
-					
 					<select name="supplier.HMD" data='{"list":[{"key":"是","value":"是"},{"key":"否","value":"否"}]}' selectedValue="#(supplier.HMD ?? '否')">
 					</select>
 					<!-- <select name="supplier.HMD" id="searchInput" style="text-align: center">
@@ -191,10 +191,11 @@
 						class=''/></td> -->
 				</tr>
 				<tr>
-					<td>不良供应商信用评价等级：</td>
-					<td><input type='text' name='supplier.BLGYSXYPJDJ'
-						value='#(supplier.BLGYSXYPJDJ ??)'
-						class=''/></td>
+				
+					<td>供应商信用等级评价：</td>
+					<td>
+						<select url="/suppliergrade/listsup" prompt="请选择" name="supplier.BLGYSXYPJDJ" selectedValue="#(supplier.BLGYSXYPJDJ ?? )"></select>
+					</td>
 				</tr>
 				<tr>
 					<td>供应商经营范围：</td>
@@ -214,13 +215,38 @@
 						value='#(supplier.CERTIFICATE_ID ??)'
 						class='validate[required,length[0,30]]' /><span class='star'>*</span></td>
 				</tr> -->
+				
+				
+				<!-- 新功能 -->
 				<tr>
-		<tr>
-			<td colspan="2">
-				<button onclick="submitHandler()">提交</button>
-				<input type="button" value="取消" onclick='top.Dialog.close()'/>
-			</td>
-		</tr>
+					<td>供应商分类：</td>
+					<td>
+					<select url="/suppliersort/GysflList"
+							prompt="请选择" name="supplier.GYSFL" selectedValue="#(supplier.GYSFL ?? )"></select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>供应商企业性质：</td>
+					<td>
+					<select name="supplier.GYSQYXZ" data='{"list":[{"key":"厂商","value":"厂商"},{"key":"代理商","value":"代理商"},{"key":"其他","value":"其他"}]}' selectedValue="#(supplier.GYSQYXZ ?? '其他')">
+					</td>
+				</tr>
+				
+				<tr>
+					<td>营业执照照片：</td>
+					<td><input type='text' name='supplier.YYZZZP'
+						value='#(supplier.YYZZZP ??)'
+						class=''/></td>
+				</tr>
+				
+				<tr>
+				<tr>
+					<td colspan="2">
+						<button onclick="submitHandler()">提交</button>
+						<input type="button" value="取消" onclick='top.Dialog.close()'/>
+					</td>
+				</tr>
 	</table>
 	</form>
 </div>

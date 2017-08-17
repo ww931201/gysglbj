@@ -5,11 +5,14 @@ package com.sinorail.gysglbj.action;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -20,6 +23,7 @@ import com.sinorail.gysglbj.model.Certificate;
 import com.sinorail.gysglbj.model.CertificateSupcode;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
+import com.sinorail.gysglbj.model.Suppliergrade;
 import com.sinorail.gysglbj.util.ExcelUtils;
 
 public class GysglAction extends QuiController {
@@ -32,6 +36,7 @@ public class GysglAction extends QuiController {
 	
 	/*添加弹出框进行保存*/
 	public void addView(){
+		
 		render("save.html");
 	}
 	
@@ -153,7 +158,18 @@ public class GysglAction extends QuiController {
 	public void list(){ 
 		
 		
-		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"));
+		String sql = "select * from E_SUPPLIER where BLGYSCFZQ < to_char(SYSDATE, 'yyyy-mm-dd')";
+		
+		List<Supplier> list = Supplier.dao.find(sql); 
+		if(list!=null){
+			for (Supplier supplier2 : list) {
+				
+				String sql2 = "update E_SUPPLIER set HMD = '否' where ID = ?";
+				
+				Db.update(sql2,supplier2.getId());
+			}
+		}
+		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
 		 
 //		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
@@ -195,6 +211,7 @@ public class GysglAction extends QuiController {
 			}
 			
 		}
+		
 		setAttr("message", status ? "保存成功!" : "保存失败!");
 		
 		renderJson();
@@ -209,9 +226,6 @@ public class GysglAction extends QuiController {
 		render("detail.html");
 	}
 	
-	
-	
-
 	/**
 	 * 
 	 * 删除对应的一行
@@ -253,7 +267,9 @@ public class GysglAction extends QuiController {
 	 * 
 	 */ 
 	public void updateView(){
+		
 		setAttr("supplier",Supplier.dao.queryById(getPara("id")));
+		
 		render("save.html");
 	}
 	
@@ -289,7 +305,14 @@ public class GysglAction extends QuiController {
 	 * 查找资质过期的供应商
 	 */
 	public void findOverDate() {
-		renderJson(Db.find(Db.getSql("supplier.findOverDate")));
+		
+		List<Record> supListRes = Db.find(Db.getSql("supplier.findOverDate"));
+		
+		List<Record> find = Db.find("select NO,NAME,SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE, 'yyyy-mm-dd')");
+		
+		setAttr("gys", supListRes);
+		setAttr("zzzs", find);
+		renderJson();
 	}
 	
 	
@@ -300,10 +323,6 @@ public class GysglAction extends QuiController {
 		
 		List<Supplier> findProjectOverDate = Supplier.dao.findProjectOverDate(getPara("PROJECT_ID"));
 		
-		/*for (Supplier supplier : findProjectOverDate) {
-			
-			renderJson(supplier);
-			}*/
 		renderJson(findProjectOverDate);
 		}
 	}

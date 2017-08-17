@@ -58,16 +58,28 @@
 					<td><input type='text' name='certificate.UNIT'
 						value='#(certificate.UNIT ??)' class=''/></td>
 				</tr>
+				<tr>
+					<td>证书类别：</td>
+					<td>
+					<select url="/cersort/ZslblList"
+							prompt="请选择" name="certificate.ZSLB" selectedValue="#(certificate.ZSLB ?? )"></select>
+					</td>
+				</tr>
 				
 				<tr>
 					<td>物资编码：</td>
 					<!-- <td><input type='text' name='certificatesupcode.CODE'
 						value='#(certificatesupcode.CODE ??)' class=''/></td> -->
 					<td>
-					<textarea name="certificatesupcode.CODE" style="width: 120px;">#(certificatesupcode.CODENAME ??)</textarea>
+					<textarea name="certificatesupcode.CODE" style="width: 150px;">#(certificatesupcode.CODENAME ??)</textarea>
 					</td>
 				</tr>
-
+				<tr>
+					<td>证书信息：</td>
+					<td>
+					<textarea name="certificate.ZSXX" style="width: 200px;">#(certificate.ZSXX ??)</textarea>
+					</td>
+				</tr>
 				<tr>
 			<td colspan="2">
 				<button onclick="submitHandlerSon()">提交</button>

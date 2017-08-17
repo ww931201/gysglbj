@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.dialect.OracleDialect;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
+import com.sinorail.gysglbj.action.CerSortAction;
 import com.sinorail.gysglbj.action.CertificateAction;
 import com.sinorail.gysglbj.action.GysglAction;
 import com.sinorail.gysglbj.action.IndexAction;
@@ -25,6 +26,8 @@ import com.sinorail.gysglbj.action.PopedomMatchAction;
 import com.sinorail.gysglbj.action.ProjectAction;
 import com.sinorail.gysglbj.action.QuoteAction;
 import com.sinorail.gysglbj.action.RoleAction;
+import com.sinorail.gysglbj.action.SupplierGradeAction;
+import com.sinorail.gysglbj.action.SupplierSortAction;
 import com.sinorail.gysglbj.action.UserAction;
 import com.sinorail.gysglbj.aop.LoginInterceptor;
 import com.sinorail.gysglbj.constant.Const;
@@ -41,7 +44,7 @@ public class MainConfig extends JFinalConfig {
 		//读取数据库配置文件
 		PropKit.use(Const.file_jdbc);
 		//设置当前是否为开发模式
-		/*me.setDevMode(PropKit.getBoolean("devMode"));*/
+		me.setDevMode(PropKit.getBoolean("devMode"));
 		//设置默认上传文件保存路径 getFile等使用
 		me.setBaseUploadPath("upload/temp/");
 		//设置上传最大限制尺寸
@@ -71,8 +74,12 @@ public class MainConfig extends JFinalConfig {
 		me.add("/project", ProjectAction.class, "WEB-INF/view/base/project");
 		me.add("/quote", QuoteAction.class, "WEB-INF/view/base/quote");
 		me.add("/certificate", CertificateAction.class, "WEB-INF/view/zzzs");
-	}
-	
+		me.add("/cersort", CerSortAction.class, "WEB-INF/view/zzzslb");
+		me.add("/suppliergrade", SupplierGradeAction.class, "WEB-INF/view/gysdj");
+		me.add("/suppliersort", SupplierSortAction.class, "WEB-INF/view/gysfl");
+		
+	} 
+	 
 	/**
 	 * 配置JFinal插件
 	 * 数据库连接池
@@ -114,7 +121,9 @@ public class MainConfig extends JFinalConfig {
 		arp.addSqlTemplate("sql/quote.sql");
 		arp.addSqlTemplate("sql/certificate.sql");
 		arp.addSqlTemplate("sql/certificatesupcode.sql");
-		
+		arp.addSqlTemplate("sql/cersort.sql");
+		arp.addSqlTemplate("sql/suppliergrade.sql");
+		arp.addSqlTemplate("sql/suppliersort.sql");
 		/********在此添加数据库 表-Model 映射*********/
 		_MappingKit.mapping(arp);
 		

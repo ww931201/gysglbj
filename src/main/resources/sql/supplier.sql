@@ -21,6 +21,12 @@
 		#if(CODE ??)
 			and ID in(select SUPPLIER_ID from E_CERTIFICATE where ID in (SELECT CERID FROM E_CERTIFICATE_SUPCODE where CODE = #(CODE)))
 		#end
+		#if(ZSLB ??)
+			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSLB like '#(ZSLB)'))
+		#end
+		#if(ZSXX ??)
+			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSXX like '%#(ZSXX)%'))
+		#end
 		
 		ORDER BY ENTRY_TIME DESC, ID
 	#end
@@ -50,9 +56,10 @@
 	
 	#查找资质过期的供应商
 	#sql("findOverDate")
-		select gysbh, qymc from E_SUPPLIER where id in(select SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE, 'yyyy-mm-dd'))
+		select gysbh, qymc,E_SUPPLIER.ID from E_SUPPLIER where id in(select SUPPLIER_ID from E_CERTIFICATE where END_TIME < to_char(SYSDATE, 'yyyy-mm-dd'))
 		UNION
-		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')
+		select gysbh, qymc,E_SUPPLIER.ID from E_SUPPLIER where  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')
+		
 	#end
 	
 	#根据项目中编码查找过期供应商

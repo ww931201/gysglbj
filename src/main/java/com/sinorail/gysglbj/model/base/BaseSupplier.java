@@ -257,4 +257,28 @@ public abstract class BaseSupplier<M extends BaseSupplier<M>> extends Model<M> i
 		return get("CERTIFICATE_ID");
 	}
 
+	public void setGysfl(java.lang.String gysfl) {
+		set("GYSFL", gysfl);
+	}
+
+	public java.lang.String getGysfl() {
+		return get("GYSFL");
+	}
+
+	public void setGysqyxz(java.lang.String gysqyxz) {
+		set("GYSQYXZ", gysqyxz);
+	}
+
+	public java.lang.String getGysqyxz() {
+		return get("GYSQYXZ");
+	}
+
+	public void setYyzzzp(java.lang.String yyzzzp) {
+		set("YYZZZP", yyzzzp);
+	}
+
+	public java.lang.String getYyzzzp() {
+		return get("YYZZZP");
+	}
+
 }

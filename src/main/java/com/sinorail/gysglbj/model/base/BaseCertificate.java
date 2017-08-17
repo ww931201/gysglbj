@@ -73,4 +73,20 @@ public abstract class BaseCertificate<M extends BaseCertificate<M>> extends Mode
 		return get("SUPPLIER_ID");
 	}
 
+	public void setZslb(java.lang.String zslb) {
+		set("ZSLB", zslb);
+	}
+
+	public java.lang.String getZslb() {
+		return get("ZSLB");
+	}
+
+	public void setZsxx(java.lang.String zsxx) {
+		set("ZSXX", zsxx);
+	}
+
+	public java.lang.String getZsxx() {
+		return get("ZSXX");
+	}
+
 }

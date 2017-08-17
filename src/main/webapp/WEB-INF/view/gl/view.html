@@ -51,7 +51,19 @@
 				<td>
 					<input type="text" id="searchInput" name="certificatesupcode.CODE" />
 				</td>
-				
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td>证书类别：</td>
+					<td>
+					<select url="/cersort/ZslblList"
+							prompt="请选择" name="certificate.ZSLB" selectedValue="#(certificate.ZSLB ?? )"></select>
+					</td>
+				<td>证书信息：</td>
+				<td>
+					<input type="text" id="searchInput" name="certificate.ZSXX" />
+				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
 			</tr>
@@ -98,10 +110,13 @@ function initComplete(){
 			{ display: '办公地址', name: 'BGDZ', align: 'center', width: '3%'},
 			{ display: '资质证书', name: 'ZZZS', align: 'center', width: '3%'},
 			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '3%'},*/
+			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '7%'},
 			{ display: '黑名单', name: 'HMD', align: 'center', width: '7%'},
-			{ display: '不良供应商信用评价等级', name: 'BLGYSXYPJDJ', align: 'center', width: '9%'},
-			{ display: '供应商经营范围', name: 'GYSJYFW', align: 'center', width: '7%'},
-			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '12%'},
+			{ display: '供应商信用等级评价', name: 'BLGYSXYPJDJ', align: 'center', width: '7%'},
+			{ display: '供应商分类', name: 'GYSFL', align: 'center', width: '7%'},
+			{ display: '供应商企业性质', name: 'GYSQYXZ', align: 'center', width: '7%'},
+			
+			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '6%'},
 			/*资质证书ID*/
 			/* { display: '资质证书ID', name: 'CERTIFICATE_ID', align: 'center', width: '3%'}, */
 			/* ID */
@@ -183,6 +198,8 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '证书有效期(起始日期)', name: 'START_TIME', align: 'center', type:'date'},
 				{ display: '证书有效期(终止日期)', name: 'END_TIME', align: 'center', type:'dateRed'},
 				{ display: '发证单位', name: 'UNIT', align: 'center'},
+				{ display: '证书类别', name: 'ZSLB', align: 'center'},
+				{ display: '证书信息', name: 'ZSXX', align: 'center'},
 				/* { display: '物资编码', name: 'CODE', align: 'center'}, */
 				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
@@ -194,7 +211,7 @@ function showCertificate(row, detailPanel,callback){
 	                 }
 	            }
                 ], 
-                isScroll: false,width: '1085', columnWidth: 150,
+                isScroll: false,width: '1385', columnWidth: 150,
                 url: '/gys/showCer?supplierId='+row.ID, rownumbers:true,
                 height: '100%', pageSize:10,
 
@@ -282,6 +299,7 @@ function handleResult(result){
 
 //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
 function getSelectIds(grid) {
+	console.log(selectedRows);
 	var selectedRows = grid.getSelectedRows();
 	var selectedRowsLength = selectedRows.length;
 	var ids = "";
@@ -410,14 +428,24 @@ function refreshSon(isUpdate){
 
 
 $.post("/gys/findOverDate", function(data){
+
+	console.log(data);
 	if(data.length < 1) return; 
-	var html = "<div style='overflow:auto'>";
-	for(var i=0; i < data.length; i++) {
-        html += "<div>"+data[i].GYSBH+"-"+data[i].QYMC+"</div>";
-    }
+	if(data.gys.length < 1) return; 
+
+	var html = "<div style='overflow:auto;height: inherit;'>";
+
+	for(var i=0; i<data.gys.length;i++){
+		html += "<div><dt>"+data.gys[i].GYSBH+"-"+data.gys[i].QYMC+"</dt></div>";
+			for(var j=0;j<data.zzzs.length;j++){
+				if(data.gys[i].ID == data.zzzs[j].SUPPLIER_ID){
+					html += "<div><dd style='margin-left:35px;'>"+data.zzzs[j].NO+"-"+data.zzzs[j].NAME+"<dd></div>";
+					}
+			}
+		}
 	html += "</div>"
-	$.messager.lays(400,200)
-	$.messager.show("以下供应商资质已过期",html,'stay');
+	$.messager.lays(400,200) 
+	$.messager.show("以下供应商和供应商证书资质已过期",html,'stay');
 });
 
 
