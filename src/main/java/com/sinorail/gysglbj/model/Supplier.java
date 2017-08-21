@@ -5,7 +5,9 @@ package com.sinorail.gysglbj.model;
 import java.util.List;
 
 import com.jfinal.kit.Kv;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseSupplier;
 
@@ -40,6 +42,26 @@ public class Supplier extends BaseSupplier<Supplier> {
 		
 		return paginate(pageNumber, pageSize,sqlp);
 	}
+	
+	/**
+	 * 
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param supplier
+	 * @param certificatesupcode
+	 * @param certificate
+	 * @return
+	 */
+	public List<Record> findExportGys(Supplier supplier, CertificateSupcode certificatesupcode,Certificate certificate) { 
+		
+		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("HMD",supplier.getHmd()).set("GYSJYFW",supplier.getGysjyfw()).set("CODE",certificatesupcode.getCode())
+				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx());  
+		SqlPara sqlp = getSqlPara("supplier.supplierList",cond);
+		
+		return Db.find(sqlp);
+	}
+	
+	
 	
 	public List<Supplier> findGysbh(){
 		String sql  = "select GYSBH from E_SUPPLIER ";

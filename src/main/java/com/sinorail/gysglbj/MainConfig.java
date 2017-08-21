@@ -165,5 +165,4 @@ public class MainConfig extends JFinalConfig {
 		FileUtils.createDir(Const.temp_file_path);
 	}
 	
-	
 }

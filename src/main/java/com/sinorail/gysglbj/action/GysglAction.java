@@ -3,17 +3,23 @@ package com.sinorail.gysglbj.action;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -25,6 +31,7 @@ import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.model.Suppliergrade;
 import com.sinorail.gysglbj.util.ExcelUtils;
+import com.sinorail.gysglbj.util.FileUtils;
 
 public class GysglAction extends QuiController {
 	
@@ -169,6 +176,7 @@ public class GysglAction extends QuiController {
 				Db.update(sql2,supplier2.getId());
 			}
 		}
+		
 		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
 		 
 //		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
@@ -325,5 +333,84 @@ public class GysglAction extends QuiController {
 		
 		renderJson(findProjectOverDate);
 		}
-	}
 	
+
+	public void exportGys() throws IOException{
+		
+		
+		
+		File file = new File("GysExport.xls");
+		
+		List<Record> exportList = Supplier.dao.findExportGys(getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
+		String[] title = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "不良供应商处罚周期", "黑名单", "不良供应商信用评价等级", "供应商经营范围", "录入时间", "供应商分类", "供应商企业性质", "营业执照照片"};
+		String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW", "ENTRY_TIME", "GYSFL", "GYSQYXZ", "YYZZZP"};
+		
+		ExcelUtils.export(exportList, title, field, file); 
+		 
+		renderFile(file);
+	}
+	/**
+	 * 上传图片
+	 */
+public void uploadPic(){
+	/*获取上传文件(临时),获取file所有*/
+	UploadFile filenames = getFile("images");
+	/*获取文件名称*/
+	String fileName = filenames.getOriginalFileName();
+	/*new File，获取到io.file的图片*/
+	File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
+	/*获取文件名称的后缀名*/
+    String extension = fileName.substring(fileName.lastIndexOf("."));
+    /*设置上传到目标文件的路径*/
+    String savePath = PathKit.getWebRootPath() + "/upload/pic/";
+    /*创建一个JSONObject对象*/
+    JSONObject json = new JSONObject();
+    /*判断文件的后缀名*/
+    if (".png".equals(extension) || ".jpg".equals(extension)
+            || ".gif".equals(extension) || "jpeg".equals(extension)
+            || "bmp".equals(extension)) {
+    	/*设置上传后的文件名称*/
+        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
+        try {
+        	/*创建输入文件流*/
+            FileInputStream fis = new FileInputStream(source);
+            /*设置目标文件file的文件文件夹*/
+            File targetDir = new File(savePath);
+            /*如果不存在，创建*/
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
+            }
+            /*创建目标文件的文件夹以及名称*/
+            File target = new File(targetDir, fileName);
+            /*如果不存在，创建*/
+            if (!target.exists()) {
+            	/*创建名称一致的文件夹以及文件名称*/
+                target.createNewFile();
+            }
+            /*创建输出文件流*/
+            FileOutputStream fos = new FileOutputStream(target);
+            byte[] bts = new byte[1024 * 20];
+            /*输入流读取，输出流写入*/
+            while (fis.read(bts, 0, 1024 * 20) != -1) {
+                fos.write(bts, 0, 1024 * 20);
+            }
+            fos.close();
+            fis.close();
+            json.put("error", 0);
+            json.put("src", "/upload/pic/" + fileName); // 相对地址，显示图片用
+            source.delete();
+        } catch (FileNotFoundException e) {
+            json.put("error", 1);
+            json.put("message", "上传出现错误，请稍后再上传");
+        } catch (IOException e) {
+            json.put("error", 1);
+            json.put("message", "文件写入服务器出现错误，请稍后再上传");
+        }
+    } else {
+        source.delete();
+        json.put("error", 1);
+        json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
+    }
+    renderJson(json.toJSONString());
+}
+}

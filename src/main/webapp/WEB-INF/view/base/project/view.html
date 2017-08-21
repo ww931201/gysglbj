@@ -261,7 +261,9 @@ function onExport(rowid){
 function filterView() {
 	var row = gridProject.getSelectedRow();
 	if(row == null) { top.Dialog.alert("请选中一条项目记录!"); return;}
+	
 	window.open("/quote/filterView?projectId="+row.ID);
+	
 	/*
 	top.Dialog.open({
 		URL:"/quote/filterView?projectId="+row.ID,

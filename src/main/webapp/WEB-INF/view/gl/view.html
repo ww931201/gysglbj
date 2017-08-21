@@ -18,6 +18,13 @@
 <!--尺寸拖拽调整start-->
 <script type="text/javascript" src="/libs/js/drag/dragResize.js"></script>
 <!--尺寸拖拽调整end-->
+
+<script src="/libs/jquery-ui.js"></script>
+<!--
+
+//-->
+
+
 </head>
 <body>
 <div class="box2" panelTitle="查询供应商企业" id="searchPanel">
@@ -65,7 +72,8 @@
 					<input type="text" id="searchInput" name="certificate.ZSXX" />
 				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
-				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
+				<td><button type="button" onclick="resetSearch()" style="width: 65px;"><span class="icon_reload">重置</span></button></td>
+				<td><button type="button" onclick="exportGys()"><span class="icon_find">导出</span></button></td>
 			</tr>
 		</table>
 	</form>
@@ -74,12 +82,14 @@
 	<div class="padding_right5">
 		<div id="dataBasic"></div>
     </div>
-
+    
 <script type="text/javascript">
 
 var grid = null;
 var childGrid = null;
 function initComplete(){
+
+	
 	//当提交表单刷新本页面时关闭弹窗
 	top.Dialog.close();
 	/**/
@@ -113,9 +123,16 @@ function initComplete(){
 			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '7%'},
 			{ display: '黑名单', name: 'HMD', align: 'center', width: '7%'},
 			{ display: '供应商信用等级评价', name: 'BLGYSXYPJDJ', align: 'center', width: '7%'},
-			{ display: '供应商分类', name: 'GYSFL', align: 'center', width: '7%'},
-			{ display: '供应商企业性质', name: 'GYSQYXZ', align: 'center', width: '7%'},
-			
+			/* { display: '供应商分类', name: 'GYSFL', align: 'center', width: '7%'},
+			{ display: '供应商企业性质', name: 'GYSQYXZ', align: 'center', width: '7%'}, */
+			{ display: '营业执照照片', name: 'YYZZZP', align: 'center', width: '7%', render:  function (rowdata, rowindex, value, column){
+				console.log(rowdata)
+				var shtml ="";
+				if(rowdata.YYZZZP!=null){
+					  shtml = "<a href="+rowdata.YYZZZP+"  id='pics'  target='_blank'>点击查看</a>";
+				}
+                return shtml;
+            }},
 			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '6%'},
 			/*资质证书ID*/
 			/* { display: '资质证书ID', name: 'CERTIFICATE_ID', align: 'center', width: '3%'}, */
@@ -247,6 +264,7 @@ function onEdit(rowid){
 	top.Dialog.open({
 		URL:"/gys/updateView?id=" + rowid,
 		Title:"修改",Width:500,Height:500});
+	
 }
 //删除	
 function onDelete(rowid,rowidx){
@@ -255,7 +273,7 @@ function onDelete(rowid,rowidx){
 	  	$.post("/gys/delete",
 	  			{"id":rowid},
 	  			function(result){
-		  			console.log(result)
+		  			//console.log(result)
 	  				handleResult(result.status);
 				},"json");
 				//刷新表格
@@ -299,7 +317,7 @@ function handleResult(result){
 
 //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
 function getSelectIds(grid) {
-	console.log(selectedRows);
+	//console.log(selectedRows);
 	var selectedRows = grid.getSelectedRows();
 	var selectedRowsLength = selectedRows.length;
 	var ids = "";
@@ -325,7 +343,13 @@ function searchHandler(){
 
 //重置查询
 function resetSearch(){
+	
 	$("#queryForm")[0].reset();
+	//$("#queryForm").find("select").val("请选择");
+	//$("#queryForm input").val('');  
+	
+	//$("#queryForm").find("option:selected").val("请选择");
+	
    /*  $('#search').click(); */
 }
 
@@ -368,7 +392,7 @@ function onDeleteSon(rowid,rowidx){
 	  	$.post("/certificate/deleteSon",
 	  			{"id":rowid},
 	  			function(result){
-		  			console.log(result)
+		  			//console.log(result)
 	  				handleResultSon(result.status);
 				},"json");
 				//刷新表格
@@ -429,7 +453,7 @@ function refreshSon(isUpdate){
 
 $.post("/gys/findOverDate", function(data){
 
-	console.log(data);
+	//console.log(data);
 	if(data.length < 1) return; 
 	if(data.gys.length < 1) return; 
 
@@ -448,7 +472,14 @@ $.post("/gys/findOverDate", function(data){
 	$.messager.show("以下供应商和供应商证书资质已过期",html,'stay');
 });
 
+//供应商信息的导出功能
+function exportGys(){
+	
+	console.log($("#queryForm").serialize());
+	window.location.href="/gys/exportGys?"+$("#queryForm").serialize();
+	
+}
 
-</script>	
+</script>
 </body>
 </html>

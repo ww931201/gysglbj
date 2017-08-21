@@ -13,14 +13,14 @@ public class DbTools {
 
 		dbs.start();
 
-		List<Record> rList = dbs.getFieldsAttributeByTableName("E_CERTIFICATE");
+		List<Record> rList = dbs.getFieldsAttributeByTableName("E_SUPPLIER");
 
 		System.out.println("字段个数: " + rList.size());
 
 		// createGrid(rList);
 		// createJSNewRowData(rList,"popedom");
 		createSeletSql(rList, "q");
-		createQuiGrid(rList, "certificate");
+		createQuiGrid(rList, "supplier");
 		createFiledArray(rList);
 	}
 

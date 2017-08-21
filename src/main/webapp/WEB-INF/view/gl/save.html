@@ -18,7 +18,7 @@
 <script type="text/javascript" src="/libs/js/form/datePicker/WdatePicker.js"></script>
 <!-- 日期选择框end -->
 
-
+<script type="text/javascript" src="/libs/js/myjs/jquery.form.js"></script>
 
 </head>
 <body>
@@ -235,12 +235,19 @@
 				
 				<tr>
 					<td>营业执照照片：</td>
-					<td><input type='text' name='supplier.YYZZZP'
+			<!-- 		<td><input type='text' name='supplier.YYZZZP'
 						value='#(supplier.YYZZZP ??)'
-						class=''/></td>
+						class=''/></td> -->
 				</tr>
-				
 				<tr>
+				<td>
+					<img id="uploadpicId"  src="#(supplier.YYZZZP ??)" alt="" style="width: 100px;"/>
+				</td> 
+				<td>
+					<input  type='file' name='images' onchange="uploadPic()" />
+					<input id="yyzzzp" type="hidden" name="supplier.YYZZZP" value="#(supplier.YYZZZP ??)">
+				</td>
+				</tr>
 				<tr>
 					<td colspan="2">
 						<button onclick="submitHandler()">提交</button>
@@ -288,6 +295,28 @@ function closeWin(){
 	top.frmright.refresh(update);
 	//关闭窗口
 	top.Dialog.close();
+}
+
+		
+function uploadPic(){
+var picoption = { 
+	 type: "post",  //提交方式  
+	 dataType: "json", //数据类型  
+	 url:"/gys/uploadPic",//默认是form action
+	success:function(data){
+		if(data.error == 0 ){
+			console.log(data)
+			$("#uploadpicId").attr("src",data.src);
+			$("#yyzzzp").val(data.src);
+			}else{
+				top.Dialog.alert(data.message);
+			}
+		},
+    error : function(data, status) {
+    			top.Dialog.alert(data.message);
+        }
+	};
+	$("#myFormId").ajaxSubmit(picoption);
 }
 /**
 function selectUnit(e) {
