@@ -353,44 +353,28 @@ public class GysglAction extends QuiController {
 	 * 上传图片
 	 */
 public void uploadPic(){
-	/*获取上传文件(临时),获取file所有*/
 	UploadFile filenames = getFile("images");
-	/*获取文件名称*/
 	String fileName = filenames.getOriginalFileName();
-	/*new File，获取到io.file的图片*/
 	File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
-	/*获取文件名称的后缀名*/
     String extension = fileName.substring(fileName.lastIndexOf("."));
-    /*设置上传到目标文件的路径*/
     String savePath = PathKit.getWebRootPath() + "/upload/pic/";
-    /*创建一个JSONObject对象*/
     JSONObject json = new JSONObject();
-    /*判断文件的后缀名*/
     if (".png".equals(extension) || ".jpg".equals(extension)
             || ".gif".equals(extension) || "jpeg".equals(extension)
             || "bmp".equals(extension)) {
-    	/*设置上传后的文件名称*/
         fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
         try {
-        	/*创建输入文件流*/
             FileInputStream fis = new FileInputStream(source);
-            /*设置目标文件file的文件文件夹*/
             File targetDir = new File(savePath);
-            /*如果不存在，创建*/
             if (!targetDir.exists()) {
                 targetDir.mkdirs();
             }
-            /*创建目标文件的文件夹以及名称*/
             File target = new File(targetDir, fileName);
-            /*如果不存在，创建*/
             if (!target.exists()) {
-            	/*创建名称一致的文件夹以及文件名称*/
                 target.createNewFile();
             }
-            /*创建输出文件流*/
             FileOutputStream fos = new FileOutputStream(target);
             byte[] bts = new byte[1024 * 20];
-            /*输入流读取，输出流写入*/
             while (fis.read(bts, 0, 1024 * 20) != -1) {
                 fos.write(bts, 0, 1024 * 20);
             }
