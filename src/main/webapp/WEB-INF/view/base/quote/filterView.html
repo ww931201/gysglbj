@@ -31,6 +31,18 @@
 				<td>
 					<input type="text" id="searchInput" name="quote.SYDWJDQ" />
 				</td>
+				<td>序号：</td>
+				<td>
+					<input type="text" id="searchInput" name="XH" />
+				</td>
+				<td>供应商编码：</td>
+				<td>
+					<input type="text" id="searchInput" name="supplier.GYSBH" />
+				</td>
+				<td>供应商名称：</td>
+				<td>
+					<input type="text" id="searchInput" name="supplier.QYMC" />
+				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
 				<td><button type="button" onclick="exportExcel()"><span class="icon_export">导出</span></button></td>
@@ -47,8 +59,8 @@
 	grid = $("#dataBasic").quiGrid({
 		columns:[
 			{ display: '包件号', name: 'BJH', align: 'center', editor: { type: 'text'}, width: '3%'},
-			{ display: '序号', name: 'xh', align: 'center', editor: { type: 'text'}, width: '3%'},
-			{ display: '供应商编号', name: 'GYSBH', align: 'center', editor: { type: 'text'}, width: '3%'},
+			{ display: '序号', name: 'XH', align: 'center', editor: { type: 'text'}, width: '3%'},
+			{ display: '供应商编码', name: 'GYSBH', align: 'center', editor: { type: 'text'}, width: '3%'},
 			{ display: '企业名称', name: 'QYMC', align: 'center', editor: { type: 'text'}, width: '7%'},
 			{ display: '物资编码', name: 'WZBM', align: 'center', editor: { type: 'text'}, width: '8%'},
 			{ display: '物资名称', name: 'WZMC', align: 'center', editor: { type: 'text'}, width: '6%'},
@@ -91,7 +103,7 @@
 	}
 	
 	function exportExcel() {
-		window.location.href = "/quote/filterDataExport?quote.PROJECT_ID=#(projectId)"
+		window.location.href = "/quote/filterDataExport?quote.PROJECT_ID=#(projectId)&"+$("#queryForm").serialize();
 	}
 	
 	//重置查询

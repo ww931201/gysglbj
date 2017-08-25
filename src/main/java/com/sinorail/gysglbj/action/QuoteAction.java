@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
+import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -61,15 +63,20 @@ public class QuoteAction extends QuiController {
 	}
 	
 	public void filterList() {
+		
+		String xh = getPara("XH");
 		Quote quote = getModel(Quote.class);
+		Supplier supplier = getModel(Supplier.class);
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("XH", xh).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
 		SqlPara sqp;
 		//类型 1 竞买(整包)  2 竞价
 		Project project = Project.dao.findById(quote.getProjectId());
 		if(project.getType().equals(new BigDecimal("1"))) {
-			sqp = Db.getSqlPara("quote.filterJJList", quote);
+			sqp = Db.getSqlPara("quote.filterJJList", kv);
 		} else {
-			sqp = Db.getSqlPara("quote.filterList", quote);
+			sqp = Db.getSqlPara("quote.filterList", kv);
 		}
+		
 		renderJson("rows", Db.find(sqp));
 	}
 	
@@ -111,8 +118,13 @@ public class QuoteAction extends QuiController {
 		UploadFile file = getFile("excel");
 		
 		String projectId = getPara("projectId");
-		
-		Object supplierNo = ExcelUtils.getCellValueFromExcel(file.getFile(), 0, 1);
+		Object supplierNo = null;
+		try {
+			 supplierNo = ExcelUtils.getCellValueFromExcel(file.getFile(), 0, 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			renderJson("msg", "上传失败！"); return;
+		}
 		
 		//System.out.println("*********"+supplierId+"************");
 		Supplier supplier = Supplier.dao.findFirst("select * from e_supplier where upper(GYSBH) = upper(?)", supplierNo);
@@ -189,13 +201,15 @@ public class QuoteAction extends QuiController {
 	public void filterDataExport() throws IOException {
 		
 		Quote quote = getModel(Quote.class);
+		Supplier supplier = getModel(Supplier.class);
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
 		File file = new File("filter.xls");
 		
 		//类型 1 竞买(整包)  2 竞价
 		Project project = Project.dao.findById(quote.getProjectId());
 		if(project.getType().equals(new BigDecimal("1"))) {
 			
-			SqlPara sqp = Db.getSqlPara("quote.filterJJList", quote);
+			SqlPara sqp = Db.getSqlPara("quote.filterJJList", kv);
 			List<Record> list = Db.find(sqp);
 			
 			String[] title = {"供应商编号", "企业名称", "总限价（不含税）", "厂商报总限价（不含税）"};
@@ -204,7 +218,7 @@ public class QuoteAction extends QuiController {
 			ExcelUtils.export(list, title, field, file);
 		} else {
 			
-			SqlPara sqp = Db.getSqlPara("quote.filterList", quote);
+			SqlPara sqp = Db.getSqlPara("quote.filterList", kv);
 			List<Record> list = Db.find(sqp);
 			
 			String[] title = {"包件号", "供应商编号", "企业名称", "物资编码", "物资名称", "规格型号", "技术要求", "计量单位", "预测数量", "单价限价(不含税）", "总限价（不含税）", "使用单位及地区", "厂商报单价(不含税）", "厂商报总限价（不含税）"};

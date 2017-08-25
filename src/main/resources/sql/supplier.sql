@@ -19,7 +19,7 @@
 			and GYSJYFW like '%#(GYSJYFW)%'
 		#end
 		#if(CODE ??)
-			and ID in(select SUPPLIER_ID from E_CERTIFICATE where ID in (SELECT CERID FROM E_CERTIFICATE_SUPCODE where CODE = #(CODE)))
+			and ID in(select SUPPLIER_ID from E_CERTIFICATE where ID in (SELECT CERID FROM E_CERTIFICATE_SUPCODE where CODE = '#(CODE)'))
 		#end
 		#if(ZSLB ??)
 			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSLB like '#(ZSLB)'))

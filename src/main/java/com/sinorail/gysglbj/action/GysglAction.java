@@ -8,15 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PathKit;
@@ -29,9 +26,7 @@ import com.sinorail.gysglbj.model.Certificate;
 import com.sinorail.gysglbj.model.CertificateSupcode;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
-import com.sinorail.gysglbj.model.Suppliergrade;
 import com.sinorail.gysglbj.util.ExcelUtils;
-import com.sinorail.gysglbj.util.FileUtils;
 
 public class GysglAction extends QuiController {
 	
@@ -66,14 +61,13 @@ public class GysglAction extends QuiController {
 			
 			List<List<Object>> list = null;
 			
-			String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW" };
+			String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW","GYSFL","GYSQYXZ" };
 			try {
 				list = ExcelUtils.readExcel(file.getFile(), 1,field.length);
 				
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				renderJson("result", "上传失败！"); return;
-				
 			}
 			//EXCEL文件供应商编码重复
 			String temp ="";
@@ -123,7 +117,7 @@ public class GysglAction extends QuiController {
 			
 			List<Record> recordList = new LinkedList<Record>();
 			
-			String[][] fields = {{"GYSBH",".*","供应商编号"}, {"SHXYDM",".*","社会信用代码"}, {"YYZZZCH",".*","营业执照注册号"}, {"QYMC",".*","企业名称"}, {"FDDBR",".*","法定代表人"}, {"FDDBRDH",".*","法定代表人电话"}, {"SSS",".*","所属省"}, {"SSS1",".*","所属市"}, {"ZS",".*","住所"}, {"ZCZB",".*","注册资本"}, {"CLRQ","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","成立日期"}, {"YYQX",".*","营业期限"}, {"QYLX",".*","企业类型"}, {"ZZJGDM",".*","组织机构代码"}, {"SWDJH",".*","税务登记号"}, {"YXQ","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","有效期"}, {"YWLXR",".*","业务联系人"}, {"LXRSJ",".*","联系人手机"}, {"BGCZ",".*","办公传真"}, {"BGDH",".*","办公电话"}, {"LXRYX",".*","联系人邮箱"}, {"LXRZW",".*","联系人职务"}, {"BGDZ",".*","办公地址"},  {"BLGYSCFZQ",".*","不良供应商处罚周期"}, {"HMD",".*","黑名单"}, {"BLGYSXYPJDJ",".*","供应商信用评价等级"}, {"GYSJYFW",".*","供应商经营范围"}};
+			String[][] fields = {{"GYSBH",".*","供应商编号"}, {"SHXYDM",".*","社会信用代码"}, {"YYZZZCH",".*","营业执照注册号"}, {"QYMC",".*","企业名称"}, {"FDDBR",".*","法定代表人"}, {"FDDBRDH",".*","法定代表人电话"}, {"SSS",".*","所属省"}, {"SSS1",".*","所属市"}, {"ZS",".*","住所"}, {"ZCZB",".*","注册资本"}, {"CLRQ","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","成立日期"}, {"YYQX",".*","营业期限"}, {"QYLX",".*","企业类型"}, {"ZZJGDM",".*","组织机构代码"}, {"SWDJH",".*","税务登记号"}, {"YXQ","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","有效期"}, {"YWLXR",".*","业务联系人"}, {"LXRSJ",".*","联系人手机"}, {"BGCZ",".*","办公传真"}, {"BGDH",".*","办公电话"}, {"LXRYX",".*","联系人邮箱"}, {"LXRZW",".*","联系人职务"}, {"BGDZ",".*","办公地址"},  {"BLGYSCFZQ",".*","不良供应商处罚周期"}, {"HMD",".*","黑名单"}, {"BLGYSXYPJDJ",".*","供应商信用评价等级"}, {"GYSJYFW",".*","供应商经营范围"}, {"GYSFL",".*","供应商分类"}, {"GYSQYXZ",".*","供应商企业性质"}};
 			
 			for(int n = 0;n<list.size();n++){
 				
@@ -336,11 +330,8 @@ public class GysglAction extends QuiController {
 	
 
 	public void exportGys() throws IOException{
-		
-		
-		
+		/*new 一个file文件*/
 		File file = new File("GysExport.xls");
-		
 		List<Record> exportList = Supplier.dao.findExportGys(getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
 		String[] title = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "不良供应商处罚周期", "黑名单", "不良供应商信用评价等级", "供应商经营范围", "录入时间", "供应商分类", "供应商企业性质", "营业执照照片"};
 		String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW", "ENTRY_TIME", "GYSFL", "GYSQYXZ", "YYZZZP"};

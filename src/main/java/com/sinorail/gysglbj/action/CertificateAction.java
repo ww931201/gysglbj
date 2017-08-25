@@ -60,7 +60,6 @@ public class CertificateAction extends QuiController{
 		
 		String codefirst = getPara("certificatesupcode.CODE");
 		
-		
 		/*CertificateSupcode certificatesupcode = getModel(CertificateSupcode.class,"certificatesupcode");
 		
 		String codefirst = certificatesupcode.getCode();*/
@@ -72,10 +71,8 @@ public class CertificateAction extends QuiController{
 		
 		if(codefirst != null){
 			if((!codefirst.trim().equals(""))){
-				
 				String code = codefirst.replaceAll("，", ",");
 				rescode = code.split(",");
-				
 			}
 		}
 		
@@ -91,7 +88,6 @@ public class CertificateAction extends QuiController{
 				
 				if(rescode.length!=0){
 					for (int i = 0; i<rescode.length;i++) {
-						
 						CertificateSupcode supcode = new CertificateSupcode();
 						
 						supcode.setCerid(cerId); 
@@ -110,11 +106,25 @@ public class CertificateAction extends QuiController{
 			//修改
 			try {
 				if(!Certificate.dao.isExistZsbh(certificate.getNo(), certificate.getId())) {
-					
 					//取消资质证书的父ID
+					
 					certificate.remove("SUPPLIER_ID");
 					status = certificate.update();
+					//删除物资编码再进行保存
+					String cerID = certificate.getId();
+					String sql = "delete from E_CERTIFICATE_SUPCODE where CERID = ?";
+					Db.update(sql, cerID);
 					
+					if(rescode.length!=0){
+						for (int i = 0; i<rescode.length;i++) {
+							CertificateSupcode supcode = new CertificateSupcode();
+							supcode.setCerid(cerID); 
+							supcode.setCode(rescode[i]);
+							supcode.setCodename(codefirst);
+							boolean save = supcode.save();
+							log.info(save);
+						}
+					}
 				}else {
 					setAttr("content", "证书编号已存在!");
 				}
@@ -133,7 +143,19 @@ public class CertificateAction extends QuiController{
 	public void updateViewSon(){
 		
 		setAttr("certificate", Certificate.dao.queryById(getPara("id")));
-		
+		String codes = "";
+		String cerid = getPara("id");
+		String sql = "select CODE from E_CERTIFICATE_SUPCODE where CERID  = ?";
+		List<Record> find = Db.find(sql,cerid);
+		if(find.size() !=0){
+			for (Record record : find) {
+				String code = record.get("CODE");
+				codes += code + ",";
+			}
+			codes = codes.substring(0, codes.length()-1); 
+			setAttr("codes",codes);
+		}
+		setAttr("codes",codes);
 		render("save.html");
 	}
 	
@@ -162,9 +184,8 @@ public class CertificateAction extends QuiController{
 	 * 
 	 */
 	public void importView(){
-		setAttr("supplierId", getPara("supplierId"));
+		setAttr("supplierId", getPara("supplierIds"));
 		render("importView.html");
-		
 	}
 	
 	public void importExcel() throws IOException, ParseException{
@@ -227,7 +248,7 @@ public class CertificateAction extends QuiController{
 		
 		List<Record> recordList = new LinkedList<Record>();
 		
-		String[][] fields = {{"NO",".*","编号"}, {"NAME",".*","名称"}, {"CONTENT",".*","内容"}, {"START_TIME","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","证书有效期(起始日期)"}, {"END_TIME","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","证书有效期(终止日期)"}, {"UNIT",".*","发证单位"} };
+		String[][] fields = {{"NO",".*","编号"}, {"NAME",".*","名称"}, {"CONTENT",".*","内容"}, {"START_TIME","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","证书有效期(起始日期)"}, {"END_TIME","(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)","证书有效期(终止日期)"}, {"UNIT",".*","发证单位"}, {"ZSLB",".*","证书类别"}, {"ZSXX",".*","证书信息"} };
 
 		for(int n = 0;n<list.size();n++){
 			

@@ -136,7 +136,6 @@ private Logger log = Logger.getLogger(CerSortAction.class);
 	 */
 	public void GysflList(){
 		
-		
 		String sql = "select GYSSORTNAME \"key\",GYSSORTNAME \"value\" from E_SUPPLIERSORT";
 		
 		setAttr("list", Suppliersort.dao.find(sql));

@@ -28,9 +28,11 @@ import com.sinorail.gysglbj.action.QuoteAction;
 import com.sinorail.gysglbj.action.RoleAction;
 import com.sinorail.gysglbj.action.SupplierGradeAction;
 import com.sinorail.gysglbj.action.SupplierSortAction;
+import com.sinorail.gysglbj.action.SuppliestemplateAction;
 import com.sinorail.gysglbj.action.UserAction;
 import com.sinorail.gysglbj.aop.LoginInterceptor;
 import com.sinorail.gysglbj.constant.Const;
+import com.sinorail.gysglbj.model.Suppliestemplate;
 import com.sinorail.gysglbj.model._MappingKit;
 import com.sinorail.gysglbj.util.FileUtils;
 
@@ -77,7 +79,7 @@ public class MainConfig extends JFinalConfig {
 		me.add("/cersort", CerSortAction.class, "WEB-INF/view/zzzslb");
 		me.add("/suppliergrade", SupplierGradeAction.class, "WEB-INF/view/gysdj");
 		me.add("/suppliersort", SupplierSortAction.class, "WEB-INF/view/gysfl");
-		
+		me.add("/suppliestemplate", SuppliestemplateAction.class, "WEB-INF/view/wzk");
 	} 
 	 
 	/**
@@ -124,6 +126,7 @@ public class MainConfig extends JFinalConfig {
 		arp.addSqlTemplate("sql/cersort.sql");
 		arp.addSqlTemplate("sql/suppliergrade.sql");
 		arp.addSqlTemplate("sql/suppliersort.sql");
+		arp.addSqlTemplate("sql/suppliestemplate.sql");
 		/********在此添加数据库 表-Model 映射*********/
 		_MappingKit.mapping(arp);
 		

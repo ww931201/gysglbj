@@ -26,10 +26,13 @@ $(function () {
 	$('#fileupload').fileupload({
         dataType: 'json',
         done: function (e, data) {
-
+			console.log(data.result.msg)
 			if(data.result.msg){
         		top.Dialog.alert(data.result.msg);
         		top.frmright.grid.loadData();
+        		top.frmright.dialogImport.close();
+        	}else{
+        		top.frmright.dialogImport.close();
         	}
         },
         progressall: function (e, data) {

@@ -29,8 +29,10 @@ $(function () {
         	if(data.result.result == "0"){ 
         		top.frmright.childGrid.loadData();
         	 	top.Dialog.close();
+        	 	top.frmright.diagImportSon.close();
         	}else{
         		top.Dialog.alert(data.result.result);
+        		top.frmright.diagImportSon.close();
         	}
         },
         progressall: function (e, data) {

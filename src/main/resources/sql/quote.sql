@@ -22,7 +22,7 @@
 	#end
 	### 查询过滤项目信息(竞价分包结果)
 	#sql("filterList")
-		SELECT a.*, row_number() over(partition by a.WZBM order by a.CSBZXJ_BHS) "xh" FROM VIEW_QUOTE a WHERE EXISTS (SELECT count(*) from VIEW_QUOTE WHERE a.WZBM = WZBM AND CSBZXJ_BHS < a.CSBZXJ_BHS HAVING count(*) < 3)
+		SELECT a.* FROM VIEW_QUOTE_RESULT a WHERE 1=1 
 		#if(WZBM ??)
 			and upper(WZBM) like upper('%#(WZBM)%')
 		#end
@@ -37,6 +37,15 @@
 		#end
 		#if(SYDWJDQ ??)
 			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
+		#end
+		#if(QYMC ??)
+			and QYMC like '%#(QYMC)%'
+		#end
+		#if(GYSBH ??)
+			and GYSBH like '%#(GYSBH)%'
+		#end
+		#if(XH ??)
+			and XH like '%#(XH)%'
 		#end
 	    ORDER BY a.bjh, a.WZBM, a.CSBZXJ_BHS
 	#end
@@ -57,6 +66,12 @@
 		#end
 		#if(SYDWJDQ ??)
 			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
+		#end
+			#if(QYMC ??)
+			and QYMC like '%#(QYMC)%'
+		#end
+		#if(GYSBH ??)
+			and GYSBH like '%#(GYSBH)%'
 		#end
 	    GROUP BY gysbh, qymc ORDER BY CSBZXJ_BHS
 	#end

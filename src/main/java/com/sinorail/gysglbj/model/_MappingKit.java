@@ -28,6 +28,7 @@ public class _MappingKit {
 		arp.addMapping("E_SUPPLIER", "ID", Supplier.class);
 		arp.addMapping("E_SUPPLIERGRADE", "ID", Suppliergrade.class);
 		arp.addMapping("E_SUPPLIERSORT", "ID", Suppliersort.class);
+		arp.addMapping("E_SUPPLIESTEMPLATE", "ID", Suppliestemplate.class);
 	}
 }
 

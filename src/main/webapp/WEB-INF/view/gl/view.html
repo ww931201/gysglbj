@@ -24,7 +24,6 @@
 
 //-->
 
-
 </head>
 <body>
 <div class="box2" panelTitle="查询供应商企业" id="searchPanel">
@@ -71,9 +70,10 @@
 				<td>
 					<input type="text" id="searchInput" name="certificate.ZSXX" />
 				</td>
-				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
-				<td><button type="button" onclick="resetSearch()" style="width: 65px;"><span class="icon_reload">重置</span></button></td>
-				<td><button type="button" onclick="exportGys()"><span class="icon_find">导出</span></button></td>
+				<td><button type="button" onclick="searchHandler()"><span class="icon_find ">查询</span></button></td>
+				<td><button type="button" onclick="resetSearch()" style="width: 65px;"><span class="icon_reload ">重置</span></button></td>
+				<td><button type="button" onclick="exportGys()"><span class="icon_export ">导出</span></button></td>
+			
 			</tr>
 		</table>
 	</form>
@@ -82,7 +82,6 @@
 	<div class="padding_right5">
 		<div id="dataBasic"></div>
     </div>
-    
 <script type="text/javascript">
 
 var grid = null;
@@ -126,7 +125,6 @@ function initComplete(){
 			/* { display: '供应商分类', name: 'GYSFL', align: 'center', width: '7%'},
 			{ display: '供应商企业性质', name: 'GYSQYXZ', align: 'center', width: '7%'}, */
 			{ display: '营业执照照片', name: 'YYZZZP', align: 'center', width: '7%', render:  function (rowdata, rowindex, value, column){
-				console.log(rowdata)
 				var shtml ="";
 				if(rowdata.YYZZZP!=null){
 					  shtml = "<a href="+rowdata.YYZZZP+"  id='pics'  target='_blank'>点击查看</a>";
@@ -140,9 +138,9 @@ function initComplete(){
        		{ display: '操作', isAllowHide: false, align: 'center', width:'7%',
 				 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
-                                + '<span class="img_list hand" title="查看" onclick='+'onView("' + rowdata.ID + '")'+'></span>'
-                                + '<span class="img_edit hand" title="修改" onclick='+'onEdit("' + rowdata.ID + '")'+'></span>' 
-                                + '<span class="img_delete hand" title="删除" onclick='+'onDelete("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
+                                + '<span class="img_list hand my-permission" data-permisson="/gys/detailView" title="查看" onclick='+'onView("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_edit my-permission" data-permisson="/gys/updateView" title="修改" onclick='+'onEdit("' + rowdata.ID + '")'+'></span>' 
+                                + '<span class="img_delete hand my-permission" data-permisson="/gys/delete" title="删除" onclick='+'onDelete("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
                            	  + '</div>';
                  }
             }
@@ -155,15 +153,18 @@ function initComplete(){
 	     onError: function (a, b){
 	         //错误事件
 	     },
+	     onAfterShowData: function (data){
+	    	 refreshPermssion();
+	     }, 
 	     toolbar:{
 	    	 items:[
-	    		  {text: '新增', click: addUnit,    iconClass: 'icon_add'},
+	    		  {text: '新增', click: addUnit,  iconClass: 'icon_add', per: '/gys/addView', perClass: 'my-permission'},
 	    		  { line : true },
-	    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
+	    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete', per: '/gys/deleteBatch', perClass: 'my-permission'},
 	    		  { line : true },
-	    		  {text: '导入', click: importQuote,   iconClass: 'icon_import'},
+	    		  {text: '导入', click: importQuote,   iconClass: 'icon_import', per: '/gys/importExcel', perClass: 'my-permission'},
 	    		  { line : true },
-	    		  {text: '导出模板', click: onExport,   iconClass: 'icon_export'},
+	    		  {text: '导出模板', click: onExport,   iconClass: 'icon_export', per: '/gys/export', perClass: 'my-permission'},
 	    		  { line : true }, 
 	    		]
 	     	},alternatingRow: false,
@@ -204,7 +205,6 @@ function initComplete(){
 }
 //子页面展示
 function showCertificate(row, detailPanel,callback){
-	 	 //console.log(row) 
 		var	sonGrid = document.createElement('div'); 
            $(detailPanel).append(sonGrid).css("background-color","#f0faf9");
           childGrid = $(sonGrid).css('margin',10).quiGrid({
@@ -221,24 +221,26 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
-                                + '<span class="img_list hand" title="查看" onclick='+'onViewSon("' + rowdata.ID + '")'+'></span>'
-                                + '<span class="img_edit hand" title="修改" onclick='+'onEditSon("' + rowdata.ID + '")'+'></span>'
-                                + '<span class="img_delete hand" title="删除" onclick='+'onDeleteSon("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_list hand my-permission" title="查看" data-permisson="/certificate/detailViewSon" onclick='+'onViewSon("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_edit hand my-permission" title="修改" data-permisson="/certificate/updateViewSon" onclick='+'onEditSon("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_delete hand my-permission" title="删除" data-permisson="/certificate/deleteSon" onclick='+'onDeleteSon("' + rowdata.ID + '")'+'></span>'
                             + '</div>';
 	                 }
 	            }
                 ], 
+                onAfterShowData: function (data){
+	    	    	 refreshPermssion();
+	    	    }, 
                 isScroll: false,width: '1385', columnWidth: 150,
                 url: '/gys/showCer?supplierId='+row.ID, rownumbers:true,
                 height: '100%', pageSize:10,
-
                 toolbar:{
 		        	 items:[
-		        		  {text: '新增', click: function(){addUnitSon(row.ID)},    iconClass: 'icon_add'},
+		        		  {text: '新增', click: function(){addUnitSon(row.ID)},    iconClass: 'icon_add', per: '/certificate/addViewSon', perClass: 'my-permission'},
 		        		  { line : true },
-		        		  {text: '导入', click: function(){importQuoteSon(row.ID)},   iconClass: 'icon_import'},
+		        		  {text: '导入', click: function(){importQuoteSon(row.ID)},   iconClass: 'icon_import', per: '/certificate/importView', perClass: 'my-permission'},
 		        		  { line : true },
-		        		  {text: '导出模板', click: function(){onExportSon()},   iconClass: 'icon_export'},
+		        		  {text: '导出模板', click: function(){onExportSon()},   iconClass: 'icon_export', per: '/certificate/export', perClass: 'my-permission'},
 		        		  { line : true }, 
 		        		]
 		         	}
@@ -273,7 +275,6 @@ function onDelete(rowid,rowidx){
 	  	$.post("/gys/delete",
 	  			{"id":rowid},
 	  			function(result){
-		  			//console.log(result)
 	  				handleResult(result.status);
 				},"json");
 				//刷新表格
@@ -317,7 +318,6 @@ function handleResult(result){
 
 //获取所有选中行获取选中行的id 格式为 ids=1&ids=2 
 function getSelectIds(grid) {
-	//console.log(selectedRows);
 	var selectedRows = grid.getSelectedRows();
 	var selectedRowsLength = selectedRows.length;
 	var ids = "";
@@ -345,12 +345,7 @@ function searchHandler(){
 function resetSearch(){
 	
 	$("#queryForm")[0].reset();
-	//$("#queryForm").find("select").val("请选择");
-	//$("#queryForm input").val('');  
-	
-	//$("#queryForm").find("option:selected").val("请选择");
-	
-   /*  $('#search').click(); */
+	$("#queryForm select").resetValue();
 }
 
 //刷新表格数据并重置排序和页数
@@ -367,7 +362,6 @@ function refresh(isUpdate){
 
 //子新增
 function addUnitSon(fatherId) {
-	/* console.log(fatherId) */
 	top.Dialog.open({
 			URL:"/certificate/addViewSon?fatherId="+fatherId,
 			Title:"添加",Width:500,Height:300});
@@ -392,7 +386,6 @@ function onDeleteSon(rowid,rowidx){
 	  	$.post("/certificate/deleteSon",
 	  			{"id":rowid},
 	  			function(result){
-		  			//console.log(result)
 	  				handleResultSon(result.status);
 				},"json");
 				//刷新表格
@@ -411,11 +404,15 @@ function handleResultSon(result){
 }
 
 //导入供应商管理
-function importQuote(){
-	top.Dialog.open({
-		URL:"/gys/importView",
-		Title:"导入模板",Width:350,Height:150});
-}
+	var diagImport = new top.Dialog();
+	function importQuote(){
+		diagImport.Title = "导入模板";
+		diagImport.Width = 350;
+		diagImport.Height = 150;
+		diagImport.URL = "/gys/importView";
+		diagImport.show();
+		
+	}
 
 //导出供应商
 function onExport(){
@@ -423,13 +420,15 @@ function onExport(){
 }
 
 
+var diagImportSon = new top.Dialog();
 //子页面证书的导入
 function importQuoteSon(rowId){
-	/* alert(rowId); */
-	top.Dialog.open({
-		URL:"/certificate/importView?supplierId="+rowId,
-		Title:"导入模板",Width:350,Height:150});
-	
+	// console.log(rowId);
+	diagImportSon.Title = "导入模板";
+	diagImportSon.Width = 350;
+	diagImportSon.Height = 150;
+	diagImportSon.URL = "/certificate/importView?supplierIds="+rowId;
+	diagImportSon.show();
 }
 
 //子页面导出模板
@@ -453,7 +452,6 @@ function refreshSon(isUpdate){
 
 $.post("/gys/findOverDate", function(data){
 
-	//console.log(data);
 	if(data.length < 1) return; 
 	if(data.gys.length < 1) return; 
 
@@ -474,12 +472,8 @@ $.post("/gys/findOverDate", function(data){
 
 //供应商信息的导出功能
 function exportGys(){
-	
-	console.log($("#queryForm").serialize());
 	window.location.href="/gys/exportGys?"+$("#queryForm").serialize();
-	
 }
-
 </script>
 </body>
 </html>

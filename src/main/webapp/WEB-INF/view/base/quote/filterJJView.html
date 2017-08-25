@@ -15,6 +15,16 @@
 		<input type="hidden" id="parentId" name="parentId" value="1"/>
 		<table>
 			<tr>
+				<td>供应商编码：</td>
+				<td>
+					<input type="text" id="searchInput" name="supplier.GYSBH" />
+				</td>
+				<td>供应商名称：</td>
+				<td>
+					<input type="text" id="searchInput" name="supplier.QYMC" />
+				</td>
+				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
+				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
 				<td><button type="button" onclick="exportExcel()"><span class="icon_export">导出</span></button></td>
 			</tr>
 		</table>
@@ -36,9 +46,25 @@
 	 url: '/quote/filterList?quote.PROJECT_ID=#(projectId)', sortName: 'userId',rownumbers:true,checkbox:false,
 	 height: '100%', width:"100%", usePager:false, percentWidthMode:true
 	});
+
+	//查询
+	function searchHandler(){
+		var query = $("#queryForm").serializeArray(); 
+	    grid.setOptions({params : query});
+	    //页号重置为1
+	    grid.setNewPage(1);
+	    //加载数据
+	    grid.loadData();
+	}
 	
 	function exportExcel() {
-		window.location.href = "/quote/filterDataExport?quote.PROJECT_ID=#(projectId)"
+		window.location.href = "/quote/filterDataExport?quote.PROJECT_ID=#(projectId)&"+$("#queryForm").serialize();
+	}
+	
+	//重置查询
+	function resetSearch(){
+		$("#queryForm")[0].reset();
+	    $('#search').click();
 	}
 			
 </script>	

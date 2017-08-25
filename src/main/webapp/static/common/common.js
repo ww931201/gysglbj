@@ -43,16 +43,26 @@ var f_cloneObj = function (obj) {
 /**
  * 默认加载，控制权限按钮的显示
  */
-//$.post('/permission/permissionButtonList',function(data){
-//	$.each(data, function(i, p){
-//		$(".permission-button").each(function(){
-//			var per = $(this).data("perid");
-//			if(per == p.ID){
-//				$(this).removeClass("permission-button");
-//			}
-//		});
-//	});
-//},'json');
+var popedomDataCache = null;
+$.post('/popedom/permissionButtonList',function(data){
+	//console.log(data)
+	popedomDataCache = data;
+	refreshPermssion();
+},'json');
+
+function refreshPermssion () {
+	$.each(popedomDataCache, function(i, p){
+		$(".my-permission").each(function(){
+			//console.log($(this))
+			var per = $(this).data("permisson");
+		console.log(p.FORWARD_ACTION)
+			if(per == p.FORWARD_ACTION){
+				$(this).removeClass("my-permission");
+			}
+		});
+	});
+}
+
 
 //var f_formatForm = function (formTarget) {
 //	var serializeObj = {};
@@ -64,17 +74,3 @@ var f_cloneObj = function (obj) {
 //	return serializeObj;
 //}
 //	
-
-/**********自定义****************/
-var xs_check_status = {
-		0 : {msg:'待上报',color:'#359102'},
-		1 : {msg:'科室审核中...',color:'#359102'},
-		2 : {msg:'科室审核驳回',color:'red'},
-		3 : {msg:'科室批准待上报',color:'#359102'},
-		4 : {msg:'单位审核中...',color:'#359102'},
-		5 : {msg:'单位审核驳回',color:'red'},
-		6 : {msg:'单位批准待上报',color:'#359102'},
-		7 : {msg:'路局审核中...',color:'#359102'},
-		8 : {msg:'路局审核驳回',color:'red'},
-		9 : {msg:'审核通过',color:'#359102'}
-	}

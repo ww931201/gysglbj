@@ -13,14 +13,14 @@ public class DbTools {
 
 		dbs.start();
 
-		List<Record> rList = dbs.getFieldsAttributeByTableName("E_SUPPLIER");
+		List<Record> rList = dbs.getFieldsAttributeByTableName("E_SUPPLIESTEMPLATE");
 
 		System.out.println("字段个数: " + rList.size());
 
 		// createGrid(rList);
 		// createJSNewRowData(rList,"popedom");
 		createSeletSql(rList, "q");
-		createQuiGrid(rList, "supplier");
+		createQuiGrid(rList, "suppliestemplate");
 		createFiledArray(rList);
 	}
 
@@ -33,7 +33,7 @@ public class DbTools {
 			colName = r.getStr(DataBaseSchema.col_name);
 			colComment = r.getStr(DataBaseSchema.col_comment);
 			System.out.println("{ display: '" + colComment + "', name: '" + colName
-					+ "', align: 'center', editor: { type: 'text'}, width: '" + 100 / 6 + "%'},");
+					+ "', align: 'center', editor: { type: 'text'}, width: '" + 100 / 8 + "%'},");
 		}
 		//详情
 		System.out.println("\r\n******************详情**********************\r\n");

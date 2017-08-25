@@ -6639,7 +6639,10 @@ function checkAllRowHandlerEditor(checked)
 				}
                 return;
             }
-            var ditem = $('<div class="l-panel-btn"><div class="l-panel-btn-l"></div><div class="l-panel-btn-r"></div></div>');
+			var ditem = $('<div class="l-panel-btn"><div class="l-panel-btn-l"></div><div class="l-panel-btn-r"></div></div>');
+			if(item.perClass){
+				var ditem = $('<div class="l-panel-btn my-permission"><div class="l-panel-btn-l"></div><div class="l-panel-btn-r"></div></div>');				
+			}
 			if(p.position=="right"){
 				ditem.addClass("l-toolbar-item-right");
 			}
@@ -6653,6 +6656,10 @@ function checkAllRowHandlerEditor(checked)
 			}
 			g.toolBar.append(ditem);
             item.id && ditem.attr("toolbarid", item.id);
+            if(item.per)
+            {            	
+            	ditem.attr("data-permisson", item.per);
+            }
             var iconCon;
 			if (item.iconClass)
             {

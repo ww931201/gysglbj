@@ -127,10 +127,10 @@ function initComplete(){
        		{ display: '操作', isAllowHide: false, align: 'center', width:'20%',
 				 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
-                                + '<span class="img_list hand" title="查看" onclick='+'onViewProject("' + rowdata.ID + '")'+'></span>'
-                                + '<span class="img_edit hand" title="修改" onclick='+'onEditProject("' + rowdata.ID + '")'+'></span>' 
-                                + '<span class="img_delete hand" title="删除" onclick='+'onDeleteProject("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
-                                + '<span class="img_export hand" title="模板" onclick='+'onExport("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_list hand my-permission" data-permisson="/project/detailView" title="查看" onclick='+'onViewProject("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_edit hand my-permission" data-permisson="/project/updateView" title="修改" onclick='+'onEditProject("' + rowdata.ID + '")'+'></span>' 
+                                + '<span class="img_delete hand my-permission" data-permisson="/project/delete" title="删除" onclick='+'onDeleteProject("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
+                                + '<span class="img_export hand my-permission" data-permisson="/project/export" title="模板" onclick='+'onExport("' + rowdata.ID + '")'+'></span>'
                            	  + '</div>';
                  }
             }
@@ -139,8 +139,7 @@ function initComplete(){
         width:"100%",pageSize:5,percentWidthMode:true,
      	onSelectRow: function (rowdata) {
 		$("#message").remove();
-
-    	
+		
    	    //页号重置为1
    	    grid.setNewPage(1);
    	    
@@ -159,9 +158,12 @@ function initComplete(){
 		});
    		 return false;
      },
+     onAfterShowData: function (data){
+    	 refreshPermssion();
+     }, 
      toolbar:{
     	 items:[
-    		  {text: '新增', click: addProject, iconClass: 'icon_add'}
+    		  {text: '新增', click: addProject, iconClass: 'icon_add', per:'/project/addView', perClass: 'my-permission'},
     	 ]
      	}
 	});
@@ -185,9 +187,9 @@ function initComplete(){
        		{ display: '操作', isAllowHide: false, align: 'center', width:'4%',
 				 render: function (rowdata, rowindex, value, column){
                 	    return '<div class="padding_top4 padding_left5">'
-                                + '<span class="img_list hand" title="查看" onclick='+'onView("' + rowdata.ID + '")'+'></span>'
-                                + '<span class="img_edit hand" title="修改" onclick='+'onEdit("' + rowdata.ID + '")'+'></span>' 
-                                + '<span class="img_delete hand" title="删除" onclick='+'onDelete("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
+                                + '<span class="img_list hand my-permission" data-permisson="/quote/detailView" title="查看" onclick='+'onView("' + rowdata.ID + '")'+'></span>'
+                                + '<span class="img_edit hand my-permission" data-permisson="/quote/updateView" title="修改" onclick='+'onEdit("' + rowdata.ID + '")'+'></span>' 
+                                + '<span class="img_delete hand my-permission" data-permisson="/quote/delete" title="删除" onclick='+'onDelete("' + rowdata.ID+'",'+rowindex + ')'+'></span>'
                            	  + '</div>';
                  }
             }
@@ -195,15 +197,18 @@ function initComplete(){
 	 url: '/quote/list', sortName: 'userId',rownumbers:true,checkbox:true,
      height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
      headerRowHeight: 40,
+     onAfterShowData: function (data){
+    	 refreshPermssion();
+     }, 
      toolbar:{
     	 items:[
-    		  {text: '导入', click: importQuote,    iconClass: 'icon_import'},
+    		  {text: '导入', click: importQuote,    iconClass: 'icon_import', per: '/quote/importView', perClass: 'my-permission'},
     		  //{ line : true },
     		  //{text: '新增', click: addQuote,    iconClass: 'icon_add'},
     		  { line : true },
-    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
+    		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete', per: '/quote/deleteBatch', perClass: 'my-permission'},
     		  { line : true },
-    		  {text: '筛选', click: filterView, iconClass: 'icon_search'}
+    		  {text: '筛选', click: filterView, iconClass: 'icon_search', per: '/quote/filterList', perClass: 'my-permission'},
     		  
     		]
      	}
@@ -270,15 +275,19 @@ function filterView() {
 		Title:"筛选",Width:1024,Height:550});
 	*/
 }
+var dialogImport = new top.Dialog();
 
 //导入
 function importQuote() {
 	var row = gridProject.getSelectedRow();
-	
 	if(row == null) { top.Dialog.alert("请选中一条项目记录!"); return;}
-	top.Dialog.open({
-			URL:"/quote/importView?projectId="+row.ID,
-			Title:"导入",Width:350,Height:150});
+	
+	dialogImport.Title = "导入模板";
+	dialogImport.URL = "/quote/importView?projectId="+row.ID;
+	dialogImport.Height = 150;
+	dialogImport.Width = 350;
+	dialogImport.show();
+	
 }
 //新增
 function addQuote() {
