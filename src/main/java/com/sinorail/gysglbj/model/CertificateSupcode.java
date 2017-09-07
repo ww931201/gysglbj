@@ -1,10 +1,6 @@
 package com.sinorail.gysglbj.model;
 
-import java.util.List;
 
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.plugin.activerecord.SqlPara;
 import com.sinorail.gysglbj.model.base.BaseCertificateSupcode;
 
 /**

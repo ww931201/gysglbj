@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -24,9 +21,6 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 import com.sinorail.gysglbj.extend.QuiController;
-import com.sinorail.gysglbj.model.Certificate;
-import com.sinorail.gysglbj.model.CertificateSupcode;
-import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.model.Suppliestemplate;
 import com.sinorail.gysglbj.util.ExcelUtils;
 

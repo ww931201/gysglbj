@@ -3,7 +3,6 @@ package com.sinorail.gysglbj.constant;
 import java.io.File;
 import java.math.BigDecimal;
 
-import com.jfinal.ext.interceptor.GET;
 
 public class Const {
 
