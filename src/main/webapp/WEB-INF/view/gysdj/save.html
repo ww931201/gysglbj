@@ -29,10 +29,20 @@
 	<input type="hidden" name="suppliergrade.ID" value="#(suppliergrade.ID ??)" />
 	
 				<tr>
-					<td width="200">等级评级：</td>
+					<td width="200">等级评价：</td>
 					<td><input type='text' name='suppliergrade.GRADEPJ'
 						value='#(suppliergrade.GRADEPJ ??)'
 						class='validate[required,length[0,30]]'/></td>
+				</tr>
+				<tr>
+					<td width="200">等级评价说明：</td>
+					
+					<td>
+					<textarea name="suppliergrade.DJPJSM" style="width: 116px;">#(suppliergrade.DJPJSM ??)</textarea>
+					<!-- <input type='text' name='suppliergrade.DJPJSM'
+						value='#(suppliergrade.DJPJSM ??)'
+						class=''/> -->
+					</td>
 				</tr>
 				<tr>
 					<td colspan="2">

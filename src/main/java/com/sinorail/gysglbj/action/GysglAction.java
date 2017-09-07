@@ -27,7 +27,14 @@ import com.sinorail.gysglbj.model.CertificateSupcode;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
 import com.sinorail.gysglbj.util.ExcelUtils;
-
+/**
+ * 
+ * 
+ * 供应商Action
+ * 
+ * @author wangwei
+ *
+ */
 public class GysglAction extends QuiController {
 	
 	private Logger log = Logger.getLogger(GysglAction.class);
@@ -235,17 +242,24 @@ public class GysglAction extends QuiController {
 	
 	public void delete(){
 		
+		String sql = "select YYZZZP from E_SUPPLIER where ID =?";
+		Record record = Db.findFirst(sql,getPara("id"));
+		
 		if(Quote.dao.queryByCerId(getPara("id")).size()>0){
 			setAttr("status",2);
 			log.info("****删除供应商记录ID在报价表存在了="+ getPara("id"));
 		}else{
-			if(Supplier.dao.deleteById(getPara("id"))){
+			if(record.get("YYZZZP")!=null){
+				File file = new File(this.getSession().getServletContext().getRealPath("") + record.get("YYZZZP"));
+				file.delete();
+			}
+			boolean deleteResult = Supplier.dao.deleteById(getPara("id"));
+			if(deleteResult == true){
 				setAttr("status", 1);
 				log.info("****删除供应商记录ID="+ getPara("id"));
 			}
 		}
 		renderJson(); 
-		
 	}
 	
 	/**

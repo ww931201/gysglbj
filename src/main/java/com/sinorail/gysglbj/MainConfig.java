@@ -32,7 +32,6 @@ import com.sinorail.gysglbj.action.SuppliestemplateAction;
 import com.sinorail.gysglbj.action.UserAction;
 import com.sinorail.gysglbj.aop.LoginInterceptor;
 import com.sinorail.gysglbj.constant.Const;
-import com.sinorail.gysglbj.model.Suppliestemplate;
 import com.sinorail.gysglbj.model._MappingKit;
 import com.sinorail.gysglbj.util.FileUtils;
 

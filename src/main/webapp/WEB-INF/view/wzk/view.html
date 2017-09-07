@@ -14,17 +14,22 @@
 <!--尺寸拖拽调整end-->
 </head>
 <body>
-<div class="box2" panelTitle="等级评价" id="searchPanel">
+<div class="box2" panelTitle="证书类别" id="searchPanel">
 	<form id="queryForm" method="post">
 		<table>
 			<tr>
 				<td></td>
-				<td>等级评价：</td>
+				<td>物资编码：</td>
 				<td>
-					<input type="text" id="searchInput" name="suppliergrade.GRADEPJ" />
+					<input type="text" id="searchInput" name="suppliestemplate.WZBM" />
+				</td>
+				<td>物资名称：</td>
+				<td>
+					<input type="text" id="searchInput" name="suppliestemplate.WZMC" />
 				</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
+				<td><button type="button" onclick="exportWzk()"><span class="icon_find ">导出</span></button></td>
 			</tr>
 		</table>
 	</form>
@@ -42,8 +47,19 @@ function initComplete(){
 	
 	grid = $("#dataBasic").quiGrid({
 		columns:[
-			{ display: '等级评价', name: 'GRADEPJ',     align: 'center', width: "30%"},
-			{ display: '等级评价说明', name: 'DJPJSM',     align: 'center', width: "30%"},
+			{ display: '类别', name: 'LB', align: 'center',  width: '12%'},
+			{ display: '物资编码', name: 'WZBM', align: 'center',  width: '12%'},
+			{ display: '物资名称', name: 'WZMC', align: 'center',  width: '12%'},
+			{ display: '规格型号', name: 'GGXH', align: 'center',  width: '12%'},
+			{ display: '计量单位', name: 'JLDW', align: 'center',  width: '12%'},
+			{ display: '实物图片', name: 'SWTP', align: 'center',  width: '12%', render:  function (rowdata, rowindex, value, column){
+				var shtml ="";
+				if(rowdata.SWTP!=null){
+					  shtml = "<a href="+rowdata.SWTP+"  id='pics'  target='_blank'>点击查看</a>";
+				}
+                return shtml;
+            }},
+			{ display: '备注', name: 'BZ', align: 'center',  width: '12%'},
        		{ display: '操作', isAllowHide: false, align: 'center', width:300,
 					 render: function (rowdata, rowindex, value, column){
                  	    return '<div class="padding_top4 padding_left5">'
@@ -54,7 +70,7 @@ function initComplete(){
 	                 }
 	            }
 		  ],
-	url: '/suppliergrade/list', sortName: 'GRADEPJ',rownumbers:true,checkbox:true,
+	url: '/suppliestemplate/list', sortName: 'WZBM',rownumbers:true,checkbox:true,
     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
     
      toolbar:{
@@ -63,6 +79,10 @@ function initComplete(){
     		  { line : true },
     		  {text: '批量删除', click: deleteUnit, iconClass: 'icon_delete'},
     		  { line : true },
+    		  {text: '导入', click: importQuote,   iconClass: 'icon_import'},
+    		  { line : true },
+    		  {text: '导出模板', click: onExport,   iconClass: 'icon_export'},
+    		  { line : true }, 
     		]
      	}
 	});
@@ -82,30 +102,31 @@ function initComplete(){
 //新增
 function addUnit() {
 	top.Dialog.open({
-			URL:"/suppliergrade/addView",
-			Title:"添加",Width:500,Height:350});
+			URL:"/suppliestemplate/addView",
+			Title:"添加",Width:500,Height:450});
 }
 //查看
 function onView(rowid){
 	top.Dialog.open({
-		URL:"/suppliergrade/detailView?id="+rowid,
-		Title:"查看",Width:500,Height:300});
+		URL:"/suppliestemplate/detailView?id="+rowid,
+		Title:"查看",Width:500,Height:450});
 }
 
 //修改	
 function onEdit(rowid){
 	top.Dialog.open({
-		URL:"/suppliergrade/updateView?id="+rowid,
-		Title:"修改",Width:500,Height:350});
+		URL:"/suppliestemplate/updateView?id="+rowid,
+		Title:"修改",Width:500,Height:450});
 }
 //删除	
 function onDelete(rowid,rowidx){
 	top.Dialog.confirm("确定要删除该记录吗？",function(){
 	  	//删除记录
 	  	//删除记录
-	  	$.post("/suppliergrade/delete",
+	  	$.post("/suppliestemplate/delete",
 	  			{"id":rowid},
 	  			function(result){
+		  			/* console.log(result) */
 	  				handleResult(result.status);
 				},"json");
 				//刷新表格
@@ -124,7 +145,7 @@ function deleteUnit() {
 		return;
 	}
 	top.Dialog.confirm("确定要删除吗？",function(){
-		$.post("/suppliergrade/deleteBatch",
+		$.post("/suppliestemplate/deleteBatch",
 					//获取所有选中行
 					getSelectIds(grid),
 					function(result){
@@ -160,6 +181,21 @@ function getSelectIds(grid) {
 	return {"ids":ids};
 }
 
+//导入供应商管理
+var diagImport = new top.Dialog();
+function importQuote(){
+	diagImport.Title = "导入模板";
+	diagImport.Width = 350;
+	diagImport.Height = 150;
+	diagImport.URL = "/suppliestemplate/importView";
+	diagImport.show();
+	
+}
+
+//导出供应商
+function onExport(){
+	location.href = "/suppliestemplate/export";
+}
 
 //查询
 function searchHandler(){
@@ -189,6 +225,10 @@ function refresh(isUpdate){
 	grid.loadData();
 }
 
+function exportWzk(){
+	window.location.href="/suppliestemplate/exportWzk?"+$("#queryForm").serialize();
+	
+}
 </script>	
 </body>
 </html>

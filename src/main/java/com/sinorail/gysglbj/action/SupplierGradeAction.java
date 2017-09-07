@@ -1,15 +1,10 @@
 package com.sinorail.gysglbj.action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.Record;
 import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Suppliergrade;
 

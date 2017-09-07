@@ -10,7 +10,6 @@ import com.jfinal.aop.Before;
 import com.jfinal.aop.Duang;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -20,8 +19,13 @@ import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Project;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
+import com.sinorail.gysglbj.model.Suppliestemplate;
 import com.sinorail.gysglbj.util.ExcelUtils;
-
+/**
+ * 
+ * @author wangwei
+ *
+ */
 public class QuoteAction extends QuiController {
 	
 	QuoteService quoteService = Duang.duang(QuoteService.class);
@@ -117,6 +121,34 @@ public class QuoteAction extends QuiController {
 		
 		UploadFile file = getFile("excel");
 		
+		List<List<Object>> list = null;
+		String[][] field = {{"BJH","^[0-9]+(.[0]{1,2})?$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW",".*","计量单位"}, {"YCSL","^[0-9]+(.[0-9]{1,2})?$","预测数量"}, {"DJXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
+		
+		try {
+			
+			list = ExcelUtils.readExcel(file.getFile(), 4);
+			
+		} catch (IOException e1) {
+			
+			e1.printStackTrace();
+			renderJson("msg", "上传失败!"); return;
+			
+		}
+		
+		//判断excel的list中物资库中是不是存在物资编码
+		int j = 5;
+		if(list!=null){
+			for (List<Object> fileWzbm : list) { 
+				String  gyswzbm = (String) fileWzbm.get(1);
+				String sql = "select * from E_SUPPLIESTEMPLATE where WZBM = ?";
+				List<Suppliestemplate> suppliestemplateList = Suppliestemplate.dao.find(sql,gyswzbm);
+				if(suppliestemplateList.size() < 1){
+					renderJson("msg", "第"+j+"行,物资编码 "+gyswzbm+"不在模板物资库中,无法导入！"); return; 
+				}
+				j++;
+			}
+		}
+		
 		String projectId = getPara("projectId");
 		Object supplierNo = null;
 		try {
@@ -135,7 +167,7 @@ public class QuoteAction extends QuiController {
 		
 			if(quote != null) {renderJson("msg", "已导入该供应商信息!"); return;}
 		
-		List<List<Object>> list = null;
+			/*List<List<Object>> list = null;
 		
 		//String[] field = {"BJH", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
 		String[][] field = {{"BJH","^[0-9]+(.[0]{1,2})?$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW",".*","计量单位"}, {"YCSL","^[0-9]+(.[0-9]{1,2})?$","预测数量"}, {"DJXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
@@ -150,6 +182,21 @@ public class QuoteAction extends QuiController {
 			renderJson("msg", "上传失败!"); return;
 			
 		}
+		
+		//判断excel的list中物资库中是不是存在物资编码
+		int jj = 5;
+		if(list!=null){
+			for (List<Object> fileWzbm : list) { 
+				String  gyswzbm = (String) fileWzbm.get(1);
+				String sql = "select * from E_SUPPLIESTEMPLATE where WZBM = ?";
+				List<Suppliestemplate> suppliestemplateList = Suppliestemplate.dao.find(sql,gyswzbm);
+				if(suppliestemplateList.size() < 1){
+					renderJson("result", "第"+jj+"行,物资编码 "+gyswzbm+"不在模板物资库中,无法导入！"); return; 
+				}
+				jj++;
+			}
+		}
+		*/
 		List<Record> recordList = new LinkedList<Record>();
 		
 		int rows = 1;

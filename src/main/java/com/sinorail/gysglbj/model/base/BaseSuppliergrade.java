@@ -25,4 +25,12 @@ public abstract class BaseSuppliergrade<M extends BaseSuppliergrade<M>> extends 
 		return get("ID");
 	}
 
+	public void setDjpjsm(java.lang.String djpjsm) {
+		set("DJPJSM", djpjsm);
+	}
+
+	public java.lang.String getDjpjsm() {
+		return get("DJPJSM");
+	}
+
 }
