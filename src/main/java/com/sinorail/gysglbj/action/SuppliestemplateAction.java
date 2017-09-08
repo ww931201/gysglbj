@@ -201,8 +201,12 @@ public class SuppliestemplateAction extends QuiController{
 				for (List<Object> fileWzbm : list) { 
 					if(lists!=null){
 						for (Object object : lists) {
-							if(fileWzbm.get(1).equals(object)){
-								 temp += fileWzbm.get(1)+",";
+							if (fileWzbm.get(1)!=null) {
+								if(fileWzbm.get(1).equals(object)){
+									 temp += fileWzbm.get(1)+",";
+								}
+							}else{
+								renderJson("result", "第" + a + "行物资编码为空，请查看修改"); return; 
 							}
 							if(temp.length()>0){
 								renderJson("result", "第" + a + "行物资编码'"+object+"'在excel已经存在，请修改后再导入数据"); return; 
@@ -210,7 +214,7 @@ public class SuppliestemplateAction extends QuiController{
 							
 						}
 					}
-					lists.add(fileWzbm.get(0));
+					lists.add(fileWzbm.get(1));
 					a++;
 				}
 			}
@@ -223,7 +227,6 @@ public class SuppliestemplateAction extends QuiController{
 					String wzbm = suppliestemplate.getWzbm();
 					if(list!=null){
 						for (int l = 0;list.size()>l;l++) { 
-							
 							if(list.get(l).get(1).equals(wzbm)){
 								duipler += wzbm+",";
 							}

@@ -30,6 +30,37 @@
 		
 		ORDER BY ENTRY_TIME DESC, ID
 	#end
+	
+	
+		### 查询所有的供应商供应商信息
+	#sql("supplierList2")
+		select  GYSBH ,  SHXYDM ,  YYZZZCH ,  QYMC ,  FDDBR ,  FDDBRDH ,  SSS , SSS1 ,  ZS,  ZCZB,  CLRQ,  YYQX ,  QYLX ,  ZZJGDM ,  SWDJH ,  YXQ ,  YWLXR ,  LXRSJ ,  BGCZ ,  BGDH ,  LXRYX ,  LXRZW ,  BGDZ ,  BLGYSCFZQ ,  HMD ,  BLGYSXYPJDJ ,  GYSJYFW ,GYSFL, GYSQYXZ
+		from E_SUPPLIER
+		where 1 = 1
+		#if(GYSBH ??)
+			and upper(GYSBH) like upper('%#(GYSBH)%')
+		#end
+		#if(QYMC ??)
+			and QYMC like '%#(QYMC)%'
+		#end
+		#if(HMD ??)
+			and HMD like '%#(HMD)%'
+		#end
+		#if(GYSJYFW ??)
+			and GYSJYFW like '%#(GYSJYFW)%'
+		#end
+		#if(CODE ??)
+			and ID in(select SUPPLIER_ID from E_CERTIFICATE where ID in (SELECT CERID FROM E_CERTIFICATE_SUPCODE where CODE = '#(CODE)'))
+		#end
+		#if(ZSLB ??)
+			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSLB like '#(ZSLB)'))
+		#end
+		#if(ZSXX ??)
+			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSXX like '%#(ZSXX)%'))
+		#end
+		
+		ORDER BY ENTRY_TIME DESC, ID
+	#end
 
 	
 	### 根据供应商编号查询供应商

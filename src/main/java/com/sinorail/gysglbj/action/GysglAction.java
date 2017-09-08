@@ -347,8 +347,11 @@ public class GysglAction extends QuiController {
 		/*new 一个file文件*/
 		File file = new File("GysExport.xls");
 		List<Record> exportList = Supplier.dao.findExportGys(getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
-		String[] title = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "不良供应商处罚周期", "黑名单", "不良供应商信用评价等级", "供应商经营范围", "录入时间", "供应商分类", "供应商企业性质", "营业执照照片"};
-		String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW", "ENTRY_TIME", "GYSFL", "GYSQYXZ", "YYZZZP"};
+		//String[] title = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "不良供应商处罚周期", "黑名单", "不良供应商信用评价等级", "供应商经营范围", "录入时间", "供应商分类", "供应商企业性质", "营业执照照片"};
+		//String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW", "ENTRY_TIME", "GYSFL", "GYSQYXZ", "YYZZZP"};
+		
+		String[] title = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "不良供应商处罚周期", "黑名单", "不良供应商信用评价等级", "供应商经营范围", "供应商分类", "供应商企业性质"};
+		String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW", "GYSFL", "GYSQYXZ"};
 		
 		ExcelUtils.export(exportList, title, field, file); 
 		 

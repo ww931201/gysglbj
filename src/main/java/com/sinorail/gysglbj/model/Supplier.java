@@ -56,7 +56,7 @@ public class Supplier extends BaseSupplier<Supplier> {
 		
 		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("HMD",supplier.getHmd()).set("GYSJYFW",supplier.getGysjyfw()).set("CODE",certificatesupcode.getCode())
 				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx());  
-		SqlPara sqlp = getSqlPara("supplier.supplierList",cond);
+		SqlPara sqlp = getSqlPara("supplier.supplierList2",cond);
 		
 		return Db.find(sqlp);
 	}
