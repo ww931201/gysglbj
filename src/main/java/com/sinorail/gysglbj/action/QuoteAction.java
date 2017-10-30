@@ -19,7 +19,6 @@ import com.sinorail.gysglbj.extend.QuiController;
 import com.sinorail.gysglbj.model.Project;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
-import com.sinorail.gysglbj.model.Suppliestemplate;
 import com.sinorail.gysglbj.util.ExcelUtils;
 /**
  * 
@@ -49,6 +48,7 @@ public class QuoteAction extends QuiController {
 		render("importView.html");
 	}
 	public void filterView() {
+		
 		setAttr("projectId", getPara("projectId"));
 		Project project = Project.dao.findById(getPara("projectId"));
 		setAttr("projectName", project.getName());
@@ -62,7 +62,11 @@ public class QuoteAction extends QuiController {
 	
 	public void list() {
 		Quote quote = getModel(Quote.class);
-		SqlPara sqp = Db.getSqlPara("quote.paginateList", quote);
+		Supplier supplier = getModel(Supplier.class);
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("GYSBH", supplier.getGysbh()).set("WZMC",quote.getWzmc()).set("PROJECT_ID",quote.getProjectId()).set("GGXH", quote.getGgxh()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc());
+		SqlPara sqp = Db.getSqlPara("quote.paginateList", kv);
+	/*	List<Record> list = paginate.getList();
+		kv.set("PROJECT_ID",list.get(0).get("PROJECT_ID"));*/
 		renderJson(Db.paginate(pageNumber(), pageSize(), sqp));
 	}
 	
@@ -77,10 +81,9 @@ public class QuoteAction extends QuiController {
 		Project project = Project.dao.findById(quote.getProjectId());
 		if(project.getType().equals(new BigDecimal("1"))) {
 			sqp = Db.getSqlPara("quote.filterJJList", kv);
-		} else {
+		}else{
 			sqp = Db.getSqlPara("quote.filterList", kv);
 		}
-		
 		renderJson("rows", Db.find(sqp));
 	}
 	
@@ -122,8 +125,8 @@ public class QuoteAction extends QuiController {
 		UploadFile file = getFile("excel");
 		
 		List<List<Object>> list = null;
-		String[][] field = {{"BJH","^[0-9]+(.[0]{1,2})?$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW",".*","计量单位"}, {"YCSL","^[0-9]+(.[0-9]{1,2})?$","预测数量"}, {"DJXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
-		
+		//String[][] field = {{"BJH","^[0-9]+(.[0]{1,2})?$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW",".*","计量单位"}, {"YCSL","^[0-9]+(.[0-9]{1,2})?$","预测数量"}, {"DJXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报单价(不含税）"}, {"CSBZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","厂商报总限价（不含税）"}};
+		String[][] field = {{"BJH","^[0-9]+(.[0]{1,2})?$","包件号"}, {"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JSYQ",".*","技术要求"}, {"JLDW",".*","计量单位"}, {"YCSL","^[0-9]+(.[0-9]{1,2})?$","预测数量"}, {"DJXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","单价限价(不含税）"}, {"ZXJ_BHS","^[0-9]+(.[0-9]{1,2})?$","总限价（不含税）"}, {"SYDWJDQ",".*","使用单位及地区"}, {"CSBDJ_BHS",".*","厂商报单价(不含税）"}, {"CSBZXJ_BHS",".*","厂商报总限价（不含税）"}};
 		try {
 			
 			list = ExcelUtils.readExcel(file.getFile(), 4);
@@ -135,8 +138,9 @@ public class QuoteAction extends QuiController {
 			
 		}
 		
-		//判断excel的list中物资库中是不是存在物资编码
-		int j = 5;
+		/**判断excel的list中物资库中是不是存在物资编码*/
+		
+		/*int j = 5;
 		if(list!=null){
 			for (List<Object> fileWzbm : list) { 
 				String  gyswzbm = (String) fileWzbm.get(1);
@@ -147,7 +151,7 @@ public class QuoteAction extends QuiController {
 				}
 				j++;
 			}
-		}
+		}*/
 		
 		String projectId = getPara("projectId");
 		Object supplierNo = null;
@@ -163,7 +167,7 @@ public class QuoteAction extends QuiController {
 		
 			if(supplier == null) {renderJson("msg", "检查文件中供应商编码是否填写,或 系统中是否录入该供应商!"); return;}
 		
-		Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?", projectId, supplier.getId());
+			Quote quote = Quote.dao.findFirst("select * from e_quote where project_id = ? and supplier_id = ?", projectId, supplier.getId());
 		
 			if(quote != null) {renderJson("msg", "已导入该供应商信息!"); return;}
 		
@@ -223,6 +227,15 @@ public class QuoteAction extends QuiController {
 					}
 				}
 				r.set(field[i][0], listm.get(i));
+				 if(listm!=null){
+					 if(listm.get(7)!=null && listm.get(8)!=null&&listm.get(10)!=null&&listm.get(11)!=null){
+							if(Double.parseDouble((listm.get(10).toString())) > Double.parseDouble((listm.get(7).toString())) || Double.parseDouble((listm.get(11).toString())) > Double.parseDouble((listm.get(8).toString())) || Double.parseDouble((listm.get(10).toString()))==0 || Double.parseDouble((listm.get(11).toString())) == 0){
+								r.set("SFYXBJ", "否");
+							}else{
+								r.set("SFYXBJ", "是");
+							}
+						}
+				 }
 				System.out.println(field[i][0]+": "+listm.get(i));
 			}
 			if(temp_is_stop) break;
@@ -249,7 +262,7 @@ public class QuoteAction extends QuiController {
 		
 		Quote quote = getModel(Quote.class);
 		Supplier supplier = getModel(Supplier.class);
-		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh()).set("XH",getPara("XH"));
 		File file = new File("filter.xls");
 		
 		//类型 1 竞买(整包)  2 竞价
@@ -259,21 +272,57 @@ public class QuoteAction extends QuiController {
 			SqlPara sqp = Db.getSqlPara("quote.filterJJList", kv);
 			List<Record> list = Db.find(sqp);
 			
-			String[] title = {"供应商编号", "企业名称", "总限价（不含税）", "厂商报总限价（不含税）"};
-			String[] field = {"GYSBH", "QYMC", "ZXJ_BHS", "CSBZXJ_BHS"};
+			String[] title = {"供应商编号", "企业名称", "总限价（不含税）", "厂商报总限价（不含税）","有效报价"};
+			String[] field = {"GYSBH", "QYMC", "ZXJ_BHS", "CSBZXJ_BHS","SFYXBJ"};
 			
 			ExcelUtils.export(list, title, field, file);
-		} else {
+		} else { 
 			
 			SqlPara sqp = Db.getSqlPara("quote.filterList", kv);
 			List<Record> list = Db.find(sqp);
 			
-			String[] title = {"包件号", "供应商编号", "企业名称", "物资编码", "物资名称", "规格型号", "技术要求", "计量单位", "预测数量", "单价限价(不含税）", "总限价（不含税）", "使用单位及地区", "厂商报单价(不含税）", "厂商报总限价（不含税）"};
-			String[] field = {"BJH", "GYSBH", "QYMC", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS"};
+			String[] title = {"包件号", "供应商编号", "企业名称", "物资编码", "物资名称", "规格型号", "技术要求", "计量单位", "预测数量", "单价限价(不含税）", "总限价（不含税）", "使用单位及地区", "厂商报单价(不含税）", "厂商报总限价（不含税）","有效报价"};
+			String[] field = {"BJH", "GYSBH", "QYMC", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS","SFYXBJ"};
 			
 			ExcelUtils.export(list, title, field, file);
 		}
 		
+		renderFile(file);
+	}
+	
+	
+	/*
+	 * 
+	 * 导出在竞买模式下导出详细信息
+	 */
+	public void filterDataExport2() throws IOException {
+		
+		Quote quote = getModel(Quote.class,"quote");
+		Supplier supplier = getModel(Supplier.class);
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("QYMC",supplier.getQymc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
+		File file = new File("filter.xls");
+		
+		//类型 1 竞买(整包)  2 竞价
+		//Project project = Project.dao.findById(quote.getProjectId());
+		/*if(project.getType().equals(new BigDecimal("1"))) {
+			
+			SqlPara sqp = Db.getSqlPara("quote.filterJJList", kv);
+			List<Record> list = Db.find(sqp);
+			
+			String[] title = {"供应商编号", "企业名称", "总限价（不含税）", "厂商报总限价（不含税）"};
+			String[] field = {"GYSBH", "QYMC", "ZXJ_BHS", "CSBZXJ_BHS"};
+			
+			ExcelUtils.export(list, title, field, file);
+		} else {*/
+			
+			SqlPara sqp = Db.getSqlPara("quote.filterList2", kv);
+			List<Record> list = Db.find(sqp);
+			
+			String[] title = {"包件号", "供应商编号", "企业名称", "物资编码", "物资名称", "规格型号", "技术要求", "计量单位", "预测数量", "单价限价(不含税）", "总限价（不含税）", "使用单位及地区", "厂商报单价(不含税）", "厂商报总限价（不含税）", "有效报价"};
+			String[] field = {"BJH", "GYSBH", "QYMC", "WZBM", "WZMC", "GGXH", "JSYQ", "JLDW", "YCSL", "DJXJ_BHS", "ZXJ_BHS", "SYDWJDQ", "CSBDJ_BHS", "CSBZXJ_BHS","SFYXBJ"};
+			
+			ExcelUtils.export(list, title, field, file);
+		//}
 		renderFile(file);
 	}
 }

@@ -618,7 +618,6 @@ public class ExcelUtils {
 										//value1 = "NUMERIC value=" + cell.getNumericCellValue();
 										
 										value = cell.getNumericCellValue();
-										
 										//如果是日期格式
 										if(DateUtil.isCellDateFormatted(cell)){ 
 											value = cell.getDateCellValue();

@@ -33,23 +33,21 @@ public class SuppliestemplateAction extends QuiController{
 	private Logger log = Logger.getLogger(SuppliestemplateAction.class);
 	
 	public void index(){
-		
+		setAttr("CSQYMC", getPara("CSQYMC"));
 		render("view.html");
-		
 		log.info("跳转到物资库对应的页面");
 	}
 	
 	/**
 	 * 
 	 * 物资库的展示
+	 * 
 	 */
 	public void list(){ 
-		
 		Page<Suppliestemplate> page = Suppliestemplate.dao.findPaginate(pageNumber(), pageSize(),getModel(Suppliestemplate.class));
-		
 		renderJson(page);
-		
 	} 
+	
 	/**
 	 * 导入excel跳转页面
 	 */
@@ -65,12 +63,13 @@ public class SuppliestemplateAction extends QuiController{
 	 */
 	public void export() throws IOException {
 		
-		String path = Thread.currentThread().getContextClassLoader().getResource("templates/suppliertemplate_template.xlsx").getPath();
+		String path = Thread.currentThread().getContextClassLoader().getResource("templates/suppliertemplate_templates.xlsx").getPath();
 		
 		File file = new File(path);
 		
 		renderFile(file);
 	}
+	
 	
 	/**
 	 * 
@@ -85,33 +84,41 @@ public class SuppliestemplateAction extends QuiController{
 	 */ 
 	public void updateView(){
 		
+		//Suppliestemplate.dao.updateSWTP(getPara("id"));
+		
 		setAttr("suppliestemplate",Suppliestemplate.dao.queryById(getPara("id")));
 		
 		render("save.html");
 	}
 	
 	public  void save(){
-			
 			boolean status = false;
 			Suppliestemplate suppliestemplate  = getModel(Suppliestemplate.class,"suppliestemplate");
 			if (suppliestemplate.getId() == null) {
 				//添加
 				suppliestemplate.remove("ID");
-				if(!Suppliestemplate.dao.isExistSupplierCode(suppliestemplate.getWzbm())) {	
+				/*if(!Suppliestemplate.dao.isExistSupplierCode(suppliestemplate.getWzbm())) {	
 					status = suppliestemplate.save();
 					log.info("****保存物资库,"+ suppliestemplate.getWzbm());
 					
 				}else {
 					setAttr("content", "物资库编码已存在!");
-				}
+				}*/
+				status = suppliestemplate.save();
+				log.info("****保存物资库,"+ suppliestemplate.getWzbm());
+				//setAttr("content", "物资库编码已存在!");
+				
 			} else {
 				//修改  
 				try {
-					if(!Suppliestemplate.dao.findByWzbmAndId(suppliestemplate.getWzbm(), suppliestemplate.getId())) {	
+					/*if(!Suppliestemplate.dao.findByWzbmAndId(suppliestemplate.getWzbm(), suppliestemplate.getId())) {
+						
 						status = suppliestemplate.update();
 					}else {
 						setAttr("content", "物资库编码已存在!");
-					}
+					}*/
+						status = suppliestemplate.update();
+						//setAttr("content", "物资库编码已存在!");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -184,7 +191,7 @@ public class SuppliestemplateAction extends QuiController{
 			
 			List<List<Object>> list = null;
 			
-			String[] field = {"LB","WZBM", "WZMC", "GGXH", "JLDW", "BZ"};
+			String[] field = {"LB","WZBM", "WZMC", "GGXH", "JLDW", "BZ", "QYMC2"};
 			try {
 				list = ExcelUtils.readExcel(file.getFile(), 1,field.length);
 				
@@ -193,7 +200,7 @@ public class SuppliestemplateAction extends QuiController{
 				renderJson("result", "上传失败！"); return;
 			}
 			
-			//EXCEL文件供应商编码重复
+		/*	//EXCEL文件供应商编码重复
 			String temp ="";
 			List<Object> lists = new ArrayList<Object>();
 			int a = 2;
@@ -221,7 +228,9 @@ public class SuppliestemplateAction extends QuiController{
 			
 			//数据库已经存在此供应商编码
 			String duipler = "";
+			
 			List<Suppliestemplate> findWzbm = Suppliestemplate.dao.findWzbm();
+			
 			if(findWzbm!=null){
 				for (Suppliestemplate suppliestemplate : findWzbm) {
 					String wzbm = suppliestemplate.getWzbm();
@@ -236,11 +245,11 @@ public class SuppliestemplateAction extends QuiController{
 						}
 					}
 				}
-			}
+			}*/
 			
 			List<Record> recordList = new LinkedList<Record>();
 			
-			String[][] fields = {{"LB",".*","类别"},{"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JLDW",".*","计量单位"}, {"BZ",".*","备注"}};			
+			String[][] fields = {{"LB",".*","类别"},{"WZBM",".*","物资编码"}, {"WZMC",".*","物资名称"}, {"GGXH",".*","规格型号"}, {"JLDW",".*","计量单位"}, {"BZ",".*","备注"}, {"QYMC2",".*","企业名称"}};			
 			for(int n = 0;n<list.size();n++){
 				
 				Record r = new Record();
@@ -275,9 +284,13 @@ public class SuppliestemplateAction extends QuiController{
 	public void exportWzk() throws IOException{
 		/*new 一个file文件*/
 		File file = new File("suppliertemplate_template.xls");
+		
 		List<Record> exportList = Suppliestemplate.dao.findExportWzk(getModel(Suppliestemplate.class));
-		String[] title = {"类别", "物资编码", "物资名称", "规格型号", "计量单位","备注"};
-		String[] field = {"LB", "WZBM", "WZMC", "GGXH", "JLDW", "BZ"};
+		
+		String[] title = {"类别", "物资编码", "物资名称", "规格型号", "计量单位","备注","企业名称"};
+		
+		String[] field = {"LB", "WZBM", "WZMC", "GGXH", "JLDW", "BZ","QYMC2"};
+		
 		ExcelUtils.export(exportList, title, field, file); 
 		 
 		renderFile(file);
@@ -286,49 +299,103 @@ public class SuppliestemplateAction extends QuiController{
 	/**
 	 * 上传图片
 	 */
-public void uploadPic(){
-	UploadFile filenames = getFile("images");
-	String fileName = filenames.getOriginalFileName();
-	File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
-    String extension = fileName.substring(fileName.lastIndexOf("."));
-    String savePath = PathKit.getWebRootPath() + "/upload/wzpic/";
-    JSONObject json = new JSONObject();
-    if (".png".equals(extension) || ".jpg".equals(extension)
-            || ".gif".equals(extension) || "jpeg".equals(extension)
-            || "bmp".equals(extension)) {
-        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
-        try {
-            FileInputStream fis = new FileInputStream(source);
-            File targetDir = new File(savePath);
-            if (!targetDir.exists()) {
-                targetDir.mkdirs();
-            }
-            File target = new File(targetDir, fileName);
-            if (!target.exists()) {
-                target.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(target);
-            byte[] bts = new byte[1024 * 20];
-            while (fis.read(bts, 0, 1024 * 20) != -1) {
-                fos.write(bts, 0, 1024 * 20);
-            }
-            fos.close();
-            fis.close();
-            json.put("error", 0);
-            json.put("src", "/upload/wzpic/" + fileName); // 相对地址，显示图片用
-            source.delete();
-        } catch (FileNotFoundException e) {
-            json.put("error", 1);
-            json.put("message", "上传出现错误，请稍后再上传");
-        } catch (IOException e) {
-            json.put("error", 1);
-            json.put("message", "文件写入服务器出现错误，请稍后再上传");
-        }
-    } else {
-        source.delete();
-        json.put("error", 1);
-        json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
-    }
-    renderJson(json.toJSONString());
-}
+	public void uploadPic(){
+	
+		List<UploadFile> files = getFiles();
+		
+		List<String> lists = new ArrayList<String>();
+	 	
+		if(files!=null){
+			for (UploadFile filenames : files) {
+				String fileName = filenames.getOriginalFileName();
+				File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
+			    String extension = fileName.substring(fileName.lastIndexOf("."));
+			    String savePath = PathKit.getWebRootPath() + "/upload/pic/";
+			    JSONObject json = new JSONObject();
+			    if (".png".equals(extension) || ".jpg".equals(extension)
+			            || ".gif".equals(extension) || "jpeg".equals(extension)
+			            || "bmp".equals(extension)) {
+			        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
+			        try {
+			            FileInputStream fis = new FileInputStream(source);
+			            File targetDir = new File(savePath);
+			            if (!targetDir.exists()) {
+			                targetDir.mkdirs();
+			            }
+			            File target = new File(targetDir, fileName);
+			            if (!target.exists()) {
+			                target.createNewFile();
+			            }
+			            FileOutputStream fos = new FileOutputStream(target);
+			            byte[] bts = new byte[1024 * 20];
+			            while (fis.read(bts, 0, 1024 * 20) != -1) {
+			                fos.write(bts, 0, 1024 * 20);
+			            }
+			            fos.close();
+			            fis.close();
+			            json.put("error", "0");
+			            json.put("src", "/upload/pic/" + fileName); // 相对地址，显示图片用
+			            source.delete();
+			        } catch (FileNotFoundException e) {
+			            json.put("error", "1");
+			            json.put("message", "上传出现错误，请稍后再上传");
+			        } catch (IOException e) {
+			            json.put("error", "1");
+			            json.put("message", "文件写入服务器出现错误，请稍后再上传");
+			        }
+			    } else {
+			        source.delete();
+			        json.put("error", "1");
+			        json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
+			    }
+			    lists.add(json.toJSONString());
+			}
+		}
+		renderJson(lists.toString());
+	}
+	
+	/*	UploadFile filenames = getFile("images");
+		String fileName = filenames.getOriginalFileName();
+		File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
+	    String extension = fileName.substring(fileName.lastIndexOf("."));
+	    String savePath = PathKit.getWebRootPath() + "/upload/wzpic/";
+	    JSONObject json = new JSONObject();
+	    if (".png".equals(extension) || ".jpg".equals(extension)
+	            || ".gif".equals(extension) || "jpeg".equals(extension)
+	            || "bmp".equals(extension)) {
+	        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
+	        try {
+	            FileInputStream fis = new FileInputStream(source);
+	            File targetDir = new File(savePath);
+	            if (!targetDir.exists()) {
+	                targetDir.mkdirs();
+	            }
+	            File target = new File(targetDir, fileName);
+	            if (!target.exists()) {
+	                target.createNewFile();
+	            }
+	            FileOutputStream fos = new FileOutputStream(target);
+	            byte[] bts = new byte[1024 * 20];
+	            while (fis.read(bts, 0, 1024 * 20) != -1) {
+	                fos.write(bts, 0, 1024 * 20);
+	            }
+	            fos.close();
+	            fis.close();
+	            json.put("error", 0);
+	            json.put("src", "/upload/wzpic/" + fileName); // 相对地址，显示图片用
+	            source.delete();
+	        } catch (FileNotFoundException e) {
+	            json.put("error", 1);
+	            json.put("message", "上传出现错误，请稍后再上传");
+	        } catch (IOException e) {
+	            json.put("error", 1);
+	            json.put("message", "文件写入服务器出现错误，请稍后再上传");
+	        }
+	    } else {
+	        source.delete();
+	        json.put("error", 1);
+	        json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
+	    }
+	    renderJson(json.toJSONString());
+		}*/
 }

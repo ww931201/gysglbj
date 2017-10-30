@@ -26,7 +26,7 @@ public class Suppliestemplate extends BaseSuppliestemplate<Suppliestemplate> {
 	 */
 	public Page<Suppliestemplate> findPaginate(Integer pageNumber, Integer pageSize, Suppliestemplate suppliestemplate) {
 		
-		Kv kv = Kv.by("WZBM", suppliestemplate.getWzbm()).set("WZMC", suppliestemplate.getWzmc()); 
+		Kv kv = Kv.by("WZBM", suppliestemplate.getWzbm()).set("WZMC", suppliestemplate.getWzmc()).set("QYMC2",suppliestemplate.getQymc2()); 
 		
 		SqlPara sqlPara = getSqlPara("suppliestemplate.suppliestemplateList",kv);
 		
@@ -87,9 +87,16 @@ public class Suppliestemplate extends BaseSuppliestemplate<Suppliestemplate> {
 
 	public List<Record> findExportWzk(Suppliestemplate suppliestemplate) {
 		
-		Kv cond = Kv.by("WZBM",suppliestemplate.getWzbm()).set("WZMC", suppliestemplate.getWzmc());  
+		Kv cond = Kv.by("WZBM",suppliestemplate.getWzbm()).set("WZMC", suppliestemplate.getWzmc()).set("QYMC2", suppliestemplate.getQymc2());  
 		SqlPara sqlp = getSqlPara("suppliestemplate.suppliestemplateList",cond);
 		
 		return Db.find(sqlp);
+	}
+
+
+	public void updateSWTP(String id) {
+		String sql  = "update E_SUPPLIESTEMPLATE set SWTP=A"+" where ID="+id;
+		//String sql  = "update E_SUPPLIESTEMPLATE set SWTP=A"+", SWTP2=?"+", SWTP3=?"+" where ID="+id;
+		Db.update(sql);
 	}
 }

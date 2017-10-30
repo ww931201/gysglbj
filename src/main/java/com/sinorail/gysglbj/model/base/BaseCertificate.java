@@ -89,4 +89,36 @@ public abstract class BaseCertificate<M extends BaseCertificate<M>> extends Mode
 		return get("ZSXX");
 	}
 
+	public void setZszp(java.lang.String zszp) {
+		set("ZSZP", zszp);
+	}
+
+	public java.lang.String getZszp() {
+		return get("ZSZP");
+	}
+
+	public void setZszp2(java.lang.String zszp2) {
+		set("ZSZP2", zszp2);
+	}
+
+	public java.lang.String getZszp2() {
+		return get("ZSZP2");
+	}
+
+	public void setZszp3(java.lang.String zszp3) {
+		set("ZSZP3", zszp3);
+	}
+
+	public java.lang.String getZszp3() {
+		return get("ZSZP3");
+	}
+
+	public void setZsshwz(java.lang.String zsshwz) {
+		set("ZSSHWZ", zsshwz);
+	}
+
+	public java.lang.String getZsshwz() {
+		return get("ZSSHWZ");
+	}
+
 }

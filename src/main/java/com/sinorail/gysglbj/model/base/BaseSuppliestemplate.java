@@ -73,4 +73,28 @@ public abstract class BaseSuppliestemplate<M extends BaseSuppliestemplate<M>> ex
 		return get("BZ");
 	}
 
+	public void setSwtp2(java.lang.String swtp2) {
+		set("SWTP2", swtp2);
+	}
+
+	public java.lang.String getSwtp2() {
+		return get("SWTP2");
+	}
+
+	public void setSwtp3(java.lang.String swtp3) {
+		set("SWTP3", swtp3);
+	}
+
+	public java.lang.String getSwtp3() {
+		return get("SWTP3");
+	}
+
+	public void setQymc2(java.lang.String qymc2) {
+		set("QYMC2", qymc2);
+	}
+
+	public java.lang.String getQymc2() {
+		return get("QYMC2");
+	}
+
 }

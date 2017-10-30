@@ -70,4 +70,7 @@
 	#sql("roleListByParentId")
 		select id "id", role_name "name", 0 "parentId", 'false' "open" , remark, '/libs/icons/user-green.png' "icon"  from DIC_ROLE where parent_id = ? or id = ? order by xh
 	#end
+	#sql("roleListByParentId_bak")
+		select id "id", role_name "name", 0 "parentId", 'false' "open" , remark, '/libs/icons/user-green.png' "icon"  from DIC_ROLE where parent_id = ? or id = ? order by xh
+	#end
 #end

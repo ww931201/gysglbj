@@ -12,7 +12,7 @@
 <div class="box2" paneltitle="#(projectName ??)---竞买项目报价详情">
 
 	<form id="queryForm" method="post">
-		<input type="hidden" id="parentId" name="parentId" value="1"/>
+		<!-- <input type="hidden" id="parentId" name="parentId" value="1"/> -->
 		<table>
 			<tr>
 				<td>物资编码：</td>
@@ -71,8 +71,11 @@
 			{ display: '单价限价（不含税）', name: 'DJXJ_BHS', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '总限价（不含税）', name: 'ZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '6%'},
 			{ display: '使用单位及地区', name: 'SYDWJDQ', align: 'center', editor: { type: 'text'}, width: '7%'},
-			{ display: '厂商报单价（不含税）', name: 'CSBDJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%', 
+			/* { display: '厂商报单价（不含税）', name: 'CSBDJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%', 
 				render: function (rowdata, rowindex, value, column){
+					if(value==0){
+						return value+"";
+						}
 					if(value*1 > rowdata.DJXJ_BHS*1) {
 		        	    return "<span style='color:red'>"+value+"</span>";
 					}
@@ -81,12 +84,68 @@
 			},
 			{ display: '厂商报总限价（不含税）', name: 'CSBZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%',
 				render: function (rowdata, rowindex, value, column){
+					if(value==0){
+						return value+"";
+					}
 					if(value*1 > rowdata.ZXJ_BHS*1) {
 		        	    return "<span style='color:red'>"+value+"</span>";
 					}
 					return value;
 	 			}
-			}
+			},
+			{ display: '有效报价', name: 'SFYXBJ', align: 'center', editor: { type: 'text'}, width: '7%', 
+				render: function (rowdata, rowindex, value, column){
+					console.dir(grid);
+					console.dir(grid.getData()[rowindex]);
+						var sfyxbj = grid.getData()[rowindex].CSBZXJ_BHS;
+						var sfyxbj2 = grid.getData()[rowindex].ZXJ_BHS;
+						var sfyxbj3 = grid.getData()[rowindex].CSBZXJ_BHS;
+						if(sfyxbj==0 || sfyxbj3>sfyxbj2){
+							return "<span style='color:red'>否</span>";
+						}else{
+							return "是";
+						}
+					
+			}}, */
+			/*{ display: '厂商报单价(不含税）', name: 'CSBDJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%'},
+			{ display: '厂商报总限价（不含税）', name: 'CSBZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%'},*/
+			{ display: '厂商报单价（不含税）', name: 'CSBDJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%', 
+				render: function (rowdata, rowindex, value, column){
+					
+					if(value===0){
+						return "<span style='color:red'>"+value+"</span>";
+						}
+					if(value*1 > rowdata.DJXJ_BHS*1) {
+		        	    return "<span style='color:red'>"+value+"</span>";
+					}
+					return value;
+	 			}
+			},
+			{ display: '厂商报总限价（不含税）', name: 'CSBZXJ_BHS', align: 'center', editor: { type: 'text'}, width: '7%',
+				render: function (rowdata, rowindex, value, column){
+					if(value==0){
+						return "<span style='color:red'>"+value+"</span>";
+						}
+					if(value*1 > rowdata.ZXJ_BHS*1) {
+		        	    return "<span style='color:red'>"+value+"</span>";
+					}
+					return value;
+	 			}
+			},
+			{ display: '有效报价', name: 'SFYXBJ', align: 'center', editor: { type: 'text'}, width: '7%', 
+				render: function (rowdata, rowindex, value, column){
+					console.dir(grid);
+					console.dir(grid.getData()[rowindex]);
+						var sfyxbj = grid.getData()[rowindex].CSBZXJ_BHS;
+						var sfyxbj2 = grid.getData()[rowindex].ZXJ_BHS;
+						var sfyxbj3 = grid.getData()[rowindex].CSBZXJ_BHS;
+						if(sfyxbj==0 || sfyxbj3>sfyxbj2){
+							return "<span style='color:red'>否</span>";
+						}else{
+							return "是";
+						}
+					
+			}},
 		  ],
 	 url: '/quote/filterList?quote.PROJECT_ID=#(projectId)', sortName: 'userId',rownumbers:true,checkbox:false,
 	 height: '100%', width:"100%", usePager:false, percentWidthMode:true

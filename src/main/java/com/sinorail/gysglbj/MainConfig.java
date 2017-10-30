@@ -17,9 +17,11 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 import com.sinorail.gysglbj.action.CerSortAction;
+import com.sinorail.gysglbj.action.CerSuppliestemplateAction;
 import com.sinorail.gysglbj.action.CertificateAction;
 import com.sinorail.gysglbj.action.GysglAction;
 import com.sinorail.gysglbj.action.IndexAction;
+import com.sinorail.gysglbj.action.JoinlistAction;
 import com.sinorail.gysglbj.action.LoginAction;
 import com.sinorail.gysglbj.action.PopedomAction;
 import com.sinorail.gysglbj.action.PopedomMatchAction;
@@ -79,8 +81,10 @@ public class MainConfig extends JFinalConfig {
 		me.add("/suppliergrade", SupplierGradeAction.class, "WEB-INF/view/gysdj");
 		me.add("/suppliersort", SupplierSortAction.class, "WEB-INF/view/gysfl");
 		me.add("/suppliestemplate", SuppliestemplateAction.class, "WEB-INF/view/wzk");
+		me.add("/cersuppliestemplate", CerSuppliestemplateAction.class, "WEB-INF/view/zswzk");  
+		me.add("/joinlist", JoinlistAction.class, "WEB-INF/view/zhcx");
 	} 
-	 
+	
 	/**
 	 * 配置JFinal插件
 	 * 数据库连接池
@@ -126,6 +130,7 @@ public class MainConfig extends JFinalConfig {
 		arp.addSqlTemplate("sql/suppliergrade.sql");
 		arp.addSqlTemplate("sql/suppliersort.sql");
 		arp.addSqlTemplate("sql/suppliestemplate.sql");
+		arp.addSqlTemplate("sql/cersuppliestemplate.sql");
 		/********在此添加数据库 表-Model 映射*********/
 		_MappingKit.mapping(arp);
 		

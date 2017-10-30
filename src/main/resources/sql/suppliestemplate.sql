@@ -13,6 +13,9 @@
 			#if(WZMC ??)
 				and WZMC like '%#(WZMC)%'
 			#end
+			#if(QYMC2 ??)
+				and QYMC2 = '#(QYMC2)'
+			#end
 		ORDER BY ID
 	#end
 	

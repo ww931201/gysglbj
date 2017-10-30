@@ -19,10 +19,11 @@
 <script type="text/javascript" src="/libs/js/drag/dragResize.js"></script>
 <!--尺寸拖拽调整end-->
 
-<script src="/libs/jquery-ui.js"></script>
-<!--
+<!-- 日期选择框start -->
+<script type="text/javascript" src="/libs/js/form/datePicker/WdatePicker.js"></script>
+<!-- 日期选择框end -->
 
-//-->
+<script src="/libs/jquery-ui.js"></script>
 
 </head>
 <body>
@@ -53,27 +54,51 @@
 				<td>
 					<input type="text" id="searchInput" name="supplier.GYSJYFW" />
 				</td> -->
-				<td>物资编码：</td>
+				<!-- <td>物资编码：</td>
 				<td>
 					<input type="text" id="searchInput" name="certificatesupcode.CODE" />
-				</td>
-			</tr>
-			
-			<tr>
-				<td></td>
+				</td> -->
+				
 				<td>证书类别：</td>
 					<td>
 					<select url="/cersort/ZslblList"
 							prompt="请选择" name="certificate.ZSLB" selectedValue="#(certificate.ZSLB ?? )"></select>
-					</td>
-				<td>证书信息：</td>
-				<td>
-					<input type="text" id="searchInput" name="certificate.ZSXX" />
 				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>证书信息：</td>
+					<td>
+						<input type="text" id="searchInput" name="certificate.ZSXX" />
+					</td>
+				<td>供应商分类：</td>
+					<td>
+					<select url="/suppliersort/GysflList"
+							prompt="请选择" name="supplier.GYSFL" selectedValue="#(suppliersort.GYSSORTNAME ??)">
+							</select>
+					</td>
+				<td>供应商企业性质：</td>
+					<td>
+					<select name="supplier.GYSQYXZ">
+					    <option value="" >请选择</option>
+					    <option value="厂商" >厂商</option>
+					    <option value="代理商" >代理商</option>
+					    <option value="其他" >其他</option>
+					</select>
+					</td>
+				<td>资质截止日期：</td>
+					<td>
+					<input type='text' name='supplier.YXQ'
+						value='#(supplier.YXQ ??)'
+						class='date validate[custom[date]]' style="width:120px;" dateFmt="yyyy-MM-dd" /></td>
+				<td>等级评价：</td>
+					<td>
+					<select url="/suppliergrade/DjpjList"
+							prompt="请选择" name="supplier.BLGYSXYPJDJ" selectedValue="#(suppliergrade.GRADEPJ ?? )"></select>
+					</td>
 				<td><button type="button" onclick="searchHandler()"><span class="icon_find ">查询</span></button></td>
 				<td><button type="button" onclick="resetSearch()" style="width: 65px;"><span class="icon_reload ">重置</span></button></td>
 				<td><button type="button" onclick="exportGys()"><span class="icon_export ">导出</span></button></td>
-			
 			</tr>
 		</table>
 	</form>
@@ -83,47 +108,53 @@
 		<div id="dataBasic"></div>
     </div>
 <script type="text/javascript">
-
+var tip = "2342"
 var grid = null;
 var childGrid = null;
-function initComplete(){
+function openDetail(qymc) {
+	top.document.getElementById("frmright").src="/suppliestemplate?CSQYMC="+qymc;
+}
 
-	
+function openDetails(zslb) {
+	top.document.getElementById("frmright").src="/cersuppliestemplate?CSZSLB="+zslb;
+}
+
+function initComplete(){
 	//当提交表单刷新本页面时关闭弹窗
 	top.Dialog.close();
 	/**/
 	grid = $("#dataBasic").quiGrid({
 		columns:[
 			{ display: '供应商编号', name: 'GYSBH', align: 'center', width: '7%'},
-			/* { display: '社会信用代码', name: 'SHXYDM', align: 'center', width: '3%'},
-			{ display: '营业执照注册号', name: 'YYZZZCH', align: 'center', width: '3%'}, */
+			{ display: '社会信用代码', name: 'SHXYDM', align: 'center', width: '7%'},
+			/*{ display: '营业执照注册号', name: 'YYZZZCH', align: 'center', width: '3%'}, */
 			{ display: '企业名称', name: 'QYMC', align: 'center', width: '7%'},
-			/* { display: '法定代表人', name: 'FDDBR', align: 'center', width: '3%'},
-			{ display: '法定代表人电话', name: 'FDDBRDH', align: 'center', width: '3%'},
-			{ display: '所属省', name: 'SSS', align: 'center', width: '3%'},
+			{ display: '法定代表人', name: 'FDDBR', align: 'center', width: '7%'},
+			{ display: '法定代表人电话', name: 'FDDBRDH', align: 'center', width: '7%'},
+			/*{ display: '所属省', name: 'SSS', align: 'center', width: '3%'},
 			{ display: '所属市', name: 'SSS1', align: 'center', width: '3%'},
-			{ display: '住所', name: 'ZS', align: 'center', width: '3%'},*/
-			{ display: '注册资本', name: 'ZCZB', align: 'center', width: '7%'},
+			{ display: '住所', name: 'ZS', align: 'center', width: '3%'},
+			{ display: '注册资本', name: 'ZCZB', align: 'center', width: '7%'},*/
 			{ display: '成立日期', name: 'CLRQ', align: 'center', width: '7%'},
-			{ display: '营业期限', name: 'YYQX', align: 'center', width: '7%'},
-		  /*{ display: '企业类型', name: 'QYLX', align: 'center', width: '7%'}, */
+			/*{ display: '营业期限', name: 'YYQX', align: 'center', width: '7%'},
+		  	{ display: '企业类型', name: 'QYLX', align: 'center', width: '7%'}, */
 			/* { display: '组织机构代码', name: 'ZZJGDM', align: 'center', width: '3%'},
 			{ display: '税务登记号', name: 'SWDJH', align: 'center', width: '3%'}, */
 			{ display: '有效期', name: 'YXQ', align: 'center', type:'dateRed', width: '7%'},
 			{ display: '业务联系人', name: 'YWLXR', align: 'center', width: '7%'},
 			{ display: '联系人手机', name: 'LXRSJ', align: 'center', width: '7%'},
 			/* { display: '办公传真', name: 'BGCZ', align: 'center', width: '3%'},
-			{ display: '办公电话', name: 'BGDH', align: 'center', width: '3%'}, 
-			{ display: '联系人邮箱', name: 'LXRYX', align: 'center', width: '3%'},
-			{ display: '联系人职务', name: 'LXRZW', align: 'center', width: '3%'},
+			{ display: '办公电话', name: 'BGDH', align: 'center', width: '3%'}, */
+			{ display: '联系人邮箱', name: 'LXRYX', align: 'center', width: '8%'},
+			/*{ display: '联系人职务', name: 'LXRZW', align: 'center', width: '3%'},
 			{ display: '办公地址', name: 'BGDZ', align: 'center', width: '3%'},
 			{ display: '资质证书', name: 'ZZZS', align: 'center', width: '3%'},
-			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '3%'},*/
-			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '7%'},
+			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '3%'},
+			{ display: '不良供应商处罚周期', name: 'BLGYSCFZQ', align: 'center', width: '7%'},*/
 			{ display: '黑名单', name: 'HMD', align: 'center', width: '7%'},
 			{ display: '供应商信用等级评价', name: 'BLGYSXYPJDJ', align: 'center', width: '7%'},
-			/* { display: '供应商分类', name: 'GYSFL', align: 'center', width: '7%'},
-			{ display: '供应商企业性质', name: 'GYSQYXZ', align: 'center', width: '7%'}, */
+		    { display: '供应商分类', name: 'GYSFL', align: 'center', width: '7%'},
+			{ display: '供应商企业性质', name: 'GYSQYXZ', align: 'center', width: '7%'},
 			{ display: '营业执照照片', name: 'YYZZZP', align: 'center', width: '7%', render:  function (rowdata, rowindex, value, column){
 				var shtml ="";
 				if(rowdata.YYZZZP!=null){
@@ -131,7 +162,15 @@ function initComplete(){
 				}
                 return shtml;
             }},
-			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '6%'},
+			{ display: '供应商经营范围', name: 'GYSJYFW', align: 'center', width: '7%', render:  function (rowdata, rowindex, value, column){
+				//top.frmright.src = '/suppliestemplate'document.getElementById('youriframe').src
+				//var	 shtml = "";
+				var s = rowdata.QYMC.trim();
+				//var	 shtml = '<a id="pics" href='+'javascript:openDetail("'+rowdata.QYMC+'")'+'>供应商所含物资</a>';
+				var	 shtml = '<a id="pics" href='+'javascript:openDetail("'+s+'")'+'>供应商所含物资</a>';
+               return shtml;
+            }},
+			{ display: '录入时间', name: 'ENTRY_TIME', align: 'center', width: '8%'},
 			/*资质证书ID*/
 			/* { display: '资质证书ID', name: 'CERTIFICATE_ID', align: 'center', width: '3%'}, */
 			/* ID */
@@ -156,6 +195,9 @@ function initComplete(){
 	     onAfterShowData: function (data){
 	    	 refreshPermssion();
 	     }, 
+	 /*     onLoading: function () {
+	    	 searchHandler2();
+		}, */
 	     toolbar:{
 	    	 items:[
 	    		  {text: '新增', click: addUnit,  iconClass: 'icon_add', per: '/gys/addView', perClass: 'my-permission'},
@@ -168,14 +210,15 @@ function initComplete(){
 	    		  { line : true }, 
 	    		]
 	     	},alternatingRow: false,
-	     	
 	        rowAttrRender: function(rowdata, rowid){
 	          	 var b = rowdata.YXQ != null && Date.today().isAfter(new Date(rowdata.YXQ));
 	              return b ? "style=\"background-color:Yellow;\"" : '';
-	        }
-	});
+	        },
+	        
 
-	
+	        
+	});
+	searchHandler();
 	//监听查询框的回车事件
 	 $("#searchInput").keydown(function(event){
 	 	if(event.keyCode==13){
@@ -217,6 +260,24 @@ function showCertificate(row, detailPanel,callback){
 				{ display: '发证单位', name: 'UNIT', align: 'center'},
 				{ display: '证书类别', name: 'ZSLB', align: 'center'},
 				{ display: '证书信息', name: 'ZSXX', align: 'center'},
+				{ display: '证书所含物资', name: 'ZSSHWZ', align: 'center',render:  function (rowdata, rowindex, value, column){
+					var s = rowdata.ZSLB.trim();
+					var	 shtml = '<a id="pics" href='+'javascript:openDetails("'+s+'")'+'>证书所含物资</a>';
+	                return shtml;
+	            }}, 
+				{ display: '证书照片', name: 'ZSZP', align: 'center', render:  function (rowdata, rowindex, value, column){
+					var shtml ="";
+					if(rowdata.ZSZP!=null){
+						  shtml = "<a href="+rowdata.ZSZP+"  id='pics'  target='_blank'>证书1</a>";
+					}
+					 if(rowdata.ZSZP2!=null){
+						  shtml += "&nbsp;&nbsp;<a href="+rowdata.ZSZP2+"  id='pics'  target='_blank'>证书2</a>";
+					}
+					if(rowdata.ZSZP3!=null){
+						  shtml += "&nbsp;&nbsp;<a href="+rowdata.ZSZP3+"  id='pics'  target='_blank'>证书3</a>";
+					}
+	                return shtml;
+	            }},
 				/* { display: '物资编码', name: 'CODE', align: 'center'}, */
 				{ display: '操作', isAllowHide: false, align: 'center',
 					 render: function (rowdata, rowindex, value, column){
@@ -231,7 +292,7 @@ function showCertificate(row, detailPanel,callback){
                 onAfterShowData: function (data){
 	    	    	 refreshPermssion();
 	    	    }, 
-                isScroll: false,width: '1385', columnWidth: 150,
+                isScroll: false,width: '1535', columnWidth: 150,
                 url: '/gys/showCer?supplierId='+row.ID, rownumbers:true,
                 height: '100%', pageSize:10,
                 toolbar:{
@@ -245,7 +306,6 @@ function showCertificate(row, detailPanel,callback){
 		        		]
 		         	}
            });  
-
 }
 
 //新增
@@ -339,6 +399,7 @@ function searchHandler(){
     //页号重置为1
     grid.setNewPage(1);
     grid.loadData();//加载数据
+    childGrid.loadData();//加载数据
 }
 
 //重置查询

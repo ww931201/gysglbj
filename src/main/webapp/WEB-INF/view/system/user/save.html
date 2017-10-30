@@ -56,7 +56,8 @@
 function submitHandler() {
 	var valid = $('#myFormId').validationEngine({returnIsValid: true});
 	if(valid){
-		$.post("/user/save", $('#myFormId').serializeArray(), function(data) {
+		$.post("/user/save", $('#myFormId').serialize(), function(data) {
+			console.log($('#myFormId').serialize());
 			top.Dialog.alert(data.message, function(){
             	if(!data.content){		            		
 	            	closeWin();

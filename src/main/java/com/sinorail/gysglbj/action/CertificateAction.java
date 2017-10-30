@@ -2,15 +2,21 @@ package com.sinorail.gysglbj.action;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
@@ -296,4 +302,61 @@ public class CertificateAction extends QuiController{
 		renderFile(file);
 		
 	}
+	
+	/**
+	 * 上传图片
+	 */
+public void uploadPic(){
+	
+		List<UploadFile> files = getFiles();
+		List<String> lists = new ArrayList<String>();
+	 	
+		if(files!=null){
+			for (UploadFile filenames : files) {
+				String fileName = filenames.getOriginalFileName();
+				File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
+			    String extension = fileName.substring(fileName.lastIndexOf("."));
+			    String savePath = PathKit.getWebRootPath() + "/upload/pic/";
+			    JSONObject json = new JSONObject();
+			    if (".png".equals(extension) || ".jpg".equals(extension)
+			            || ".gif".equals(extension) || "jpeg".equals(extension)
+			            || "bmp".equals(extension)) {
+			        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
+			        try {
+			            FileInputStream fis = new FileInputStream(source);
+			            File targetDir = new File(savePath);
+			            if (!targetDir.exists()) {
+			                targetDir.mkdirs();
+			            }
+			            File target = new File(targetDir, fileName);
+			            if (!target.exists()) {
+			                target.createNewFile();
+			            }
+			            FileOutputStream fos = new FileOutputStream(target);
+			            byte[] bts = new byte[1024 * 20];
+			            while (fis.read(bts, 0, 1024 * 20) != -1) {
+			                fos.write(bts, 0, 1024 * 20);
+			            }
+			            fos.close();
+			            fis.close();
+			            json.put("error", "0");
+			            json.put("src", "/upload/pic/" + fileName); // 相对地址，显示图片用
+			            source.delete();
+			        } catch (FileNotFoundException e) {
+			            json.put("error", "1");
+			            json.put("message", "上传出现错误，请稍后再上传");
+			        } catch (IOException e) {
+			            json.put("error", "1");
+			            json.put("message", "文件写入服务器出现错误，请稍后再上传");
+			        }
+			    } else {
+			        source.delete();
+			        json.put("error", "1");
+			        json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
+			    }
+			    lists.add(json.toJSONString());
+			}
+		}
+		renderJson(lists.toString());
+}
 }

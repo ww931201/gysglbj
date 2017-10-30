@@ -137,4 +137,12 @@ public abstract class BaseQuote<M extends BaseQuote<M>> extends Model<M> impleme
 		return get("PROJECT_ID");
 	}
 
+	public void setSfyxbj(java.lang.String sfyxbj) {
+		set("SFYXBJ", sfyxbj);
+	}
+
+	public java.lang.String getSfyxbj() {
+		return get("SFYXBJ");
+	}
+
 }

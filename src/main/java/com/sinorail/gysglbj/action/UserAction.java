@@ -86,11 +86,12 @@ public class UserAction extends QuiController {
 	}
 	
 	public void roleList() {
-		if (isRoot()) {			
+		/*if (isRoot()) {			
 			renderJson("treeNodes",DicUser.dao.findRoleAll());
 		} else {
 			renderJson("treeNodes",DicUser.dao.findRoleById(getSessionUser().getRoleId()));
-		}
+		}*/
+		renderJson("treeNodes",DicUser.dao.findRoleAll());
 	}
 	
 	public void modifyPasswd(){

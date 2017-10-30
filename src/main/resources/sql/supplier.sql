@@ -27,10 +27,20 @@
 		#if(ZSXX ??)
 			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSXX like '%#(ZSXX)%'))
 		#end
-		
-		ORDER BY ENTRY_TIME DESC, ID
+		#if(GYSFL ??)
+			and GYSFL like '%#(GYSFL)%'
+		#end
+		#if(GYSQYXZ ??)
+			and  GYSQYXZ like '%#(GYSQYXZ)%'
+		#end
+		#if(YXQ ??)
+			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where END_TIME < '#(YXQ)'))
+		#end
+		#if(BLGYSXYPJDJ ??)
+			and BLGYSXYPJDJ like '%#(BLGYSXYPJDJ)%'
+		#end
+		ORDER BY GYSBH DESC
 	#end
-	
 	
 		### 查询所有的供应商供应商信息
 	#sql("supplierList2")
@@ -58,9 +68,21 @@
 		#if(ZSXX ??)
 			and ID in((SELECT SUPPLIER_ID FROM E_CERTIFICATE where ZSXX like '%#(ZSXX)%'))
 		#end
-		
-		ORDER BY ENTRY_TIME DESC, ID
+		#if(GYSFL ??)
+			and GYSFL like '%#(GYSFL)%'
+		#end
+		#if(GYSQYXZ ??)
+			and  GYSQYXZ like '%#(GYSQYXZ)%'
+		#end
+		#if(YXQ ??)
+			and  YXQ  < to_char(SYSDATE, 'yyyy-mm-dd')
+		#end
+		#if(GRADEPJ ??)
+			and GRADEPJ like '%#(GRADEPJ)%'
+		#end
+		ORDER BY GYSBH DESC
 	#end
+		/*ORDER BY ENTRY_TIME DESC, ID*/
 
 	
 	### 根据供应商编号查询供应商
@@ -101,6 +123,33 @@
 		select gysbh, qymc from E_SUPPLIER where  YXQ  < to_char(SYSDATE+365, 'yyyy-mm-dd')  and id IN(select supplier_id from E_QUOTE where PROJECT_ID  = (select id from E_PROJECT where id = ?))
 	#end
 	
+	#综合查询
+	#sql("joinList")
+		select * from
+		(select * from E_SUPPLIER a left join 
+		E_CERTIFICATE b on a.ID=b.SUPPLIER_ID
+		left join E_CERTIFICATE_SUPCODE c on c.CERID=b.ID) e left join E_SUPPLIESTEMPLATE d on d.WZBM = e.CODE
+		where 1 = 1
+		#if(GYSBH ??)
+			and upper(GYSBH) like upper('%#(GYSBH)%')
+		#end
+		#if(QYMC ??)
+			and QYMC like '%#(QYMC)%'
+		#end
+		#if(CODE ??)
+			and CODE like '%#(CODE)%'
+		#end
+		#if(ZSLB ??)
+			and ZSLB like '%#(ZSLB)%'
+		#end
+		#if(NO ??)
+			and NO like '%#(NO)%'
+		#end
+		#if(NAME ??)
+			and NAME like '%#(NAME)%'
+		#end
+		ORDER BY GYSBH DESC
+	#end
 #end
 
 #namespace("certificate")

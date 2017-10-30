@@ -197,12 +197,12 @@
 						<select url="/suppliergrade/listsup" prompt="请选择" name="supplier.BLGYSXYPJDJ" selectedValue="#(supplier.BLGYSXYPJDJ ?? )"></select>
 					</td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td>供应商经营范围：</td>
 					<td><input type='text' name='supplier.GYSJYFW'
 						value='#(supplier.GYSJYFW ??)'
 						class=''/></td>
-				</tr>
+				</tr> -->
 				<!-- <tr>
 					<td>录入时间：</td>
 					<td><input type='text' name='supplier.ENTRY_TIME'
@@ -215,8 +215,6 @@
 						value='#(supplier.CERTIFICATE_ID ??)'
 						class='validate[required,length[0,30]]' /><span class='star'>*</span></td>
 				</tr> -->
-				
-				
 				<!-- 新功能 -->
 				<tr>
 					<td>供应商分类：</td>
@@ -243,9 +241,11 @@
 				<td>
 					<img id="uploadpicId"  src="#(supplier.YYZZZP ??)" alt="" style="width: 100px;"/>
 				</td> 
-				<td>
-					<input  type='file' name='images' onchange="uploadPic()" />
+				<td> 
+					<input  type='file' name='images' multiple="multiple" onchange="uploadPic()" />
 					<input id="yyzzzp" type="hidden" name="supplier.YYZZZP" value="#(supplier.YYZZZP ??)">
+					<!-- <input id="yyzzzp2" type="hidden" name="supplier.YYZZZP" value="#(supplier.YYZZZP ??)">
+					<input id="yyzzzp3" type="hidden" name="supplier.YYZZZP" value="#(supplier.YYZZZP ??)"> -->
 				</td>
 				</tr>
 				<tr>
@@ -308,6 +308,9 @@ var picoption = {
 			console.log(data)
 			$("#uploadpicId").attr("src",data.src);
 			$("#yyzzzp").val(data.src);
+			$("#yyzzzp2").val(data.src);
+			$("#yyzzzp3").val(data.src);
+			
 			}else{
 				top.Dialog.alert(data.message);
 			}

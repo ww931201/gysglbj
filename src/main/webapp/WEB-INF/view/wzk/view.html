@@ -13,12 +13,16 @@
 <script type="text/javascript" src="/libs/js/drag/dragResize.js"></script>
 <!--尺寸拖拽调整end-->
 </head>
-<body>
+<body style="height: 500px;"> 
 <div class="box2" panelTitle="物资库" id="searchPanel">
 	<form id="queryForm" method="post">
 		<table>
 			<tr>
 				<td></td>
+				<td>企业名称：</td>
+				<td>
+					<input type="text" id="searchInput" name="suppliestemplate.QYMC2" value="#(CSQYMC ??)" />
+				</td>
 				<td>物资编码：</td>
 				<td>
 					<input type="text" id="searchInput" name="suppliestemplate.WZBM" />
@@ -45,9 +49,10 @@ function initComplete(){
 	//当提交表单刷新本页面时关闭弹窗
 	top.Dialog.close();
 	
-	grid = $("#dataBasic").quiGrid({
+	grid = $("#dataBasic").quiGrid({ 
 		columns:[
-			{ display: '类别', name: 'LB', align: 'center',  width: '12%'},
+			{ display: '企业名称', name: 'QYMC2', align: 'center',  width: '12%'},
+			{ display: '物资类别', name: 'LB', align: 'center',  width: '12%'},
 			{ display: '物资编码', name: 'WZBM', align: 'center',  width: '12%'},
 			{ display: '物资名称', name: 'WZMC', align: 'center',  width: '12%'},
 			{ display: '规格型号', name: 'GGXH', align: 'center',  width: '12%'},
@@ -55,7 +60,13 @@ function initComplete(){
 			{ display: '实物图片', name: 'SWTP', align: 'center',  width: '12%', render:  function (rowdata, rowindex, value, column){
 				var shtml ="";
 				if(rowdata.SWTP!=null){
-					  shtml = "<a href="+rowdata.SWTP+"  id='pics'  target='_blank'>点击查看</a>";
+					  shtml = "<a href="+rowdata.SWTP+"  id='pics'  target='_blank'>实物1</a>";
+				}
+				if(rowdata.SWTP2!=null){
+					  shtml += "&nbsp;&nbsp;&nbsp;<a href="+rowdata.SWTP2+"  id='pics'  target='_blank'>实物2</a>";
+				}
+				if(rowdata.SWTP3!=null){
+					  shtml += "&nbsp;&nbsp;&nbsp;<a href="+rowdata.SWTP3+"  id='pics'  target='_blank'>实物3</a>";
 				}
                 return shtml;
             }},
@@ -70,7 +81,7 @@ function initComplete(){
 	                 }
 	            }
 		  ],
-	url: '/suppliestemplate/list', sortName: 'WZBM',rownumbers:true,checkbox:true,
+	url: '/suppliestemplate/list',params:$("#queryForm").serializeArray(), sortName: 'WZBM',rownumbers:true,checkbox:true,
     height: '100%', width:"100%",pageSize:10,percentWidthMode:true,
     
      toolbar:{
@@ -174,10 +185,8 @@ function getSelectIds(grid) {
 	for(var i = 0;i<selectedRowsLength;i++) {
 		ids += selectedRows[i].ID + ",";
 	}
-	
 	//去掉末尾的","号
 	ids = ids.substring(0, ids.length-1);
-	
 	return {"ids":ids};
 }
 
@@ -221,9 +230,10 @@ function refresh(isUpdate){
     	//页号重置为1
 		grid.setNewPage(1);
 	}
-	
 	grid.loadData();
 }
+
+
 
 function exportWzk(){
 	window.location.href="/suppliestemplate/exportWzk?"+$("#queryForm").serialize();

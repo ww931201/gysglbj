@@ -33,11 +33,11 @@ public class Supplier extends BaseSupplier<Supplier> {
 	}*/
 	
 	
-	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier, CertificateSupcode certificatesupcode,Certificate certificate) { 
+	public Page<Supplier> findPaginate(Integer pageNumber, Integer pageSize, Supplier supplier, CertificateSupcode certificatesupcode,Certificate certificate,Suppliersort suppliersort,Suppliergrade suppliergrade) { 
 		
 		
 		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("HMD",supplier.getHmd()).set("GYSJYFW",supplier.getGysjyfw()).set("CODE",certificatesupcode.getCode())
-				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx());  
+				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx()).set("GYSFL",supplier.getGysfl()).set("GYSQYXZ",supplier.getGysqyxz()).set("YXQ",supplier.getYxq()).set("BLGYSXYPJDJ",supplier.getBlgysxypjdj());  
 		SqlPara sqlp = getSqlPara("supplier.supplierList",cond);
 		
 		return paginate(pageNumber, pageSize,sqlp);
@@ -52,10 +52,10 @@ public class Supplier extends BaseSupplier<Supplier> {
 	 * @param certificate
 	 * @return
 	 */
-	public List<Record> findExportGys(Supplier supplier, CertificateSupcode certificatesupcode,Certificate certificate) { 
+	public List<Record> findExportGys(Supplier supplier, CertificateSupcode certificatesupcode,Certificate certificate,Suppliersort suppliersort,Suppliergrade suppliergrade) { 
 		
 		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("HMD",supplier.getHmd()).set("GYSJYFW",supplier.getGysjyfw()).set("CODE",certificatesupcode.getCode())
-				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx());  
+				.set("ZSLB",certificate.getZslb()).set("ZSXX",certificate.getZsxx()).set("GYSSORTNAME",suppliersort.getGyssortname()).set("GYSQYXZ",supplier.getGysqyxz()).set("YXQ",supplier.getYxq()).set("GRADEPJ",suppliergrade.getGradepj());  
 		SqlPara sqlp = getSqlPara("supplier.supplierList2",cond);
 		
 		return Db.find(sqlp);
@@ -135,4 +135,25 @@ public class Supplier extends BaseSupplier<Supplier> {
 		return supResult;
 	}
 
+	public Page<Supplier> findPaginateByZhcx(Integer pageNumber, Integer pageSize, Supplier supplier,
+			Certificate certificate, CertificateSupcode certificatesupcode) {
+		
+		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("CODE",certificatesupcode.getCode()).set("NO",certificate.getNo()).set("NAME",certificate.getName()).set("ZSLB",certificate.getZslb());
+ 
+		SqlPara sqlp = getSqlPara("supplier.joinList",cond);
+		
+		Page<Supplier> paginate = paginate(pageNumber, pageSize,sqlp);
+		
+		return paginate;
+		
+	}
+
+	public List<Record> findExportSupAndCerAndCode(Supplier supplier, Certificate certificate, CertificateSupcode certificatesupcode) {
+		Kv cond = Kv.by("GYSBH", supplier.getGysbh()).set("QYMC",supplier.getQymc()).set("CODE",certificatesupcode.getCode()).set("NO",certificate.getNo()).set("NAME",certificate.getName());
+		 
+		SqlPara sqlp = getSqlPara("supplier.joinList",cond);
+		
+		return Db.find(sqlp);
+	}
+	
 }

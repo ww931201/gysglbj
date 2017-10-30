@@ -4,7 +4,7 @@
 	<div class="box1"  overflow="true" panelHeight="250" id="formContent" whiteBg="true">
 	<table class="tableStyle" formMode="view">
 			<tr>
-				<td width="40%">编号</td>
+				<td width="50%">编号</td>
 				<td>#(certificate.NO ??)</td>
 			</tr>
 			<tr>
@@ -35,9 +35,16 @@
 				<td>证书信息</td>
 				<td>#(certificate.ZSXX ??)</td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td>物资编码</td>
+				<td><textarea disabled="false" style="width: 150px;">#(certificatesupcode.CODENAME ??)</textarea></td>
 				<td>#(certificatesupcode.CODENAME ??)</td>
+			</tr> -->
+			<tr>
+				<td>证书照片</td>
+				<td><img src="#(certificate.ZSZP ??)" style="width: 100px;"></br>
+				<img src="#(certificate.ZSZP2 ??)" style="width: 100px;"></br>
+				<img src="#(certificate.ZSZP3 ??)" style="width: 100px;"></td>
 			</tr>
 		</table>
 	</div>

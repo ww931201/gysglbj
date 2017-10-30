@@ -21,6 +21,7 @@ public class _MappingKit {
 		arp.addMapping("DIC_ROLE_POPEDOM", "ID", DicRolePopedom.class);
 		arp.addMapping("DIC_USER", "ID", DicUser.class);
 		arp.addMapping("E_CERSORT", "ID", Cersort.class);
+		arp.addMapping("E_CERSUPPLIESTEMPLATE", "ID", Cersuppliestemplate.class);
 		arp.addMapping("E_CERTIFICATE", "ID", Certificate.class);
 		arp.addMapping("E_CERTIFICATE_SUPCODE", "ID", CertificateSupcode.class);
 		arp.addMapping("E_PROJECT", "ID", Project.class);

@@ -156,7 +156,13 @@ private Logger log = Logger.getLogger(CerSortAction.class);
 		
 		renderJson();
 		
-		
-		
 	} 
+	
+	public void DjpjList(){
+		
+		String sql = "select GRADEPJ \"key\",GRADEPJ \"value\" from E_SUPPLIERGRADE ORDER BY GRADEPJ ASC";
+		
+		renderJson(Suppliergrade.dao.find(sql));
+		
+	}
 }

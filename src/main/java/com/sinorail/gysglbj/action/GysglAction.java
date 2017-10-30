@@ -26,7 +26,11 @@ import com.sinorail.gysglbj.model.Certificate;
 import com.sinorail.gysglbj.model.CertificateSupcode;
 import com.sinorail.gysglbj.model.Quote;
 import com.sinorail.gysglbj.model.Supplier;
+import com.sinorail.gysglbj.model.Suppliergrade;
+import com.sinorail.gysglbj.model.Suppliersort;
 import com.sinorail.gysglbj.util.ExcelUtils;
+
+
 /**
  * 
  * 
@@ -141,7 +145,11 @@ public class GysglAction extends QuiController {
 							renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 						}
 					}
-					r.set(fields[i][0], list.get(n).get(i));
+					if(fields[i][0] == "QYMC"){
+						r.set(fields[i][0], list.get(n).get(i).toString().trim());
+					}else{
+						r.set(fields[i][0], list.get(n).get(i));
+					}
 				}
 				
 				if(r != null) recordList.add(r);
@@ -165,9 +173,7 @@ public class GysglAction extends QuiController {
 	 */
 	public void list(){ 
 		
-		
 		String sql = "select * from E_SUPPLIER where BLGYSCFZQ < to_char(SYSDATE, 'yyyy-mm-dd')";
-		
 		List<Supplier> list = Supplier.dao.find(sql); 
 		if(list!=null){
 			for (Supplier supplier2 : list) {
@@ -178,9 +184,8 @@ public class GysglAction extends QuiController {
 			}
 		}
 		
-		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
+		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"),getModel(Suppliersort.class,"suppliersort"),getModel(Suppliergrade.class,"suppliergrade"));
 		 
-//		Page<Supplier> page = Supplier.dao.findPaginate(pageNumber(), pageSize(),getModel(Supplier.class));
 		renderJson(page);
 	}  
 	
@@ -201,7 +206,7 @@ public class GysglAction extends QuiController {
 		
 		if (supplier.getId() == null) {
 			supplier.remove("ID");
-			if(!Supplier.dao.isExistGysbh(supplier.getGysbh())) {		
+			if(!Supplier.dao.isExistGysbh(supplier.getGysbh())) {
 				status = supplier.save();
 				log.info("****保存供应商,编号为"+ supplier.getGysbh());
 			}else {
@@ -346,7 +351,7 @@ public class GysglAction extends QuiController {
 	public void exportGys() throws IOException{
 		/*new 一个file文件*/
 		File file = new File("GysExport.xls");
-		List<Record> exportList = Supplier.dao.findExportGys(getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"));
+		List<Record> exportList = Supplier.dao.findExportGys(getModel(Supplier.class),getModel(CertificateSupcode.class,"certificatesupcode"),getModel(Certificate.class,"certificate"),getModel(Suppliersort.class,"suppliersort"),getModel(Suppliergrade.class,"suppliergrade"));
 		//String[] title = {"供应商编号", "社会信用代码", "营业执照注册号", "企业名称", "法定代表人", "法定代表人电话", "所属省", "所属市", "住所", "注册资本", "成立日期", "营业期限", "企业类型", "组织机构代码", "税务登记号", "有效期", "业务联系人", "联系人手机", "办公传真", "办公电话", "联系人邮箱", "联系人职务", "办公地址", "不良供应商处罚周期", "黑名单", "不良供应商信用评价等级", "供应商经营范围", "录入时间", "供应商分类", "供应商企业性质", "营业执照照片"};
 		//String[] field = {"GYSBH", "SHXYDM", "YYZZZCH", "QYMC", "FDDBR", "FDDBRDH", "SSS", "SSS1", "ZS", "ZCZB", "CLRQ", "YYQX", "QYLX", "ZZJGDM", "SWDJH", "YXQ", "YWLXR", "LXRSJ", "BGCZ", "BGDH", "LXRYX", "LXRZW", "BGDZ", "BLGYSCFZQ", "HMD", "BLGYSXYPJDJ", "GYSJYFW", "ENTRY_TIME", "GYSFL", "GYSQYXZ", "YYZZZP"};
 		
@@ -357,11 +362,66 @@ public class GysglAction extends QuiController {
 		 
 		renderFile(file);
 	}
+	
 	/**
 	 * 上传图片
 	 */
-public void uploadPic(){
-	UploadFile filenames = getFile("images");
+	public void uploadPic(){
+	
+	List<UploadFile> files = getFiles();
+	
+	List<String> lists = new ArrayList<String>();
+ 	
+	if(files!=null){
+		for (UploadFile filenames : files) {
+			String fileName = filenames.getOriginalFileName();
+			File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
+		    String extension = fileName.substring(fileName.lastIndexOf("."));
+		    String savePath = PathKit.getWebRootPath() + "/upload/pic/";
+		    JSONObject json = new JSONObject();
+		    if (".png".equals(extension) || ".jpg".equals(extension)
+		            || ".gif".equals(extension) || "jpeg".equals(extension)
+		            || "bmp".equals(extension) || "JPG".equals(extension)) {
+		        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
+		        try {
+		            FileInputStream fis = new FileInputStream(source);
+		            File targetDir = new File(savePath);
+		            if (!targetDir.exists()) {
+		                targetDir.mkdirs();
+		            }
+		            File target = new File(targetDir, fileName);
+		            if (!target.exists()) {
+		                target.createNewFile();
+		            }
+		            FileOutputStream fos = new FileOutputStream(target);
+		            byte[] bts = new byte[1024 * 20];
+		            while (fis.read(bts, 0, 1024 * 20) != -1) {
+		                fos.write(bts, 0, 1024 * 20);
+		            }
+		            fos.close();
+		            fis.close();
+		            json.put("error", 0);
+		            json.put("src", "/upload/pic/" + fileName); // 相对地址，显示图片用
+		            source.delete();
+		        } catch (FileNotFoundException e) {
+		            json.put("error", 1);
+		            json.put("message", "上传出现错误，请稍后再上传");
+		        } catch (IOException e) {
+		            json.put("error", 1);
+		            json.put("message", "文件写入服务器出现错误，请稍后再上传");
+		        }
+		    } else {
+		        source.delete();
+		        json.put("error", 1);
+		        json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
+		    }
+		    lists.add(json.toJSONString());
+		}
+	}
+	
+	
+	/*UploadFile filenames = getFile("images");
+	
 	String fileName = filenames.getOriginalFileName();
 	File source = new File(filenames.getUploadPath() + "\\" + fileName); // 获取临时文件对象
     String extension = fileName.substring(fileName.lastIndexOf("."));
@@ -403,6 +463,9 @@ public void uploadPic(){
         json.put("error", 1);
         json.put("message", "只允许上传png,jpg,jpeg,gif,bmp类型的图片文件");
     }
-    renderJson(json.toJSONString());
-}
+    	renderJson(json.toJSONString());*/
+		renderJson(lists);
+	}
+
+
 }

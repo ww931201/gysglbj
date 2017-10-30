@@ -54,10 +54,15 @@
 		<artifactId>fastjson</artifactId>
 		<version>1.2.8</version>
 	</dependency>
-    <dependency>
+    <!-- <dependency>
     	<groupId>com.jfinal</groupId>
     	<artifactId>cos</artifactId>
     	<version>26Dec2008</version>
+    </dependency> -->
+       <dependency>
+    	<groupId>com.jfinal</groupId>
+    	<artifactId>cos</artifactId>
+    	<version>2017.5</version>
     </dependency>
 
 <!-- servlet -->
