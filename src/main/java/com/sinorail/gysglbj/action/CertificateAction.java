@@ -320,7 +320,7 @@ public void uploadPic(){
 			    JSONObject json = new JSONObject();
 			    if (".png".equals(extension) || ".jpg".equals(extension)
 			            || ".gif".equals(extension) || "jpeg".equals(extension)
-			            || "bmp".equals(extension)) {
+			            || "bmp".equals(extension) || "JPG".equals(extension)) {
 			        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
 			        try {
 			            FileInputStream fis = new FileInputStream(source);

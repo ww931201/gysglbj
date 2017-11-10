@@ -21,8 +21,8 @@
 		#if(PROJECT_ID ??)
 			and PROJECT_ID = '#(PROJECT_ID)'
 		#end
-		#if(SYDWJDQ ??)
-			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
+		#if(SFYXBJ ??)
+			and SFYXBJ = '#(SFYXBJ)'
 		#end
 		ORDER BY GYSBH, BJH ASC
 	#end
@@ -42,8 +42,8 @@
 		#if(PROJECT_ID ??)
 			and PROJECT_ID = '#(PROJECT_ID)'
 		#end
-		#if(SYDWJDQ ??)
-			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
+		#if(SFYXBJ ??)
+			and SFYXBJ = '#(SFYXBJ)'
 		#end
 		#if(QYMC ??)
 			and QYMC like '%#(QYMC)%'
@@ -72,8 +72,8 @@
 		#if(PROJECT_ID ??)
 			and PROJECT_ID = '#(PROJECT_ID)'
 		#end
-		#if(SYDWJDQ ??)
-			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
+		#if(SFYXBJ ??)
+			and SFYXBJ = '#(SFYXBJ)'
 		#end
 		#if(QYMC ??)
 			and QYMC like '%#(QYMC)%'
@@ -102,8 +102,8 @@
 		#if(PROJECT_ID ??)
 			and PROJECT_ID = '#(PROJECT_ID)'
 		#end
-		#if(SYDWJDQ ??)
-			and upper(SYDWJDQ) like upper('%#(SYDWJDQ)%')
+		#if(SFYXBJ ??)
+			and SFYXBJ = '#(SFYXBJ)'
 		#end
 		#if(QYMC ??)
 			and QYMC like '%#(QYMC)%'

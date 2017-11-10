@@ -312,9 +312,9 @@ public class SuppliestemplateAction extends QuiController{
 			    String extension = fileName.substring(fileName.lastIndexOf("."));
 			    String savePath = PathKit.getWebRootPath() + "/upload/pic/";
 			    JSONObject json = new JSONObject();
-			    if (".png".equals(extension) || ".jpg".equals(extension)
-			            || ".gif".equals(extension) || "jpeg".equals(extension)
-			            || "bmp".equals(extension)) {
+			    if (".png".equalsIgnoreCase(extension) || ".jpg".equalsIgnoreCase(extension)
+			            || ".gif".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)
+			            || "bmp".equalsIgnoreCase(extension)) {
 			        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
 			        try {
 			            FileInputStream fis = new FileInputStream(source);

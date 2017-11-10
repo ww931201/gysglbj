@@ -94,9 +94,19 @@
 								<td>
 									<input type="text" id="searchInput" name="quote.GGXH" />
 								</td>
-								<td>使用单位及地区：</td>
+								<!-- <td>使用单位及地区：</td>
 								<td>
 									<input type="text" id="searchInput" name="quote.SYDWJDQ" />
+								</td> -->
+								<td>是否有效报价：</td>
+								
+								<td>
+									<!-- <input type="text" id="searchInput" name="quote.SYDWJDQ" /> -->
+									<select name="quote.SFYXBJ" id="searchInput" style="text-align: center">
+										<option value="">请选择</option>
+										<option value="是">是</option>
+										<option value="否">否</option>
+									</select>
 								</td>
 								<td><button type="button" onclick="searchHandler()"><span class="icon_find">查询</span></button></td>
 								<td><button type="button" onclick="resetSearch()"><span class="icon_reload">重置</span></button></td>
@@ -151,7 +161,6 @@ function initComplete(){
 		
    	    //页号重置为1
    	    grid.setNewPage(1);
-   	    
     	grid.setOptions({url : "/quote/list?quote.PROJECT_ID="+rowdata.ID});
 
 		$.post("/gys/findProjectOverDate",{ PROJECT_ID: rowdata.ID },function(data){

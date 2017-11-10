@@ -145,11 +145,13 @@ public class GysglAction extends QuiController {
 							renderJson("result","第"+(n+2)+"行"+"第"+(i+1)+"列数据"+fields[i][2]+list.get(n).get(i)+"格式填写错误！请修改后重新填写！"); return;
 						}
 					}
-					if(fields[i][0] == "QYMC"){
+					//在导入信息的时候进行字符串的trim()切割！
+					/*if(fields[i][0] == "QYMC"){
 						r.set(fields[i][0], list.get(n).get(i).toString().trim());
 					}else{
 						r.set(fields[i][0], list.get(n).get(i));
-					}
+					}*/
+					r.set(fields[i][0], list.get(n).get(i));
 				}
 				
 				if(r != null) recordList.add(r);
@@ -371,7 +373,7 @@ public class GysglAction extends QuiController {
 	List<UploadFile> files = getFiles();
 	
 	List<String> lists = new ArrayList<String>();
- 	
+	
 	if(files!=null){
 		for (UploadFile filenames : files) {
 			String fileName = filenames.getOriginalFileName();
@@ -379,9 +381,14 @@ public class GysglAction extends QuiController {
 		    String extension = fileName.substring(fileName.lastIndexOf("."));
 		    String savePath = PathKit.getWebRootPath() + "/upload/pic/";
 		    JSONObject json = new JSONObject();
-		    if (".png".equals(extension) || ".jpg".equals(extension)
+		    //区分大小写的格式类型
+		    /*if (".png".equals(extension) || ".jpg".equals(extension)
 		            || ".gif".equals(extension) || "jpeg".equals(extension)
-		            || "bmp".equals(extension) || "JPG".equals(extension)) {
+		            || "bmp".equals(extension) || "JPG".equals(extension)) {*/
+		    //不区分大小写的格式类型
+		   if (".png".equalsIgnoreCase(extension) || ".jpg".equalsIgnoreCase(extension)
+		            || ".gif".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)
+		            || "bmp".equalsIgnoreCase(extension)) {
 		        fileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
 		        try {
 		            FileInputStream fis = new FileInputStream(source);

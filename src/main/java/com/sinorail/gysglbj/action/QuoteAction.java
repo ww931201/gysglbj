@@ -63,7 +63,7 @@ public class QuoteAction extends QuiController {
 	public void list() {
 		Quote quote = getModel(Quote.class);
 		Supplier supplier = getModel(Supplier.class);
-		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("GYSBH", supplier.getGysbh()).set("WZMC",quote.getWzmc()).set("PROJECT_ID",quote.getProjectId()).set("GGXH", quote.getGgxh()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc());
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("GYSBH", supplier.getGysbh()).set("WZMC",quote.getWzmc()).set("PROJECT_ID",quote.getProjectId()).set("GGXH", quote.getGgxh()).set("SFYXBJ", quote.getSfyxbj()).set("QYMC", supplier.getQymc());
 		SqlPara sqp = Db.getSqlPara("quote.paginateList", kv);
 	/*	List<Record> list = paginate.getList();
 		kv.set("PROJECT_ID",list.get(0).get("PROJECT_ID"));*/
@@ -75,7 +75,7 @@ public class QuoteAction extends QuiController {
 		String xh = getPara("XH");
 		Quote quote = getModel(Quote.class);
 		Supplier supplier = getModel(Supplier.class);
-		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("XH", xh).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("XH", xh).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SFYXBJ", quote.getSfyxbj()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
 		SqlPara sqp;
 		//类型 1 竞买(整包)  2 竞价
 		Project project = Project.dao.findById(quote.getProjectId());
@@ -262,7 +262,7 @@ public class QuoteAction extends QuiController {
 		
 		Quote quote = getModel(Quote.class);
 		Supplier supplier = getModel(Supplier.class);
-		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh()).set("XH",getPara("XH"));
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SFYXBJ", quote.getSfyxbj()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh()).set("XH",getPara("XH"));
 		File file = new File("filter.xls");
 		
 		//类型 1 竞买(整包)  2 竞价
@@ -299,7 +299,7 @@ public class QuoteAction extends QuiController {
 		
 		Quote quote = getModel(Quote.class,"quote");
 		Supplier supplier = getModel(Supplier.class);
-		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("QYMC",supplier.getQymc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SYDWJDQ", quote.getSydwjdq()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
+		Kv kv = Kv.by("WZBM", quote.getWzbm()).set("WZMC",quote.getWzmc()).set("QYMC",supplier.getQymc()).set("GGXH", quote.getGgxh()).set("PROJECT_ID",quote.getProjectId()).set("SFYXBJ", quote.getSfyxbj()).set("QYMC", supplier.getQymc()).set("GYSBH", supplier.getGysbh()).set("BJH", quote.getBjh());
 		File file = new File("filter.xls");
 		
 		//类型 1 竞买(整包)  2 竞价
